@@ -16,18 +16,10 @@ public class JIBPinger implements Runnable {
     public JIBPinger(JIBSocket s) {
         this.s = s;
     }
-    
-    public void setPingStr() {
-        pingStr = "LAG"+System.currentTimeMillis();
-    }
 
     public void processLine(String l) {
-        String[] sp = l.split(" ");
         if (l.startsWith("PING ")) {
             s.writeLine("PONG " + l.substring(5) + "\r\n");
-        }
-        if(sp.length > 1 && sp[1].equals("PONG")) {
-            setPingStr();
         }
     }
 
