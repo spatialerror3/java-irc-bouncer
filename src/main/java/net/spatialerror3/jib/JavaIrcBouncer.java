@@ -20,6 +20,13 @@ public class JavaIrcBouncer {
         jibConfig = new JIBConfig();
         jibConfig.parseArgs(args);
         jibSysEnv = new JIBSysEnv();
+        jibSysEnv.envToConfig("AUTHUSER");
+        jibSysEnv.envToConfig("AUTHPASS");
+        jibSysEnv.envToConfig("Server");
+        jibSysEnv.envToConfig("Port");
+        jibSysEnv.envToConfig("Nick");
+        jibSysEnv.envToConfig("User");
+        jibSysEnv.envToConfig("Realname");
         jibDbUtil = new JIBDBUtil();
         jibDbUtil.initSchema();
         JIBServer jib1 = null;
