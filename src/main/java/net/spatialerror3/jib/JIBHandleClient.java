@@ -4,13 +4,6 @@
  */
 package net.spatialerror3.jib;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 /**
@@ -18,78 +11,114 @@ import java.net.Socket;
  * @author spatialerror3
  */
 public class JIBHandleClient implements Runnable {
-
-    InputStream IS = null;
-    InputStreamReader ISR = null;
-    BufferedReader BR = null;
-    OutputStream OS = null;
-    OutputStreamWriter OSW = null;
-    BufferedWriter BW = null;
     JIBSocket sock = null;
-
+    private boolean inAuth = true;
+    private String authUser = null;
+    private String authPass = null;
+    private boolean authOk = false;
+    
     public JIBHandleClient(Socket cs) {
-        try {
-            IS = cs.getInputStream();
-        } catch (IOException ex) {
-            System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-        ISR = new InputStreamReader(IS);
-        BR = new BufferedReader(ISR);
-        try {
-            OS = cs.getOutputStream();
-        } catch (IOException ex) {
-            System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-        OSW = new OutputStreamWriter(OS);
-        BW = new BufferedWriter(OSW);
         sock=new JIBSocket(cs);
         onConnect();
     }
 
     public void onConnect() {
         sendLine("");
-        JavaIrcBouncer.jibIRC=new JIBIRC("192.168.179.3",6697,"test7667","test1","testing...");
+        sendLine(":JIB.jib NOTICE "+"*"+" :AUTHENTICATION MANDATORY\r\n");
     }
-
-    public void sendLine(String l) {
-        try {
-            BW.write(l + "\r\n");
-            BW.flush();
-            OSW.flush();
-            OS.flush();
-        } catch (IOException ex) {
-            System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+    
+    public Exception getError() {
+        return sock.getError();
+    }
+    
+    public JIBIRC getSingleJIBIRC() {
+        if(authOk==false)
+            return null;
+        int dstPort = Integer.valueOf(JavaIrcBouncer.jibConfig.getValue("Port")).intValue();
+        if(JavaIrcBouncer.jibIRC==null) {
+            if(JavaIrcBouncer.jibConfig.getValue("Server") != null) {
+                JavaIrcBouncer.jibIRC=new JIBIRC(JavaIrcBouncer.jibConfig.getValue("Server"),dstPort,JavaIrcBouncer.jibConfig.getValue("Nick"),JavaIrcBouncer.jibConfig.getValue("User"),JavaIrcBouncer.jibConfig.getValue("Realname"));
+            } else {
+                System.exit(255);
+            }
+        }
+        return JavaIrcBouncer.jibIRC;
+    }
+    
+    public void processError() {
+        if(JavaIrcBouncer.jibIRC!=null) {
+            if(JavaIrcBouncer.jibIRC.getError()!=null) {
+                JavaIrcBouncer.jibIRC=null;
+            }
         }
     }
-
+    
+    public void sendLine(String l) {
+        sock.writeLine(l + "\r\n");
+    }
+    
+    public void checkUserPass() {
+        if(this.authUser==null||this.authPass==null) {
+            return;
+        }
+        String cnfUserChk = JavaIrcBouncer.jibConfig.getValue("AUTHUSER");
+        String cnfPassChk = JavaIrcBouncer.jibConfig.getValue("AUTHPASS");
+        if(this.authUser.equals(cnfUserChk)&&this.authPass.equals(cnfPassChk)) {
+            this.authOk=true;
+        } else {
+            sendLine("ERROR :Auth failed\r\n");
+        }
+        this.inAuth=false;
+    }
+    
     public void processLine(String l) {
+        boolean passthrough = true;
+        String[] sp = l.split(" ");
         System.err.println("l=" + l);
         if (l.startsWith("CAP")) {
+            passthrough=false;
             sendLine(l);
         }
         if (l.startsWith("NICK")) {
+            passthrough=false;
             sendLine(l);
         }
         if (l.startsWith("USER")) {
+            passthrough=false;
+            this.authUser=sp[1];
+            checkUserPass();
             sendLine(l);
         }
         if (l.startsWith("PASS")) {
+            passthrough=false;
+            this.authPass=l.substring(5);
+            checkUserPass();
             sendLine(l);
         }
         if (l.startsWith("QUIT")) {
-
+            passthrough=false;
+            return;
         }
-        JavaIrcBouncer.jibIRC.writeLine(l+"\r\n");
+        if(l.startsWith("CAP END")) {
+            getSingleJIBIRC();
+        }
+        if(l.startsWith("JOIN")) {
+            getSingleJIBIRC().simulateJoin(l.substring(5));
+        }
+        if(l.startsWith("PRIVMSG")) {
+            String[] msgextract = l.split(" ", 3);
+            getSingleJIBIRC().simulatePRIVMSG(sp[1], msgextract[2].substring(1));
+        }
+        if(passthrough) {
+            getSingleJIBIRC().writeLine(l+"\r\n");
+        }
     }
 
     public void run() {
         String l = null;
         while (true) {
-            try {
-                l = BR.readLine();
-            } catch (IOException ex) {
-                System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            }
+            processError();
+            l=sock.readLine();
             processLine(l);
         }
     }

@@ -10,6 +10,7 @@ package net.spatialerror3.jib;
  */
 public class JavaIrcBouncer {
     public static JIBConfig jibConfig = null;
+    public static JIBSysEnv jibSysEnv = null;
     public static JIBDBUtil jibDbUtil = null;
     public static JIBServer jibServ = null;
     public static JIBIRC jibIRC = null;
@@ -18,6 +19,7 @@ public class JavaIrcBouncer {
     public static void main(String[] args) {
         jibConfig = new JIBConfig();
         jibConfig.parseArgs(args);
+        jibSysEnv = new JIBSysEnv();
         jibDbUtil = new JIBDBUtil();
         jibDbUtil.initSchema();
         JIBServer jib1 = null;
