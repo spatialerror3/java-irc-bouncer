@@ -62,7 +62,7 @@ ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
-    --home "/nonexistent" \
+    --home "/tmp" \
     --shell "/sbin/nologin" \
     --no-create-home \
     --uid "${UID}" \
@@ -70,8 +70,8 @@ RUN adduser \
 USER appuser
 
 # Copy the executable from the "package" stage.
-COPY --from=package build/target/app.jar app.jar
+COPY --from=package build/target/java-irc-bouncer-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
 
 EXPOSE 7667
 
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
+ENTRYPOINT [ "java", "-Dpython.import.site=false", "-jar", "app.jar" ]
