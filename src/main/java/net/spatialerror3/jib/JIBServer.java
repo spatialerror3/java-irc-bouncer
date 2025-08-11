@@ -18,15 +18,35 @@ public class JIBServer implements Runnable {
     Vector<JIBHandleClient> clients = new Vector<JIBHandleClient>();
     
     public JIBServer() {
+        InetAddress bindAddr = null;
+        
+        if(JavaIrcBouncer.jibConfig.getValue("ServerBind")!=null) {
+            try {
+                bindAddr=InetAddress.getByName(JavaIrcBouncer.jibConfig.getValue("ServerBind"));
+            } catch (UnknownHostException ex) {
+                System.getLogger(JIBServer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }
         try {
-            ss = new ServerSocket(7667);
+            ss = new ServerSocket(7667, 0, bindAddr);
         } catch (IOException ex) {
             System.getLogger(JIBServer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         
     }
     
+    public void cleanErrorClients() {
+        Iterator<JIBHandleClient> it1 = clients.iterator();
+        while(it1.hasNext()) {
+            JIBHandleClient tc = it1.next();
+            if(tc.getError()!=null) {
+                clients.remove(tc);
+            }
+        }
+    }
+    
     public void writeAllClients(String l) {
+        cleanErrorClients();
         Iterator<JIBHandleClient> it1 = clients.iterator();
         while(it1.hasNext()) {
             JIBHandleClient tc = it1.next();
