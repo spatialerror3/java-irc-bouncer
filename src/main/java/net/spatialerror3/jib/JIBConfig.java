@@ -24,7 +24,8 @@ public class JIBConfig {
     }
     
     public void setValue(String Key, String Value) {
-        kvStore.put(Key, Value);
+        if(Value!=null)
+          kvStore.put(Key, Value);
     }
     
     public String getValue(String Key) {
