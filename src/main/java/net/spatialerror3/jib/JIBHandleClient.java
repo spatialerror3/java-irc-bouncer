@@ -109,6 +109,12 @@ public class JIBHandleClient implements Runnable {
             String[] msgextract = l.split(" ", 3);
             getSingleJIBIRC().simulatePRIVMSG(sp[1], msgextract[2].substring(1));
         }
+        if(l.startsWith("RAW")) {
+            passthrough=false;
+            if(l.length() >= 4) {
+              getSingleJIBIRC().writeLine(l.substring(4)+"\r\n");
+            }
+        }
         if(passthrough) {
             getSingleJIBIRC().writeLine(l+"\r\n");
         }
