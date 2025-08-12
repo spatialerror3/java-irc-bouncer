@@ -11,6 +11,14 @@ services:
   server:
     build:
       context: .
+    environment:
+      - AUTHUSER=test
+      - AUTHPASS=test
+      - Server=irc.libera.chat
+      - Port=6697
+      - Nick=docker1
+      - User=docker1
+      - Realname=docker
     ports:
       - 7667:7667
 
