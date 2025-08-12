@@ -16,6 +16,8 @@ public class JIBHandleClient implements Runnable {
     private String authUser = null;
     private String authPass = null;
     private boolean authOk = false;
+    //
+    private String trackNick = null;
     
     public JIBHandleClient(Socket cs) {
         sock=new JIBSocket(cs);
@@ -25,6 +27,16 @@ public class JIBHandleClient implements Runnable {
     public void onConnect() {
         sendLine("");
         sendLine(":JIB.jib NOTICE "+"*"+" :AUTHENTICATION MANDATORY\r\n");
+    }
+    
+    public void onAuthDone() {
+        String[] channels = JavaIrcBouncer.jibDbUtil.getChannels();
+        for(int j = 0; j < channels.length; j++) {
+            if(channels[j]!= null) {
+                getSingleJIBIRC().simulateJoin(channels[j]);
+                getSingleJIBIRC().simulateJoin(channels[j], trackNick);
+            }
+        }
     }
     
     public Exception getError() {
@@ -65,6 +77,7 @@ public class JIBHandleClient implements Runnable {
         String cnfPassChk = JavaIrcBouncer.jibConfig.getValue("AUTHPASS");
         if(this.authUser.equals(cnfUserChk)&&this.authPass.equals(cnfPassChk)) {
             this.authOk=true;
+            onAuthDone();
         } else {
             sendLine("ERROR :Auth failed\r\n");
         }
@@ -81,6 +94,7 @@ public class JIBHandleClient implements Runnable {
         }
         if (l.startsWith("NICK")) {
             passthrough=false;
+            trackNick=l.substring(5);
             sendLine(l);
         }
         if (l.startsWith("USER")) {
@@ -103,11 +117,19 @@ public class JIBHandleClient implements Runnable {
             getSingleJIBIRC();
         }
         if(l.startsWith("JOIN")) {
-            getSingleJIBIRC().simulateJoin(l.substring(5));
+            String[] channels = l.substring(5).split(",");
+            for(int j = 0; j < channels.length; j++) {
+                getSingleJIBIRC().simulateJoin(channels[j]);
+                JavaIrcBouncer.jibDbUtil.addChannel(channels[j]);
+            }
         }
         if(l.startsWith("PRIVMSG")) {
             String[] msgextract = l.split(" ", 3);
             getSingleJIBIRC().simulatePRIVMSG(sp[1], msgextract[2].substring(1));
+        }
+        if(l.startsWith("PART")) {
+            String[] sp4 = l.split(" ",3);
+            JavaIrcBouncer.jibDbUtil.removeChannel(sp4[1]);
         }
         if(l.startsWith("RAW")) {
             passthrough=false;
