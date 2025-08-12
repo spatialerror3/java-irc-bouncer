@@ -7,17 +7,20 @@ package net.spatialerror3.jib;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 /**
  *
  * @author spatialerror3
  */
 public class JIBDBUtil {
+
     public JIBDBUtil() {
-        
+
     }
-    
+
     public Connection getDatabase() {
         Connection conn = null;
         try {
@@ -27,16 +30,23 @@ public class JIBDBUtil {
         }
         return conn;
     }
-    
+
     public void initSchema() {
-        String sql = "CREATE TABLE IF NOT EXISTS servers (id int primary key, server varchar(256), port integer);";
+        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer);";
         try {
             PreparedStatement ps1 = getDatabase().prepareStatement(sql);
             ps1.execute();
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        sql = "CREATE TABLE IF NOT EXISTS clientauth (id int primary key, username varchar(256), password varchar(256));";
+        sql = "CREATE TABLE IF NOT EXISTS channels (id int auto_increment primary key, channel varchar(256));";
+        try {
+            PreparedStatement ps4 = getDatabase().prepareStatement(sql);
+            ps4.execute();
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        sql = "CREATE TABLE IF NOT EXISTS clientauth (id int auto_increment primary key, username varchar(256), password varchar(256));";
         try {
             PreparedStatement ps3 = getDatabase().prepareStatement(sql);
             ps3.execute();
@@ -44,7 +54,7 @@ public class JIBDBUtil {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-    
+
     public void addServer(String Server, int Port) {
         String sql = "INSERT INTO servers (server,port) VALUES(?,?);";
         PreparedStatement ps2 = null;
@@ -57,7 +67,59 @@ public class JIBDBUtil {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
+
+    public void addChannel(String Channel) {
+        String sql = "INSERT INTO channels (channel) VALUES(?);";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, Channel);
+            ps2.execute();
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
     
+    public void removeChannel(String Channel) {
+        String sql = "DELETE FROM channels WHERE channel = ?;";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, Channel);
+            ps2.execute();
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        
+    }
+
+    public String[] getChannels() {
+        Vector<String> cv = new Vector<String>();
+        String[] channels = new String[100];
+        PreparedStatement ps5 = null;
+        ResultSet rs5 = null;
+        String sql = "SELECT channel FROM channels;";
+        try {
+            ps5 = getDatabase().prepareStatement(sql);
+            rs5 = ps5.executeQuery();
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        try {
+            //if (rs5 != null) {
+            //    rs5.first();
+            //}
+            while (rs5 != null && rs5.next()) {
+                cv.add(rs5.getString(1));
+                System.err.println("Contains Channel="+rs5.getString(1));
+            }
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        channels=(String[])cv.toArray(channels);
+        return channels;
+    }
+
     public boolean checkUserPass(String User, String Pass) {
         return false;
     }
