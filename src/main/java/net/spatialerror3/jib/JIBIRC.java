@@ -125,6 +125,21 @@ public class JIBIRC implements Runnable {
         }
     }
 
+    public void simulateJoin(String chan, String nick) {
+        String joinSim = ":" + nick + " JOIN " + chan + " * :" + realname;
+        String joinSim2 = ":" + nick + " JOIN :" + chan;
+        if(ircv32==true) {
+            JavaIrcBouncer.jibServ.writeAllClients(joinSim + "\r\n");
+        } else {
+            JavaIrcBouncer.jibServ.writeAllClients(joinSim2 + "\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib MODE "+ chan + " +nt\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 366 "+nick+" "+ chan + " :End of /NAMES list.\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 324 "+nick+" "+ chan + " +nt\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 329 "+nick+" "+ chan + " 0\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 315 "+nick+" "+ chan + " :End of /WHO list.\r\n");
+        }
+    }
+
     public void simulatePRIVMSG(String chan, String msg) {
         String msgSim = ":" + myInfo.nuh() + " PRIVMSG " + chan + " :" + msg;
         JavaIrcBouncer.jibServ.writeAllClients(msgSim + "\r\n");
