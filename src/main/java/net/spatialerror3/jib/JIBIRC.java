@@ -6,6 +6,7 @@ package net.spatialerror3.jib;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -21,6 +22,7 @@ import javax.net.ssl.TrustManager;
 public class JIBIRC implements Runnable {
 
     private SSLSocket ircServer = null;
+    private Socket ircServerNoSsl = null;
     private JIBSocket sock = null;
     //
     private String Server = null;
@@ -34,6 +36,7 @@ public class JIBIRC implements Runnable {
     private JIBPinger ping1 = null;
     //
     private boolean ircv32 = false;
+    private boolean noSsl = false;
 
     public JIBIRC(String Server, int Port, String nick, String user, String realname) {
         this.Server = Server;
@@ -58,6 +61,9 @@ public class JIBIRC implements Runnable {
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname + "\r\n");
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICK= " + myInfo.nick + "\r\n");
         InetAddress clientBind = null;
+        if (JavaIrcBouncer.jibConfig.getValue("ClientNoSSL") != null) {
+            noSsl=true;
+        }
         try {
             if (JavaIrcBouncer.jibConfig.getValue("ClientBind") != null) {
                 clientBind = InetAddress.getByName(JavaIrcBouncer.jibConfig.getValue("ClientBind"));
@@ -71,24 +77,33 @@ public class JIBIRC implements Runnable {
         } catch (UnknownHostException ex) {
             System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        try {
-            sslctx = SSLContext.getInstance("TLS");
-        } catch (NoSuchAlgorithmException ex) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        if (!noSsl) {
+            try {
+                sslctx = SSLContext.getInstance("TLS");
+            } catch (NoSuchAlgorithmException ex) {
+                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            TrustManager[] tm = new TrustManager[]{new JIBSSLTrustManager()};
+            try {
+                sslctx.init(null, tm, null);
+            } catch (KeyManagementException ex) {
+                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            SSLSocketFactory factory = (SSLSocketFactory) sslctx.getSocketFactory();
+            try {
+                ircServer = (SSLSocket) factory.createSocket(dst, Port, clientBind, 0);
+            } catch (IOException ex) {
+                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            sock = new JIBSocket(ircServer);
+        } else {
+            try {
+                ircServerNoSsl = new Socket(dst, Port, clientBind, 0);
+            } catch (IOException ex) {
+                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            sock = new JIBSocket(ircServerNoSsl);
         }
-        TrustManager[] tm = new TrustManager[]{new JIBSSLTrustManager()};
-        try {
-            sslctx.init(null, tm, null);
-        } catch (KeyManagementException ex) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-        SSLSocketFactory factory = (SSLSocketFactory) sslctx.getSocketFactory();
-        try {
-            ircServer = (SSLSocket) factory.createSocket(dst, Port, null, 0);
-        } catch (IOException ex) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
-        sock = new JIBSocket(ircServer);
         onConnect();
         Thread t3 = new Thread(this);
         t3.start();
@@ -118,7 +133,7 @@ public class JIBIRC implements Runnable {
     public void simulateJoin(String chan) {
         String joinSim = ":" + myInfo.nuh() + " JOIN " + chan + " * :" + realname;
         String joinSim2 = ":" + myInfo.nuh() + " JOIN :" + chan;
-        if(ircv32==true) {
+        if (ircv32 == true) {
             JavaIrcBouncer.jibServ.writeAllClients(joinSim + "\r\n");
         } else {
             JavaIrcBouncer.jibServ.writeAllClients(joinSim2 + "\r\n");
@@ -128,15 +143,15 @@ public class JIBIRC implements Runnable {
     public void simulateJoin(String chan, String nick) {
         String joinSim = ":" + nick + " JOIN " + chan + " * :" + realname;
         String joinSim2 = ":" + nick + " JOIN :" + chan;
-        if(ircv32==true) {
+        if (ircv32 == true) {
             JavaIrcBouncer.jibServ.writeAllClients(joinSim + "\r\n");
         } else {
             JavaIrcBouncer.jibServ.writeAllClients(joinSim2 + "\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib MODE "+ chan + " +nt\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 366 "+nick+" "+ chan + " :End of /NAMES list.\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 324 "+nick+" "+ chan + " +nt\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 329 "+nick+" "+ chan + " 0\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 315 "+nick+" "+ chan + " :End of /WHO list.\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib MODE " + chan + " +nt\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 366 " + nick + " " + chan + " :End of /NAMES list.\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 324 " + nick + " " + chan + " +nt\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 329 " + nick + " " + chan + " 0\r\n");
+            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 315 " + nick + " " + chan + " :End of /WHO list.\r\n");
         }
     }
 
