@@ -129,6 +129,14 @@ public class JIBIRC implements Runnable {
         System.err.println(this + " l=" + l);
         JavaIrcBouncer.jibServ.writeAllClients(l);
     }
+    
+    public void simulateNick(String oldnick, String newnick) {
+        if(newnick == null) {
+            newnick=myInfo.nick;
+        }
+        String nickSim = ":"+oldnick+" NICK "+newnick;
+        JavaIrcBouncer.jibServ.writeAllClients(nickSim + "\r\n");
+    }
 
     public void simulateJoin(String chan) {
         String joinSim = ":" + myInfo.nuh() + " JOIN " + chan + " * :" + realname;
