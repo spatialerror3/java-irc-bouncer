@@ -55,6 +55,21 @@ public class JIBDBUtil {
         }
     }
 
+    public int cntResultSet(ResultSet rs) {
+        int r = -1;
+
+        try {
+            rs.last();
+            r = rs.getRow();
+            rs.beforeFirst();
+        } catch (Exception e) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
+            r=0;
+        }
+
+        return r;
+    }
+
     public void addServer(String Server, int Port) {
         String sql = "INSERT INTO servers (server,port) VALUES(?,?);";
         PreparedStatement ps2 = null;
@@ -79,7 +94,7 @@ public class JIBDBUtil {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-    
+
     public void removeChannel(String Channel) {
         String sql = "DELETE FROM channels WHERE channel = ?;";
         PreparedStatement ps2 = null;
@@ -90,7 +105,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        
+
     }
 
     public String[] getChannels() {
@@ -111,12 +126,12 @@ public class JIBDBUtil {
             //}
             while (rs5 != null && rs5.next()) {
                 cv.add(rs5.getString(1));
-                System.err.println("Contains Channel="+rs5.getString(1));
+                System.err.println("Contains Channel=" + rs5.getString(1));
             }
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        channels=(String[])cv.toArray(channels);
+        channels = (String[]) cv.toArray(channels);
         return channels;
     }
 
