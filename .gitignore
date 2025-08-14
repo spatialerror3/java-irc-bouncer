@@ -27,5 +27,6 @@ replay_pid*
 nbactions.xml
 .jython_cache
 config.jy
+/bridge/
 
 
