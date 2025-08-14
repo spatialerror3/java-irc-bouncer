@@ -40,6 +40,8 @@ public class JIBIRC implements Runnable {
     //
     private boolean preLogon = true;
     private JIBIRCNickServ ns = null;
+    //
+    private int errorCounter = 0;
 
     public JIBIRC(String Server, int Port, String nick, String user, String realname) {
         this.Server = Server;
@@ -61,6 +63,9 @@ public class JIBIRC implements Runnable {
 
     private void connect() {
         SSLContext sslctx = null;
+        if(errorCounter>=15) {
+            return;
+        }
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port + "\r\n");
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user + "\r\n");
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname + "\r\n");
@@ -148,6 +153,9 @@ public class JIBIRC implements Runnable {
             if(sp5.length>1 && sp5[1].equals("005")) {
                 onLogon();
             }
+        }
+        if(l.startsWith("ERROR")) {
+            errorCounter++;
         }
         JavaIrcBouncer.jibServ.writeAllClients(l);
     }
