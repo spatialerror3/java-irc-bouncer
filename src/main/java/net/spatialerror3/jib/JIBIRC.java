@@ -42,7 +42,9 @@ public class JIBIRC implements Runnable {
     private JIBIRCNickServ ns = null;
     //
     private int errorCounter = 0;
-
+    //
+    private JIBIRCLog log = null;
+    
     public JIBIRC(String Server, int Port, String nick, String user, String realname) {
         this.Server = Server;
         this.Port = Port;
@@ -156,6 +158,9 @@ public class JIBIRC implements Runnable {
         }
         if(l.startsWith("ERROR")) {
             errorCounter++;
+        }
+        if(log!=null) {
+            log.processLine(l);
         }
         JavaIrcBouncer.jibServ.writeAllClients(l);
     }
