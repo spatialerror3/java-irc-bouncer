@@ -125,7 +125,7 @@ public class JIBIRC implements Runnable {
     public void onConnect() {
         ping1 = new JIBPinger(sock);
         ping1.setPingStr();
-        writeLine("CAP \r\n");
+        writeLine("CAP LS 302\r\n");
         writeLine("NICK " + nick + "\r\n");
         writeLine("USER " + user + " 0 * :" + realname + "\r\n");
         writeLine("CAP END\r\n");
