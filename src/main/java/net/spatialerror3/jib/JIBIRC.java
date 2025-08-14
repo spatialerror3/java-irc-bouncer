@@ -60,6 +60,7 @@ public class JIBIRC implements Runnable {
         myInfo.realname = this.realname;
         ns = new JIBIRCNickServ();
         ns.init();
+        log = new JIBIRCLog();
         connect();
     }
 
