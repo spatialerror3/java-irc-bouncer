@@ -37,6 +37,9 @@ public class JIBIRC implements Runnable {
     //
     private boolean ircv32 = false;
     private boolean noSsl = false;
+    //
+    private boolean preLogon = true;
+    private JIBIRCNickServ ns = null;
 
     public JIBIRC(String Server, int Port, String nick, String user, String realname) {
         this.Server = Server;
@@ -51,6 +54,8 @@ public class JIBIRC implements Runnable {
         myInfo.user = this.user;
         myInfo.host = "localhost";
         myInfo.realname = this.realname;
+        ns = new JIBIRCNickServ();
+        ns.init();
         connect();
     }
 
@@ -120,13 +125,30 @@ public class JIBIRC implements Runnable {
         t4.start();
         ping1.doPing();
     }
-
+    
+    public void onLogon() {
+        this.ns.identify();
+        String[] chans = JavaIrcBouncer.jibDbUtil.getChannels();
+        for(int i = 0; i < chans.length; i++) {
+            if(chans[i] != null) {
+                writeLine("JOIN "+chans[i]+"\r\n");
+            }
+        }
+        preLogon=false;
+    }
+    
     public void writeLine(String l) {
         sock.writeLine(l);
     }
 
     public void processLine(String l) {
         System.err.println(this + " l=" + l);
+        if(preLogon) {
+            String[] sp5 = l.split(" ", 3);
+            if(sp5.length>1 && sp5[1].equals("005")) {
+                onLogon();
+            }
+        }
         JavaIrcBouncer.jibServ.writeAllClients(l);
     }
     
