@@ -28,6 +28,8 @@ public class JavaIrcBouncer {
         jibSysEnv.envToConfig("User");
         jibSysEnv.envToConfig("Realname");
         jibSysEnv.envToConfig("ClientNoSSL");
+        jibSysEnv.envToConfig("NICKSERVUSER");
+        jibSysEnv.envToConfig("NICKSERVPASS");
         jibDbUtil = new JIBDBUtil();
         jibDbUtil.initSchema();
         JIBServer jib1 = null;
