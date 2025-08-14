@@ -44,7 +44,7 @@ public class JIBIRC implements Runnable {
     private int errorCounter = 0;
     //
     private JIBIRCLog log = null;
-    
+
     public JIBIRC(String Server, int Port, String nick, String user, String realname) {
         this.Server = Server;
         this.Port = Port;
@@ -66,7 +66,7 @@ public class JIBIRC implements Runnable {
 
     private void connect() {
         SSLContext sslctx = null;
-        if(errorCounter>=15) {
+        if (errorCounter >= 15) {
             return;
         }
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port + "\r\n");
@@ -75,7 +75,7 @@ public class JIBIRC implements Runnable {
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICK= " + myInfo.nick + "\r\n");
         InetAddress clientBind = null;
         if (JavaIrcBouncer.jibConfig.getValue("ClientNoSSL") != null) {
-            noSsl=true;
+            noSsl = true;
         }
         try {
             if (JavaIrcBouncer.jibConfig.getValue("ClientBind") != null) {
@@ -133,44 +133,44 @@ public class JIBIRC implements Runnable {
         t4.start();
         ping1.doPing();
     }
-    
+
     public void onLogon() {
         this.ns.identify();
         String[] chans = JavaIrcBouncer.jibDbUtil.getChannels();
-        for(int i = 0; i < chans.length; i++) {
-            if(chans[i] != null) {
-                writeLine("JOIN "+chans[i]+"\r\n");
+        for (int i = 0; i < chans.length; i++) {
+            if (chans[i] != null) {
+                writeLine("JOIN " + chans[i] + "\r\n");
             }
         }
-        preLogon=false;
+        preLogon = false;
     }
-    
+
     public void writeLine(String l) {
         sock.writeLine(l);
     }
 
     public void processLine(String l) {
         System.err.println(this + " l=" + l);
-        if(preLogon) {
+        if (preLogon) {
             String[] sp5 = l.split(" ", 3);
-            if(sp5.length>1 && sp5[1].equals("005")) {
+            if (sp5.length > 1 && sp5[1].equals("005")) {
                 onLogon();
             }
         }
-        if(l.startsWith("ERROR")) {
+        if (l.startsWith("ERROR")) {
             errorCounter++;
         }
-        if(log!=null) {
+        if (log != null) {
             log.processLine(l);
         }
         JavaIrcBouncer.jibServ.writeAllClients(l);
     }
-    
+
     public void simulateNick(String oldnick, String newnick) {
-        if(newnick == null) {
-            newnick=myInfo.nick;
+        if (newnick == null) {
+            newnick = myInfo.nick;
         }
-        String nickSim = ":"+oldnick+" NICK "+newnick;
+        String nickSim = ":" + oldnick + " NICK " + newnick;
         JavaIrcBouncer.jibServ.writeAllClients(nickSim + "\r\n");
     }
 
@@ -210,10 +210,13 @@ public class JIBIRC implements Runnable {
 
     public void run() {
         String l = null;
-        while (getError() == null) {
-            l = sock.readLine();
-            ping1.processLine(l);
-            processLine(l);
+        while (errorCounter < 15) {
+            while (getError() == null) {
+                l = sock.readLine();
+                ping1.processLine(l);
+                processLine(l);
+            }
+            connect();
         }
     }
 }
