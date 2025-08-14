@@ -9,6 +9,7 @@ package net.spatialerror3.jib;
  * @author spatialerror3
  */
 public class JavaIrcBouncer {
+    public static JIBCore jibCore = null;
     public static JIBConfig jibConfig = null;
     public static JIBSysEnv jibSysEnv = null;
     public static JIBDBUtil jibDbUtil = null;
@@ -17,6 +18,7 @@ public class JavaIrcBouncer {
     public static JIBJython jibJython = null;
 
     public static void main(String[] args) {
+        jibCore = new JIBCore();
         jibConfig = new JIBConfig();
         jibConfig.parseArgs(args);
         jibSysEnv = new JIBSysEnv();
