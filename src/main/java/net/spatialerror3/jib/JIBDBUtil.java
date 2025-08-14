@@ -53,6 +53,13 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
+        sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513));";
+        try {
+            PreparedStatement ps4 = getDatabase().prepareStatement(sql);
+            ps4.execute();
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     public int cntResultSet(ResultSet rs) {
@@ -133,6 +140,20 @@ public class JIBDBUtil {
         }
         channels = (String[]) cv.toArray(channels);
         return channels;
+    }
+    
+    public void logUserTargetMessage(String logUser, String logTarget, String logMessage) {
+        String sql = "INSERT INTO log1 (loguser,logtarget,logmessage) VALUES(?,?,?);";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, logUser);
+            ps2.setString(2, logTarget);
+            ps2.setString(3, logMessage);
+            ps2.execute();
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     public boolean checkUserPass(String User, String Pass) {
