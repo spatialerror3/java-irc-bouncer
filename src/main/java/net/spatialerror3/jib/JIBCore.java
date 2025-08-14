@@ -4,10 +4,16 @@
  */
 package net.spatialerror3.jib;
 
+import java.util.Vector;
+
 /**
  *
  * @author spatialerror3
  */
 public class JIBCore {
+    Vector<JIBUser> users = null;
     
+    public JIBCore() {
+        users = new Vector<JIBUser>();
+    }
 }
