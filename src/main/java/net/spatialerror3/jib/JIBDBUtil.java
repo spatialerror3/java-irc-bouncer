@@ -24,7 +24,7 @@ public class JIBDBUtil {
     public Connection getDatabase() {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:h2:~/test", "sa", "");
+            conn = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "");
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
