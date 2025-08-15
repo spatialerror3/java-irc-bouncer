@@ -216,7 +216,7 @@ public class JIBIRC implements Runnable {
                 ping1.processLine(l);
                 processLine(l);
             }
-            connect();
+            //connect();
         }
     }
 }
