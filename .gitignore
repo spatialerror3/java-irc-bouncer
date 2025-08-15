@@ -34,3 +34,5 @@ mvnw.cmd
 .mvn
 bridge
 
+server-deployment.yaml
+server-service.yaml
