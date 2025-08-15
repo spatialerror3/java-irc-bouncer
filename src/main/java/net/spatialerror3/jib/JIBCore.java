@@ -20,14 +20,20 @@ public class JIBCore {
         userMap = new Hashtable<String,JIBUser>();
     }
     
-    public void createUser(String userName, boolean admin) {
+    public JIBUser createUser(String userName, boolean admin) {
         JIBUser u = new JIBUser();
         u.setUserName(userName);
         userMap.put(userName, u);
         users.add(u);
+        return u;
     }
     
     public JIBUser getUser(String userName) {
         return userMap.get(userName);
+    }
+    
+    public JIBUser authUser(String userName, String authToken) {
+        JIBUser u = getUser(userName);
+        return u.auth(authToken);
     }
 }
