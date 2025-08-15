@@ -85,6 +85,7 @@ public class JIBHandleClient implements Runnable {
         String cnfPassChk = JavaIrcBouncer.jibConfig.getValue("AUTHPASS");
         if(this.authUser.equals(cnfUserChk)&&this.authPass.equals(cnfPassChk)) {
             authed = JavaIrcBouncer.jibCore.authUser(this.authUser, this.authPass);
+            authed.addClient(this);
             this.authOk=true;
             onAuthDone();
         } else {
