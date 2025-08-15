@@ -44,6 +44,9 @@ public class JIBIRC implements Runnable {
     private int errorCounter = 0;
     //
     private JIBIRCLog log = null;
+    //
+    private boolean connected = false;
+    private boolean connecting = false;
 
     public JIBIRC(String Server, int Port, String nick, String user, String realname) {
         this.Server = Server;
@@ -66,9 +69,13 @@ public class JIBIRC implements Runnable {
 
     private void connect() {
         SSLContext sslctx = null;
+        if (connected == true) {
+            return;
+        }
         if (errorCounter >= 15) {
             return;
         }
+        connecting = true;
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port + "\r\n");
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user + "\r\n");
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname + "\r\n");
@@ -83,12 +90,14 @@ public class JIBIRC implements Runnable {
             }
         } catch (UnknownHostException ex) {
             System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            connecting = false;
         }
         InetAddress dst = null;
         try {
             dst = InetAddress.getByName(this.Server);
         } catch (UnknownHostException ex) {
             System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            connecting = false;
         }
         if (!noSsl) {
             try {
@@ -117,9 +126,23 @@ public class JIBIRC implements Runnable {
             }
             sock = new JIBSocket(ircServerNoSsl);
         }
+        if (sock != null && sock.getError() == null) {
+            connected = true;
+        }
         onConnect();
         Thread t3 = new Thread(this);
         t3.start();
+        connecting = false;
+    }
+
+    public void reconnect() {
+        System.err.println("reconnect() called...");
+        if (sock.connected() == false || connected == false) {
+            errorCounter = 0;
+            connecting = false;
+            connected = false;
+            connect();
+        }
     }
 
     public void onConnect() {
@@ -157,7 +180,7 @@ public class JIBIRC implements Runnable {
                 onLogon();
             }
         }
-        if (l.startsWith("ERROR")) {
+        if (l == null || l.startsWith("ERROR")) {
             errorCounter++;
         }
         if (log != null) {
@@ -205,18 +228,33 @@ public class JIBIRC implements Runnable {
     }
 
     public Exception getError() {
+        if (sock.getError() != null) {
+            connected = false;
+        }
         return sock.getError();
     }
 
     public void run() {
         String l = null;
         while (errorCounter < 15) {
-            while (getError() == null) {
+            while (getError() == null && sock.connected() == true) {
                 l = sock.readLine();
-                ping1.processLine(l);
-                processLine(l);
+                if (l != null) {
+                    ping1.processLine(l);
+                    processLine(l);
+                } else {
+                    connected = false;
+                }
             }
-            //connect();
+            System.err.println("connecting=" + connecting + " connected=" + connected);
+            if (sock.connected() == false || connected == false) {
+                reconnect();
+            }
+            try {
+                Thread.sleep(30000);
+            } catch (InterruptedException ex) {
+                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
         }
     }
 }
