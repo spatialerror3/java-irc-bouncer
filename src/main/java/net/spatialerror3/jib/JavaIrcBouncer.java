@@ -34,13 +34,14 @@ public class JavaIrcBouncer {
         jibSysEnv.envToConfig("NICKSERVPASS");
         jibDbUtil = new JIBDBUtil();
         jibDbUtil.initSchema();
+        jibJython = new JIBJython();
+        jibJython.loadConfig();
+        jibCore.createUser(jibConfig.getValue("AUTHUSER"), true);
         JIBServer jib1 = null;
         jib1 = new JIBServer();
         JavaIrcBouncer.jibServ=jib1;
         Thread t1 = new Thread(jib1);
         t1.start();
-        jibJython = new JIBJython();
-        jibJython.loadConfig();
         while(true) {
             try {
                 Thread.sleep(60000);
