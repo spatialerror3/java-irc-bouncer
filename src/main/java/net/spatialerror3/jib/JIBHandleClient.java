@@ -5,6 +5,7 @@
 package net.spatialerror3.jib;
 
 import java.net.Socket;
+import java.util.Iterator;
 
 /**
  *
@@ -139,6 +140,12 @@ public class JIBHandleClient implements Runnable {
                 sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+"YOU ARE "+authed.getUUID()+"\r\n");
                 sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+"REPLAY"+"\r\n");
                 sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+msgextract[2].substring(1)+"\r\n");
+                if(msgextract[2].substring(1).startsWith("REPLAY")) {
+                    Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog().iterator();
+                    while(logReplay.hasNext()) {
+                        sendLine(logReplay.next());
+                    }
+                }
             }
         }
         if(l.startsWith("PART")) {
