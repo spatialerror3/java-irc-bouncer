@@ -27,4 +27,15 @@ public class JIBUser {
     public void setUserName(String userName) {
         this.userName=userName;
     }
+    
+    public void setAuthToken(String authToken) {
+        this.authToken=authToken;
+    }
+    
+    public JIBUser auth(String authToken) {
+        if(authToken.equals(authToken)) {
+            return this;
+        }
+        return null;
+    }
 }
