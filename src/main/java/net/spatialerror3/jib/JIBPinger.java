@@ -39,12 +39,19 @@ public class JIBPinger implements Runnable {
     }
 
     public void run() {
-        while (true) {
+        boolean noErrors = true;
+        while (noErrors) {
             doPing();
             try {
                 Thread.sleep(30000);
             } catch (InterruptedException ex) {
                 System.getLogger(JIBPinger.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            if (s.connected() == false) {
+                noErrors = false;
+            }
+            if (s.getError() != null) {
+                noErrors = false;
             }
         }
     }
