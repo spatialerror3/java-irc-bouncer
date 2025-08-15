@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+import org.h2.tools.Server;
 
 /**
  *
@@ -18,9 +19,18 @@ import java.util.Vector;
 public class JIBDBUtil {
 
     private Connection conn = null;
+    private Server server = null;
 
     public JIBDBUtil() {
         getDatabase();
+        if (JavaIrcBouncer.jibConfig.getValue("H2SERVER") != null) {
+            try {
+                server = Server.createTcpServer("").start();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     public Connection getDatabase() {
@@ -69,6 +79,12 @@ public class JIBDBUtil {
             ps4.execute();
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        try {
+            getDatabase().commit();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
@@ -161,6 +177,7 @@ public class JIBDBUtil {
             ps2.setString(2, logTarget);
             ps2.setString(3, logMessage.substring(1));
             ps2.execute();
+            getDatabase().commit();
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
