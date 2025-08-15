@@ -147,6 +147,18 @@ public class JIBHandleClient implements Runnable {
                         sendLine(logReplay.next());
                     }
                 }
+                if(msgextract[2].substring(1).startsWith("CONNECT")) {
+                
+                }
+                if(msgextract[2].substring(1).startsWith("DISCONNECT")) {
+                    
+                }
+                if(msgextract[2].substring(1).startsWith("RECONNECT")) {
+                    
+                }
+                if(msgextract[2].substring(1).startsWith("SET")) {
+                    
+                }
             }
         }
         if(l.startsWith("PART")) {
