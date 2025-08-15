@@ -18,6 +18,7 @@ public class JavaIrcBouncer {
     public static JIBJython jibJython = null;
 
     public static void main(String[] args) {
+        System.setProperty("python.import.site", "false");
         jibCore = new JIBCore();
         jibConfig = new JIBConfig();
         jibConfig.parseArgs(args);
