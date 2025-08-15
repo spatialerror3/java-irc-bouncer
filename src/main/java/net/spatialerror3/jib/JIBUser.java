@@ -19,6 +19,8 @@ public class JIBUser {
     private String authToken = null;
     //
     private boolean admin = false;
+    //
+    private JIBIRC jibIRC = null;
     
     public JIBUser() {
         
@@ -41,5 +43,13 @@ public class JIBUser {
     
     public UUID getUUID() {
         return this.uuid;
+    }
+    
+    public void setJibIRC(JIBIRC jibIRC) {
+        this.jibIRC=jibIRC;
+    }
+    
+    public JIBIRC getJibIRC() {
+        return this.jibIRC;
     }
 }
