@@ -38,4 +38,8 @@ public class JIBUser {
         }
         return null;
     }
+    
+    public UUID getUUID() {
+        return this.uuid;
+    }
 }
