@@ -5,6 +5,7 @@
 package net.spatialerror3.jib;
 
 import java.util.UUID;
+import java.util.Vector;
 
 /**
  *
@@ -21,6 +22,8 @@ public class JIBUser {
     private boolean admin = false;
     //
     private JIBIRC jibIRC = null;
+    //
+    Vector<JIBHandleClient> clients = new Vector<JIBHandleClient>();
     
     public JIBUser() {
         
@@ -51,5 +54,9 @@ public class JIBUser {
     
     public JIBIRC getJibIRC() {
         return this.jibIRC;
+    }
+    
+    public void addClient(JIBHandleClient jibhc) {
+        clients.add(jibhc);
     }
 }
