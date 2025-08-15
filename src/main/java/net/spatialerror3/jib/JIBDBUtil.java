@@ -60,6 +60,13 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
+        sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), admin boolean);";
+        try {
+            PreparedStatement ps4 = getDatabase().prepareStatement(sql);
+            ps4.execute();
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     public int cntResultSet(ResultSet rs) {
