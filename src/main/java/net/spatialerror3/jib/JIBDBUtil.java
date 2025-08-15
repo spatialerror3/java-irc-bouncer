@@ -78,7 +78,7 @@ public class JIBDBUtil {
             rs.beforeFirst();
         } catch (Exception e) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
-            r=0;
+            r = 0;
         }
 
         return r;
@@ -148,7 +148,7 @@ public class JIBDBUtil {
         channels = (String[]) cv.toArray(channels);
         return channels;
     }
-    
+
     public void logUserTargetMessage(String logUser, String logTarget, String logMessage) {
         String sql = "INSERT INTO log1 (loguser,logtarget,logmessage) VALUES(?,?,?);";
         PreparedStatement ps2 = null;
@@ -161,6 +161,41 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
+    }
+
+    public Vector<String> replayLog() {
+        String sql = "SELECT loguser,logtarget,logmessage FROM log1;";
+        Vector<String> replay = new Vector<String>();
+        PreparedStatement ps8 = null;
+        ResultSet rs8 = null;
+        try {
+            ps8 = getDatabase().prepareStatement(sql);
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        try {
+            rs8 = ps8.executeQuery();
+        } catch (SQLException ex) {
+            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        if (rs8 != null) {
+            String replayStr = null;
+            String logUser = null;
+            String logTarget = null;
+            String logMessage = null;
+            try {
+                while (rs8.next()) {
+                    logUser = rs8.getString(1);
+                    logTarget = rs8.getString(2);
+                    logMessage = rs8.getString(3);
+                    replayStr = ":" + logUser + " PRIVMSG " + logTarget + " :" + logMessage + "\r\n";
+                }
+                replay.add(replayStr);
+            } catch (SQLException ex) {
+                System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        }
+        return replay;
     }
 
     public boolean checkUserPass(String User, String Pass) {
