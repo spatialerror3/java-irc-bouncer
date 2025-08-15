@@ -144,7 +144,7 @@ public class JIBHandleClient implements Runnable {
                 if(msgextract[2].substring(1).startsWith("REPLAY")) {
                     Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog().iterator();
                     while(logReplay.hasNext()) {
-                        sendLine(logReplay.next());
+                        sendLine(logReplay.next()+"\r\n");
                     }
                 }
                 if(msgextract[2].substring(1).startsWith("CONNECT")) {
