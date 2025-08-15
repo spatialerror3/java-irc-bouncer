@@ -28,7 +28,7 @@ public class JIBSocket {
     BufferedWriter BW = null;
     //
     Exception e = null;
-    
+
     public JIBSocket(Socket s) {
         this.s = s;
         try {
@@ -54,8 +54,8 @@ public class JIBSocket {
             OSW.flush();
             OS.flush();
         } catch (IOException ex) {
-            if(e==null) {
-                e=ex;
+            if (e == null) {
+                e = ex;
             }
             System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -66,17 +66,26 @@ public class JIBSocket {
         String l = null;
         try {
             l = BR.readLine();
+            if (l == null) {
+                if (e == null) {
+                    e = new NullPointerException();
+                }
+            }
         } catch (IOException ex) {
-            if(e==null) {
-                e=ex;
+            if (e == null) {
+                e = ex;
             }
             System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         System.err.println(this.s + " readLine()=" + l);
         return l;
     }
-    
+
     public Exception getError() {
         return e;
+    }
+
+    public boolean connected() {
+        return s.isConnected();
     }
 }
