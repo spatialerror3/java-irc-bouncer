@@ -17,6 +17,8 @@ public class JIBHandleClient implements Runnable {
     private String authPass = null;
     private boolean authOk = false;
     //
+    private JIBUser authed = null;
+    //
     private String trackNick = null;
     
     public JIBHandleClient(Socket cs) {
@@ -38,6 +40,7 @@ public class JIBHandleClient implements Runnable {
                 getSingleJIBIRC().simulateJoin(channels[j], trackNick);
             }
         }
+        sendLine(":JIB.jib NOTICE "+trackNick+" :IDENTIFIED AS "+authed.getUUID().toString()+"\r\n");
     }
     
     public Exception getError() {
@@ -77,6 +80,7 @@ public class JIBHandleClient implements Runnable {
         String cnfUserChk = JavaIrcBouncer.jibConfig.getValue("AUTHUSER");
         String cnfPassChk = JavaIrcBouncer.jibConfig.getValue("AUTHPASS");
         if(this.authUser.equals(cnfUserChk)&&this.authPass.equals(cnfPassChk)) {
+            authed = JavaIrcBouncer.jibCore.authUser(this.authUser, this.authPass);
             this.authOk=true;
             onAuthDone();
         } else {
