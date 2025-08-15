@@ -36,7 +36,7 @@ public class JavaIrcBouncer {
         jibDbUtil.initSchema();
         jibJython = new JIBJython();
         jibJython.loadConfig();
-        jibCore.createUser(jibConfig.getValue("AUTHUSER"), true);
+        jibCore.createUser(jibConfig.getValue("AUTHUSER"), true).setAuthToken(jibConfig.getValue("AUTHPASS"));
         JIBServer jib1 = null;
         jib1 = new JIBServer();
         JavaIrcBouncer.jibServ=jib1;
