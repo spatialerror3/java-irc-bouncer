@@ -51,15 +51,17 @@ public class JIBHandleClient implements Runnable {
         if(authOk==false)
             return null;
         int dstPort = Integer.valueOf(JavaIrcBouncer.jibConfig.getValue("Port")).intValue();
-        if(authed.getJibIRC()==null&&JavaIrcBouncer.jibIRC==null) {
+        JIBIRC jibIRC = null;
+        if(authed.getJibIRC()==null) {
             if(JavaIrcBouncer.jibConfig.getValue("Server") != null) {
-                JavaIrcBouncer.jibIRC=new JIBIRC(JavaIrcBouncer.jibConfig.getValue("Server"),dstPort,JavaIrcBouncer.jibConfig.getValue("Nick"),JavaIrcBouncer.jibConfig.getValue("User"),JavaIrcBouncer.jibConfig.getValue("Realname"));
-                authed.setJibIRC(JavaIrcBouncer.jibIRC);
+                jibIRC=new JIBIRC(JavaIrcBouncer.jibConfig.getValue("Server"),dstPort,JavaIrcBouncer.jibConfig.getValue("Nick"),JavaIrcBouncer.jibConfig.getValue("User"),JavaIrcBouncer.jibConfig.getValue("Realname"));
+                JavaIrcBouncer.jibIRC=jibIRC;
+                authed.setJibIRC(jibIRC);
             } else {
                 System.exit(255);
             }
         }
-        return JavaIrcBouncer.jibIRC;
+        return authed.getJibIRC();
     }
     
     public void processError() {
@@ -132,6 +134,12 @@ public class JIBHandleClient implements Runnable {
         if(l.startsWith("PRIVMSG")) {
             String[] msgextract = l.split(" ", 3);
             getSingleJIBIRC().simulatePRIVMSG(sp[1], msgextract[2].substring(1));
+            if(msgextract[1].equals("*jib")) {
+                passthrough=false;
+                sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+"YOU ARE "+authed.getUUID()+"\r\n");
+                sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+"REPLAY"+"\r\n");
+                sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+msgextract[2].substring(1)+"\r\n");
+            }
         }
         if(l.startsWith("PART")) {
             String[] sp4 = l.split(" ",3);
