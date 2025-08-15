@@ -4,10 +4,27 @@
  */
 package net.spatialerror3.jib;
 
+import java.util.UUID;
+
 /**
  *
  * @author spatialerror3
  */
 public class JIBUser {
+    private static long userIdCnt = 0;
+    private long userId = userIdCnt++;
+    private UUID uuid = UUID.randomUUID();
+    //
+    private String userName = null;
+    private String authToken = null;
+    //
+    private boolean admin = false;
     
+    public JIBUser() {
+        
+    }
+    
+    public void setUserName(String userName) {
+        this.userName=userName;
+    }
 }
