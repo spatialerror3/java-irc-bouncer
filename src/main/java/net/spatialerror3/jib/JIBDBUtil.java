@@ -172,7 +172,7 @@ public class JIBDBUtil {
         PreparedStatement ps8 = null;
         ResultSet rs8 = null;
         try {
-            ps8 = getDatabase().prepareStatement(sql);
+            ps8 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -186,6 +186,7 @@ public class JIBDBUtil {
             String logUser = null;
             String logTarget = null;
             String logMessage = null;
+            System.err.println("rs8 rowCnt=" + cntResultSet(rs8));
             try {
                 rs8.beforeFirst();
                 while (rs8.next()) {
