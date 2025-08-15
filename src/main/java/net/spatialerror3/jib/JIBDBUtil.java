@@ -17,16 +17,19 @@ import java.util.Vector;
  */
 public class JIBDBUtil {
 
-    public JIBDBUtil() {
+    private Connection conn = null;
 
+    public JIBDBUtil() {
+        getDatabase();
     }
 
     public Connection getDatabase() {
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "");
-        } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        if (conn == null) {
+            try {
+                conn = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "");
+            } catch (SQLException ex) {
+                System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
         }
         return conn;
     }
@@ -154,9 +157,9 @@ public class JIBDBUtil {
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
-            ps2.setString(1, logUser);
+            ps2.setString(1, logUser.substring(1));
             ps2.setString(2, logTarget);
-            ps2.setString(3, logMessage);
+            ps2.setString(3, logMessage.substring(1));
             ps2.execute();
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -184,6 +187,7 @@ public class JIBDBUtil {
             String logTarget = null;
             String logMessage = null;
             try {
+                rs8.beforeFirst();
                 while (rs8.next()) {
                     logUser = rs8.getString(1);
                     logTarget = rs8.getString(2);
