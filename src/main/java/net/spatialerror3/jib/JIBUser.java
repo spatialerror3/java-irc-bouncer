@@ -25,11 +25,13 @@ public class JIBUser {
     //
     private JIBIRC jibIRC = null;
     private Vector<JIBIRCServer> ircServers = null;
+    private JIBUserInfo ircUserInfo = null;
     //
     Vector<JIBHandleClient> clients = new Vector<JIBHandleClient>();
 
     public JIBUser() {
         ircServers = new Vector<JIBIRCServer>();
+        ircUserInfo = new JIBUserInfo();
     }
 
     public void setUserName(String userName) {
@@ -91,5 +93,21 @@ public class JIBUser {
     
     public Vector<JIBIRCServer> getIrcServers() {
         return this.ircServers;
+    }
+    
+    public void setNick(String nick) {
+        ircUserInfo.nick=nick;
+    }
+    
+    public void setUser(String user) {
+        ircUserInfo.user=user;
+    }
+    
+    public void setRealname(String realname) {
+        ircUserInfo.realname=realname;
+    }
+    
+    public JIBUserInfo getIRCUserInfo() {
+        return this.ircUserInfo;
     }
 }
