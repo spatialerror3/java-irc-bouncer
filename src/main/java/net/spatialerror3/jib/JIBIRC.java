@@ -81,10 +81,10 @@ public class JIBIRC implements Runnable {
         }
         connecting = true;
         preLogon = true;
-        JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port + "\r\n");
-        JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user + "\r\n");
-        JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname + "\r\n");
-        JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICK= " + myInfo.nick + "\r\n");
+        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
+        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user);
+        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname);
+        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICK= " + myInfo.nick);
         InetAddress clientBind = null;
         if (JavaIrcBouncer.jibConfig.getValue("ClientNoSSL") != null) {
             noSsl = true;
@@ -192,7 +192,7 @@ public class JIBIRC implements Runnable {
         if (log != null) {
             log.processLine(l);
         }
-        JavaIrcBouncer.jibServ.writeAllClients(l);
+        u.writeAllClients(l);
     }
 
     public void simulateNick(String oldnick, String newnick) {
@@ -200,16 +200,16 @@ public class JIBIRC implements Runnable {
             newnick = myInfo.nick;
         }
         String nickSim = ":" + oldnick + " NICK " + newnick;
-        JavaIrcBouncer.jibServ.writeAllClients(nickSim + "\r\n");
+        u.writeAllClients(nickSim + "\r\n");
     }
 
     public void simulateJoin(String chan) {
         String joinSim = ":" + myInfo.nuh() + " JOIN " + chan + " * :" + realname;
         String joinSim2 = ":" + myInfo.nuh() + " JOIN :" + chan;
         if (ircv32 == true) {
-            JavaIrcBouncer.jibServ.writeAllClients(joinSim + "\r\n");
+            u.writeAllClients(joinSim + "\r\n");
         } else {
-            JavaIrcBouncer.jibServ.writeAllClients(joinSim2 + "\r\n");
+            u.writeAllClients(joinSim2 + "\r\n");
         }
     }
 
@@ -217,20 +217,20 @@ public class JIBIRC implements Runnable {
         String joinSim = ":" + nick + " JOIN " + chan + " * :" + realname;
         String joinSim2 = ":" + nick + " JOIN :" + chan;
         if (ircv32 == true) {
-            JavaIrcBouncer.jibServ.writeAllClients(joinSim + "\r\n");
+            u.writeAllClients(joinSim + "\r\n");
         } else {
-            JavaIrcBouncer.jibServ.writeAllClients(joinSim2 + "\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib MODE " + chan + " +nt\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 366 " + nick + " " + chan + " :End of /NAMES list.\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 324 " + nick + " " + chan + " +nt\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 329 " + nick + " " + chan + " 0\r\n");
-            JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib 315 " + nick + " " + chan + " :End of /WHO list.\r\n");
+            u.writeAllClients(joinSim2 + "\r\n");
+            u.writeAllClients(":JIB.jib MODE " + chan + " +nt\r\n");
+            u.writeAllClients(":JIB.jib 366 " + nick + " " + chan + " :End of /NAMES list.\r\n");
+            u.writeAllClients(":JIB.jib 324 " + nick + " " + chan + " +nt\r\n");
+            u.writeAllClients(":JIB.jib 329 " + nick + " " + chan + " 0\r\n");
+            u.writeAllClients(":JIB.jib 315 " + nick + " " + chan + " :End of /WHO list.\r\n");
         }
     }
 
     public void simulatePRIVMSG(String chan, String msg) {
         String msgSim = ":" + myInfo.nuh() + " PRIVMSG " + chan + " :" + msg;
-        JavaIrcBouncer.jibServ.writeAllClients(msgSim + "\r\n");
+        u.writeAllClients(msgSim + "\r\n");
     }
 
     public Exception getError() {
