@@ -49,12 +49,17 @@ public class JIBIRC implements Runnable {
     private boolean connecting = false;
     //
     private JIBUser u = null;
+    private JIBIRCServer serv = null;
 
     public JIBIRC(JIBUser u, String Server, int Port, String nick, String user, String realname) {
         this.u = u;
         //
         this.Server = Server;
         this.Port = Port;
+        serv = new JIBIRCServer();
+        serv.setServer(Server);
+        serv.setPort(Port);
+        serv.setSsl(!noSsl);
         //
         this.nick = nick;
         this.user = user;
