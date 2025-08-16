@@ -86,27 +86,38 @@ public class JIBUser {
             }
         }
     }
-    
+
     public void addIrcServer(JIBIRCServer ircServer) {
         ircServers.add(ircServer);
     }
-    
+
     public Vector<JIBIRCServer> getIrcServers() {
         return this.ircServers;
     }
-    
+
+    public JIBIRCServer getIrcServer() {
+        int pos = (int) (System.currentTimeMillis() % this.ircServers.size());
+        JIBIRCServer ret = null;
+        try {
+            ret = this.ircServers.elementAt(pos);
+        } catch (Exception e) {
+            ret = null;
+        }
+        return ret;
+    }
+
     public void setNick(String nick) {
-        ircUserInfo.nick=nick;
+        ircUserInfo.nick = nick;
     }
-    
+
     public void setUser(String user) {
-        ircUserInfo.user=user;
+        ircUserInfo.user = user;
     }
-    
+
     public void setRealname(String realname) {
-        ircUserInfo.realname=realname;
+        ircUserInfo.realname = realname;
     }
-    
+
     public JIBUserInfo getIRCUserInfo() {
         return this.ircUserInfo;
     }
