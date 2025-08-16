@@ -36,6 +36,10 @@ public class JIBIRCServer {
         return this.ssl;
     }
     
+    public String getClientBind() {
+        return this.clientBind;
+    }
+    
     public void setNetType(JIBIRCNetType.NetType netType) {
         this.netType=netType;
     }
