@@ -65,6 +65,7 @@ public class JIBHandleClient implements Runnable {
                 tmpServ.setServer(JavaIrcBouncer.jibConfig.getValue("Server"));
                 tmpServ.setPort(dstPort);
                 tmpServ.setSsl(JavaIrcBouncer.jibConfig.getValue("ClientNoSSL") == null);
+                tmpServ.setClientBind(JavaIrcBouncer.jibConfig.getValue("ClientBind"));
                 authed.addIrcServer(tmpServ);
                 authed.setNick(JavaIrcBouncer.jibConfig.getValue("Nick"));
                 authed.setUser(JavaIrcBouncer.jibConfig.getValue("User"));
