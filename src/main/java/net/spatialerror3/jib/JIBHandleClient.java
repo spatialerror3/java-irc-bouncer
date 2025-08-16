@@ -139,7 +139,7 @@ public class JIBHandleClient implements Runnable {
         }
         if(l.startsWith("PRIVMSG")) {
             String[] msgextract = l.split(" ", 3);
-            getSingleJIBIRC().simulatePRIVMSG(sp[1], msgextract[2].substring(1));
+            getSingleJIBIRC().simulatePRIVMSG(this, sp[1], msgextract[2].substring(1));
             if(msgextract[1].equals("*jib")) {
                 passthrough=false;
                 sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+"YOU ARE "+authed.getUUID()+"\r\n");
