@@ -12,6 +12,7 @@ import java.util.Iterator;
  * @author spatialerror3
  */
 public class JIBHandleClient implements Runnable {
+
     JIBSocket sock = null;
     private boolean inAuth = true;
     private String authUser = null;
@@ -23,25 +24,25 @@ public class JIBHandleClient implements Runnable {
     private String trackNick = null;
     
     public JIBHandleClient(Socket cs) {
-        sock=new JIBSocket(cs);
+        sock = new JIBSocket(cs);
         onConnect();
     }
-
+    
     public void onConnect() {
         sendLine("");
-        sendLine(":JIB.jib NOTICE "+"*"+" :AUTHENTICATION MANDATORY\r\n");
+        sendLine(":JIB.jib NOTICE " + "*" + " :AUTHENTICATION MANDATORY\r\n");
     }
     
     public void onAuthDone() {
         String[] channels = JavaIrcBouncer.jibDbUtil.getChannels();
         getSingleJIBIRC().simulateNick(trackNick, null);
-        for(int j = 0; j < channels.length; j++) {
-            if(channels[j]!= null) {
+        for (int j = 0; j < channels.length; j++) {
+            if (channels[j] != null) {
                 getSingleJIBIRC().simulateJoin(channels[j]);
                 getSingleJIBIRC().simulateJoin(channels[j], trackNick);
             }
         }
-        sendLine(":JIB.jib NOTICE "+trackNick+" :IDENTIFIED AS "+authed.getUUID().toString()+"\r\n");
+        sendLine(":JIB.jib NOTICE " + trackNick + " :IDENTIFIED AS " + authed.getUUID().toString() + "\r\n");
     }
     
     public Exception getError() {
@@ -53,14 +54,23 @@ public class JIBHandleClient implements Runnable {
     }
     
     public JIBIRC getSingleJIBIRC() {
-        if(authOk==false)
+        if (authOk == false) {
             return null;
+        }
         int dstPort = Integer.valueOf(JavaIrcBouncer.jibConfig.getValue("Port")).intValue();
         JIBIRC jibIRC = null;
-        if(authed.getJibIRC()==null) {
-            if(JavaIrcBouncer.jibConfig.getValue("Server") != null) {
-                jibIRC=new JIBIRC(authed,JavaIrcBouncer.jibConfig.getValue("Server"),dstPort,JavaIrcBouncer.jibConfig.getValue("Nick"),JavaIrcBouncer.jibConfig.getValue("User"),JavaIrcBouncer.jibConfig.getValue("Realname"));
-                JavaIrcBouncer.jibIRC=jibIRC;
+        if (authed.getJibIRC() == null) {
+            if (JavaIrcBouncer.jibConfig.getValue("Server") != null) {
+                JIBIRCServer tmpServ = new JIBIRCServer();
+                tmpServ.setServer(JavaIrcBouncer.jibConfig.getValue("Server"));
+                tmpServ.setPort(dstPort);
+                tmpServ.setSsl(JavaIrcBouncer.jibConfig.getValue("ClientNoSSL") == null);
+                authed.addIrcServer(tmpServ);
+                authed.setNick(JavaIrcBouncer.jibConfig.getValue("Nick"));
+                authed.setUser(JavaIrcBouncer.jibConfig.getValue("User"));
+                authed.setRealname(JavaIrcBouncer.jibConfig.getValue("Realname"));
+                jibIRC = new JIBIRC(authed, JavaIrcBouncer.jibConfig.getValue("Server"), dstPort, JavaIrcBouncer.jibConfig.getValue("Nick"), JavaIrcBouncer.jibConfig.getValue("User"), JavaIrcBouncer.jibConfig.getValue("Realname"));
+                JavaIrcBouncer.jibIRC = jibIRC;
                 authed.setJibIRC(jibIRC);
             } else {
                 System.exit(255);
@@ -70,9 +80,9 @@ public class JIBHandleClient implements Runnable {
     }
     
     public void processError() {
-        if(JavaIrcBouncer.jibIRC!=null) {
-            if(JavaIrcBouncer.jibIRC.getError()!=null) {
-                JavaIrcBouncer.jibIRC=null;
+        if (JavaIrcBouncer.jibIRC != null) {
+            if (JavaIrcBouncer.jibIRC.getError() != null) {
+                JavaIrcBouncer.jibIRC = null;
             }
         }
     }
@@ -82,20 +92,20 @@ public class JIBHandleClient implements Runnable {
     }
     
     public void checkUserPass() {
-        if(this.authUser==null||this.authPass==null) {
+        if (this.authUser == null || this.authPass == null) {
             return;
         }
         String cnfUserChk = JavaIrcBouncer.jibConfig.getValue("AUTHUSER");
         String cnfPassChk = JavaIrcBouncer.jibConfig.getValue("AUTHPASS");
-        if(this.authUser.equals(cnfUserChk)&&this.authPass.equals(cnfPassChk)) {
+        if (this.authUser.equals(cnfUserChk) && this.authPass.equals(cnfPassChk)) {
             authed = JavaIrcBouncer.jibCore.authUser(this.authUser, this.authPass);
             authed.addClient(this);
-            this.authOk=true;
+            this.authOk = true;
             onAuthDone();
         } else {
             sendLine("ERROR :Auth failed\r\n");
         }
-        this.inAuth=false;
+        this.inAuth = false;
     }
     
     public void processLine(String l) {
@@ -103,88 +113,88 @@ public class JIBHandleClient implements Runnable {
         String[] sp = l.split(" ");
         System.err.println("l=" + l);
         if (l.startsWith("CAP")) {
-            passthrough=false;
+            passthrough = false;
             sendLine(l);
         }
         if (l.startsWith("NICK")) {
-            passthrough=false;
-            trackNick=l.substring(5);
+            passthrough = false;
+            trackNick = l.substring(5);
             sendLine(l);
         }
         if (l.startsWith("USER")) {
-            passthrough=false;
-            this.authUser=sp[1];
+            passthrough = false;
+            this.authUser = sp[1];
             checkUserPass();
             sendLine(l);
         }
         if (l.startsWith("PASS")) {
-            passthrough=false;
-            this.authPass=l.substring(5);
+            passthrough = false;
+            this.authPass = l.substring(5);
             checkUserPass();
             sendLine(l);
         }
         if (l.startsWith("QUIT")) {
-            passthrough=false;
+            passthrough = false;
             return;
         }
-        if(l.startsWith("CAP END")) {
+        if (l.startsWith("CAP END")) {
             getSingleJIBIRC();
         }
-        if(l.startsWith("JOIN")) {
+        if (l.startsWith("JOIN")) {
             String[] channels = l.substring(5).split(",");
-            for(int j = 0; j < channels.length; j++) {
+            for (int j = 0; j < channels.length; j++) {
                 getSingleJIBIRC().simulateJoin(channels[j]);
                 JavaIrcBouncer.jibDbUtil.addChannel(channels[j]);
             }
         }
-        if(l.startsWith("PRIVMSG")) {
+        if (l.startsWith("PRIVMSG")) {
             String[] msgextract = l.split(" ", 3);
             getSingleJIBIRC().simulatePRIVMSG(this, sp[1], msgextract[2].substring(1));
-            if(msgextract[1].equals("*jib")) {
-                passthrough=false;
-                sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+"YOU ARE "+authed.getUUID()+"\r\n");
-                sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+"REPLAY"+"\r\n");
-                sendLine(":*jib!jib@JIB.jib PRIVMSG "+trackNick+" :"+msgextract[2].substring(1)+"\r\n");
-                if(msgextract[2].substring(1).startsWith("REPLAY")) {
+            if (msgextract[1].equals("*jib")) {
+                passthrough = false;
+                sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "YOU ARE " + authed.getUUID() + "\r\n");
+                sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "REPLAY" + "\r\n");
+                sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + msgextract[2].substring(1) + "\r\n");
+                if (msgextract[2].substring(1).startsWith("REPLAY")) {
                     Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog().iterator();
-                    while(logReplay.hasNext()) {
-                        sendLine(logReplay.next()+"\r\n");
+                    while (logReplay.hasNext()) {
+                        sendLine(logReplay.next() + "\r\n");
                     }
                 }
-                if(msgextract[2].substring(1).startsWith("CONNECT")) {
-                
-                }
-                if(msgextract[2].substring(1).startsWith("DISCONNECT")) {
+                if (msgextract[2].substring(1).startsWith("CONNECT")) {
                     
                 }
-                if(msgextract[2].substring(1).startsWith("RECONNECT")) {
+                if (msgextract[2].substring(1).startsWith("DISCONNECT")) {
                     
                 }
-                if(msgextract[2].substring(1).startsWith("SET")) {
+                if (msgextract[2].substring(1).startsWith("RECONNECT")) {
+                    
+                }
+                if (msgextract[2].substring(1).startsWith("SET")) {
                     
                 }
             }
         }
-        if(l.startsWith("PART")) {
-            String[] sp4 = l.split(" ",3);
+        if (l.startsWith("PART")) {
+            String[] sp4 = l.split(" ", 3);
             JavaIrcBouncer.jibDbUtil.removeChannel(sp4[1]);
         }
-        if(l.startsWith("RAW")) {
-            passthrough=false;
-            if(l.length() >= 4) {
-              getSingleJIBIRC().writeLine(l.substring(4)+"\r\n");
+        if (l.startsWith("RAW")) {
+            passthrough = false;
+            if (l.length() >= 4) {
+                getSingleJIBIRC().writeLine(l.substring(4) + "\r\n");
             }
         }
-        if(passthrough) {
-            getSingleJIBIRC().writeLine(l+"\r\n");
+        if (passthrough) {
+            getSingleJIBIRC().writeLine(l + "\r\n");
         }
     }
-
+    
     public void run() {
         String l = null;
         while (true) {
             processError();
-            l=sock.readLine();
+            l = sock.readLine();
             processLine(l);
         }
     }
