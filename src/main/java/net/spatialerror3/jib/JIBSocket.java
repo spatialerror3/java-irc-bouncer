@@ -31,6 +31,12 @@ public class JIBSocket {
 
     public JIBSocket(Socket s) {
         this.s = s;
+        if(this.s == null) {
+            if(e == null) {
+                e = new NullPointerException();
+            }
+            return;
+        }
         try {
             IS = s.getInputStream();
         } catch (IOException ex) {
@@ -92,6 +98,9 @@ public class JIBSocket {
     }
 
     public boolean connected() {
+        if(e!=null) {
+            return false;
+        }
         return s.isConnected();
     }
 }
