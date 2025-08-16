@@ -24,11 +24,12 @@ public class JIBUser {
     private boolean admin = false;
     //
     private JIBIRC jibIRC = null;
+    private Vector<JIBIRCServer> ircServers = null;
     //
     Vector<JIBHandleClient> clients = new Vector<JIBHandleClient>();
 
     public JIBUser() {
-
+        ircServers = new Vector<JIBIRCServer>();
     }
 
     public void setUserName(String userName) {
@@ -82,5 +83,13 @@ public class JIBUser {
                 }
             }
         }
+    }
+    
+    public void addIrcServer(JIBIRCServer ircServer) {
+        ircServers.add(ircServer);
+    }
+    
+    public Vector<JIBIRCServer> getIrcServers() {
+        return this.ircServers;
     }
 }
