@@ -48,6 +48,10 @@ public class JIBHandleClient implements Runnable {
         return sock.getError();
     }
     
+    public boolean getConnected() {
+        return sock.connected();
+    }
+    
     public JIBIRC getSingleJIBIRC() {
         if(authOk==false)
             return null;
