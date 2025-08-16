@@ -10,8 +10,27 @@ package net.spatialerror3.jib;
  */
 public class JIBIRCServer {
     private JIBIRCNetType.NetType netType = JIBIRCNetType.NetType.GENERIC;
+    private String server = null;
+    private int port = 0;
+    private boolean ssl = true;
     
     public JIBIRCServer() {
         
+    }
+    
+    public JIBIRCNetType.NetType getNetType() {
+        return this.netType;
+    }
+    
+    public String getServer() {
+        return this.server;
+    }
+    
+    public int getPort() {
+        return this.port;
+    }
+    
+    public boolean getSsl() {
+        return this.ssl;
     }
 }
