@@ -11,11 +11,17 @@ package net.spatialerror3.jib;
 public class JIBStringUtil {
     public static String remEOL(String s) {
         String r = null;
+        if(s==null) {
+            return s;
+        }
         r = s.replaceAll("\r\n", "");
         return r;
     }
     
     public static String remDD(String s) {
+        if(s==null) {
+            return s;
+        }
         if(s.charAt(0)==':') {
             return s.substring(1);
         }
