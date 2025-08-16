@@ -111,6 +111,10 @@ public class JIBHandleClient implements Runnable {
 
     public void processLine(String l) {
         boolean passthrough = true;
+        if(l==null) {           
+            // FIXME: HANDLE ERROR
+            return;
+        }
         String[] sp = l.split(" ");
         System.err.println("l=" + l);
         if (l.startsWith("CAP")) {
