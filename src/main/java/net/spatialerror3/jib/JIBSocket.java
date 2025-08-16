@@ -34,6 +34,9 @@ public class JIBSocket {
         try {
             IS = s.getInputStream();
         } catch (IOException ex) {
+            if (e == null) {
+                e = ex;
+            }
             System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         ISR = new InputStreamReader(IS);
@@ -41,6 +44,9 @@ public class JIBSocket {
         try {
             OS = s.getOutputStream();
         } catch (IOException ex) {
+            if (e == null) {
+                e = ex;
+            }
             System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
         OSW = new OutputStreamWriter(OS);
