@@ -27,6 +27,7 @@ public class JIBIRC implements Runnable {
     //
     private String Server = null;
     private int Port = -1;
+    private JIBIRCServer serv = null;
     //
     private String nick = "";
     private String user = "";
@@ -49,7 +50,6 @@ public class JIBIRC implements Runnable {
     private boolean connecting = false;
     //
     private JIBUser u = null;
-    private JIBIRCServer serv = null;
 
     public JIBIRC(JIBUser u, String Server, int Port, String nick, String user, String realname) {
         this.u = u;
