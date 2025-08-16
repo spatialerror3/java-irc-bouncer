@@ -33,4 +33,20 @@ public class JIBIRCServer {
     public boolean getSsl() {
         return this.ssl;
     }
+    
+    public void setNetType(JIBIRCNetType.NetType netType) {
+        this.netType=netType;
+    }
+    
+    public void setServer(String server) {
+        this.server=server;
+    }
+    
+    public void setPort(int port) {
+        this.port=port;
+    }
+    
+    public void setSsl(boolean ssl) {
+        this.ssl=ssl;
+    }
 }
