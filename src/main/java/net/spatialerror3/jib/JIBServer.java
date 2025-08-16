@@ -14,15 +14,16 @@ import java.util.Vector;
  * @author spatialerror3
  */
 public class JIBServer implements Runnable {
+
     ServerSocket ss = null;
     Vector<JIBHandleClient> clients = new Vector<JIBHandleClient>();
-    
+
     public JIBServer() {
         InetAddress bindAddr = null;
-        
-        if(JavaIrcBouncer.jibConfig.getValue("ServerBind")!=null) {
+
+        if (JavaIrcBouncer.jibConfig.getValue("ServerBind") != null) {
             try {
-                bindAddr=InetAddress.getByName(JavaIrcBouncer.jibConfig.getValue("ServerBind"));
+                bindAddr = InetAddress.getByName(JavaIrcBouncer.jibConfig.getValue("ServerBind"));
             } catch (UnknownHostException ex) {
                 System.getLogger(JIBServer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
@@ -32,32 +33,34 @@ public class JIBServer implements Runnable {
         } catch (IOException ex) {
             System.getLogger(JIBServer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        
+
     }
-    
+
     public void cleanErrorClients() {
         Iterator<JIBHandleClient> it1 = clients.iterator();
-        while(it1.hasNext()) {
+        while (it1.hasNext()) {
             JIBHandleClient tc = it1.next();
-            if(tc.getError()!=null) {
-                clients.remove(tc);
+            if (tc.getError() != null) {
+                it1.remove();
+            } else if (tc.getConnected() == false) {
+                it1.remove();
             }
         }
     }
-    
+
     public void writeAllClients(String l) {
         cleanErrorClients();
         Iterator<JIBHandleClient> it1 = clients.iterator();
-        while(it1.hasNext()) {
+        while (it1.hasNext()) {
             JIBHandleClient tc = it1.next();
             tc.sendLine(l);
         }
     }
-    
+
     public void run() {
         Socket cs = null;
         JIBHandleClient nc = null;
-        while(true) {
+        while (true) {
             try {
                 cs = ss.accept();
             } catch (IOException ex) {
