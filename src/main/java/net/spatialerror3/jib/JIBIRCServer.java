@@ -13,6 +13,8 @@ public class JIBIRCServer {
     private String server = null;
     private int port = 0;
     private boolean ssl = true;
+    //
+    private String clientBind = null;
     
     public JIBIRCServer() {
         
