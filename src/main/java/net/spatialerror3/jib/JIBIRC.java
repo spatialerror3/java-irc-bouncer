@@ -280,5 +280,8 @@ public class JIBIRC implements Runnable {
                 System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
         }
+        if (t3 != null) {
+            t3 = null;
+        }
     }
 }
