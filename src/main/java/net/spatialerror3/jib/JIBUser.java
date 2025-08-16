@@ -65,7 +65,9 @@ public class JIBUser {
         Iterator<JIBHandleClient> it1 = clients.iterator();
         while(it1.hasNext()) {
             JIBHandleClient tc = it1.next();
-            tc.sendLine(l);
+            if(tc.getError()==null&&tc.getConnected()==true) {
+              tc.sendLine(l);
+            }
         }
     }
 }
