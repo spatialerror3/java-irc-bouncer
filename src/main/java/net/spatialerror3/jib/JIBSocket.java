@@ -65,7 +65,7 @@ public class JIBSocket {
             }
             System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        System.err.println(this.s + " writeLine()=" + l);
+        System.err.println(this.s + " writeLine()=" + JIBStringUtil.remEOL(l));
     }
 
     public String readLine() {
@@ -83,7 +83,7 @@ public class JIBSocket {
             }
             System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        System.err.println(this.s + " readLine()=" + l);
+        System.err.println(this.s + " readLine()=" + JIBStringUtil.remEOL(l));
         return l;
     }
 
