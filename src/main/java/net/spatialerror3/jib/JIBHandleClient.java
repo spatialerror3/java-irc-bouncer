@@ -197,10 +197,12 @@ public class JIBHandleClient implements Runnable {
 
     public void run() {
         String l = null;
-        while (true) {
+        String pl = "";
+        while (pl!=null) {
             processError();
             l = sock.readLine();
             processLine(l);
+            pl=l;
         }
     }
 }
