@@ -228,7 +228,9 @@ public class JIBIRC implements Runnable {
         } else {
             u.writeAllClients(joinSim2 + "\r\n");
             u.writeAllClients(":JIB.jib MODE " + chan + " +nt\r\n");
+            u.writeAllClients(":JIB.jib 353 " + nick + " @ " + chan + " :" + nick + "\r\n");
             u.writeAllClients(":JIB.jib 366 " + nick + " " + chan + " :End of /NAMES list.\r\n");
+            writeLine("NAMES "+chan+"\r\n");
             u.writeAllClients(":JIB.jib 324 " + nick + " " + chan + " +nt\r\n");
             u.writeAllClients(":JIB.jib 329 " + nick + " " + chan + " 0\r\n");
             u.writeAllClients(":JIB.jib 315 " + nick + " " + chan + " :End of /WHO list.\r\n");
