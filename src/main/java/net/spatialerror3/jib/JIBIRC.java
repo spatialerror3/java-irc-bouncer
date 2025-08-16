@@ -50,6 +50,8 @@ public class JIBIRC implements Runnable {
     private boolean connecting = false;
     //
     private JIBUser u = null;
+    //
+    private Thread t3 = null;
 
     public JIBIRC(JIBUser u, String Server, int Port, String nick, String user, String realname) {
         this.u = u;
@@ -140,10 +142,12 @@ public class JIBIRC implements Runnable {
         }
         if (sock != null && sock.getError() == null) {
             connected = true;
+            onConnect();
         }
-        onConnect();
-        Thread t3 = new Thread(this);
-        t3.start();
+        if (t3 == null) {
+            t3 = new Thread(this);
+            t3.start();
+        }
         connecting = false;
     }
 
@@ -230,7 +234,7 @@ public class JIBIRC implements Runnable {
             u.writeAllClients(":JIB.jib MODE " + chan + " +nt\r\n");
             u.writeAllClients(":JIB.jib 353 " + nick + " = " + chan + " :" + nick + "\r\n");
             u.writeAllClients(":JIB.jib 366 " + nick + " " + chan + " :End of /NAMES list.\r\n");
-            writeLine("NAMES "+chan+"\r\n");
+            writeLine("NAMES " + chan + "\r\n");
             u.writeAllClients(":JIB.jib 324 " + nick + " " + chan + " +nt\r\n");
             u.writeAllClients(":JIB.jib 329 " + nick + " " + chan + " 0\r\n");
             u.writeAllClients(":JIB.jib 315 " + nick + " " + chan + " :End of /WHO list.\r\n");
