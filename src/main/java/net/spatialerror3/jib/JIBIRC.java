@@ -74,6 +74,11 @@ public class JIBIRC implements Runnable {
         myInfo.user = this.user;
         myInfo.host = "localhost";
         myInfo.realname = this.realname;
+        //
+        if (u.getIRCUserInfo() != null) {
+            myInfo = u.getIRCUserInfo();
+        }
+        //
         ns = new JIBIRCNickServ();
         ns.init();
         log = new JIBIRCLog();
