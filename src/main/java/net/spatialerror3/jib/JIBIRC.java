@@ -47,8 +47,12 @@ public class JIBIRC implements Runnable {
     //
     private boolean connected = false;
     private boolean connecting = false;
+    //
+    private JIBUser u = null;
 
-    public JIBIRC(String Server, int Port, String nick, String user, String realname) {
+    public JIBIRC(JIBUser u, String Server, int Port, String nick, String user, String realname) {
+        this.u = u;
+        //
         this.Server = Server;
         this.Port = Port;
         //
@@ -76,7 +80,7 @@ public class JIBIRC implements Runnable {
             return;
         }
         connecting = true;
-        preLogon=true;
+        preLogon = true;
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port + "\r\n");
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user + "\r\n");
         JavaIrcBouncer.jibServ.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname + "\r\n");
