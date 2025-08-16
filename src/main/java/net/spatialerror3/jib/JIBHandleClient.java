@@ -22,17 +22,17 @@ public class JIBHandleClient implements Runnable {
     private JIBUser authed = null;
     //
     private String trackNick = null;
-    
+
     public JIBHandleClient(Socket cs) {
         sock = new JIBSocket(cs);
         onConnect();
     }
-    
+
     public void onConnect() {
         sendLine("");
         sendLine(":JIB.jib NOTICE " + "*" + " :AUTHENTICATION MANDATORY\r\n");
     }
-    
+
     public void onAuthDone() {
         String[] channels = JavaIrcBouncer.jibDbUtil.getChannels();
         getSingleJIBIRC().simulateNick(trackNick, null);
@@ -44,15 +44,15 @@ public class JIBHandleClient implements Runnable {
         }
         sendLine(":JIB.jib NOTICE " + trackNick + " :IDENTIFIED AS " + authed.getUUID().toString() + "\r\n");
     }
-    
+
     public Exception getError() {
         return sock.getError();
     }
-    
+
     public boolean getConnected() {
         return sock.connected();
     }
-    
+
     public JIBIRC getSingleJIBIRC() {
         if (authOk == false) {
             return null;
@@ -78,7 +78,7 @@ public class JIBHandleClient implements Runnable {
         }
         return authed.getJibIRC();
     }
-    
+
     public void processError() {
         if (JavaIrcBouncer.jibIRC != null) {
             if (JavaIrcBouncer.jibIRC.getError() != null) {
@@ -86,11 +86,11 @@ public class JIBHandleClient implements Runnable {
             }
         }
     }
-    
+
     public void sendLine(String l) {
         sock.writeLine(l + "\r\n");
     }
-    
+
     public void checkUserPass() {
         if (this.authUser == null || this.authPass == null) {
             return;
@@ -107,7 +107,7 @@ public class JIBHandleClient implements Runnable {
         }
         this.inAuth = false;
     }
-    
+
     public void processLine(String l) {
         boolean passthrough = true;
         String[] sp = l.split(" ");
@@ -162,16 +162,16 @@ public class JIBHandleClient implements Runnable {
                     }
                 }
                 if (msgextract[2].substring(1).startsWith("CONNECT")) {
-                    
+
                 }
                 if (msgextract[2].substring(1).startsWith("DISCONNECT")) {
-                    
+
                 }
                 if (msgextract[2].substring(1).startsWith("RECONNECT")) {
-                    
+
                 }
                 if (msgextract[2].substring(1).startsWith("SET")) {
-                    
+
                 }
             }
         }
@@ -189,7 +189,7 @@ public class JIBHandleClient implements Runnable {
             getSingleJIBIRC().writeLine(l + "\r\n");
         }
     }
-    
+
     public void run() {
         String l = null;
         while (true) {
