@@ -61,6 +61,8 @@ public class JIBIRC implements Runnable {
         serv.setPort(Port);
         serv.setSsl(!noSsl);
         //
+        serv.resolve();
+        //
         this.nick = nick;
         this.user = user;
         this.realname = realname;
