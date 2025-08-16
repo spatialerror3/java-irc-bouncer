@@ -233,6 +233,11 @@ public class JIBIRC implements Runnable {
         u.writeAllClients(msgSim + "\r\n");
     }
 
+    public void simulatePRIVMSG(JIBHandleClient skip, String chan, String msg) {
+        String msgSim = ":" + myInfo.nuh() + " PRIVMSG " + chan + " :" + msg;
+        u.writeAllClients(skip, msgSim + "\r\n");
+    }
+
     public Exception getError() {
         if (sock.getError() != null) {
             connected = false;
