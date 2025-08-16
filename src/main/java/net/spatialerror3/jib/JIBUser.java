@@ -4,6 +4,7 @@
  */
 package net.spatialerror3.jib;
 
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -58,5 +59,13 @@ public class JIBUser {
     
     public void addClient(JIBHandleClient jibhc) {
         clients.add(jibhc);
+    }
+       
+    public void writeAllClients(String l) {
+        Iterator<JIBHandleClient> it1 = clients.iterator();
+        while(it1.hasNext()) {
+            JIBHandleClient tc = it1.next();
+            tc.sendLine(l);
+        }
     }
 }
