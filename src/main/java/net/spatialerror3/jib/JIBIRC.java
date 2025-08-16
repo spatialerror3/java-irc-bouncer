@@ -5,6 +5,7 @@
 package net.spatialerror3.jib;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -52,6 +53,8 @@ public class JIBIRC implements Runnable {
     private JIBUser u = null;
     //
     private Thread t3 = null;
+    //
+    private Exception connectError = null;
 
     public JIBIRC(JIBUser u, String Server, int Port, String nick, String user, String realname) {
         this.u = u;
@@ -133,6 +136,8 @@ public class JIBIRC implements Runnable {
             SSLSocketFactory factory = (SSLSocketFactory) sslctx.getSocketFactory();
             try {
                 ircServer = (SSLSocket) factory.createSocket(dst, Port, clientBind, 0);
+            } catch(ConnectException ce) {
+                connectError = ce;
             } catch (IOException ex) {
                 System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
@@ -140,6 +145,8 @@ public class JIBIRC implements Runnable {
         } else {
             try {
                 ircServerNoSsl = new Socket(dst, Port, clientBind, 0);
+            } catch(ConnectException ce) {
+                connectError = ce;
             } catch (IOException ex) {
                 System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
@@ -262,7 +269,11 @@ public class JIBIRC implements Runnable {
         }
         return sock.getError();
     }
-
+    
+    public Exception getConnectError() {
+        return this.connectError;
+    }
+    
     public void run() {
         String l = null;
         while (errorCounter < 15) {
