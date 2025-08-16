@@ -62,6 +62,10 @@ public class JIBIRCServer {
         this.ssl = ssl;
     }
 
+    public void setClientBind(String clientBind) {
+        this.clientBind = clientBind;
+    }
+
     public void resolve() {
         try {
             this.resolved = InetAddress.getByName(this.server);
@@ -69,7 +73,7 @@ public class JIBIRCServer {
             System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-    
+
     public InetAddress getResolved() {
         return this.resolved;
     }
