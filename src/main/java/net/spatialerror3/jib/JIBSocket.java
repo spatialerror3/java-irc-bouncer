@@ -19,6 +19,8 @@ import java.net.Socket;
  */
 public class JIBSocket {
 
+    private static boolean SOCKETDEBUGGING = false;
+    //
     Socket s = null;
     InputStream IS = null;
     InputStreamReader ISR = null;
@@ -30,9 +32,10 @@ public class JIBSocket {
     Exception e = null;
 
     public JIBSocket(Socket s) {
+        JIBSocket.SOCKETDEBUGGING = (JavaIrcBouncer.jibConfig.getValue("SOCKETDEBUGGING") != null ? true : false);
         this.s = s;
-        if(this.s == null) {
-            if(e == null) {
+        if (this.s == null) {
+            if (e == null) {
                 e = new NullPointerException();
             }
             return;
@@ -71,7 +74,9 @@ public class JIBSocket {
             }
             System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        System.err.println(this.s + " writeLine()=" + JIBStringUtil.remEOL(l));
+        if (JIBSocket.SOCKETDEBUGGING) {
+            System.err.println(this.s + " writeLine()=" + JIBStringUtil.remEOL(l));
+        }
     }
 
     public String readLine() {
@@ -89,7 +94,9 @@ public class JIBSocket {
             }
             System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        System.err.println(this.s + " readLine()=" + JIBStringUtil.remEOL(l));
+        if (JIBSocket.SOCKETDEBUGGING) {
+            System.err.println(this.s + " readLine()=" + JIBStringUtil.remEOL(l));
+        }
         return l;
     }
 
@@ -98,7 +105,7 @@ public class JIBSocket {
     }
 
     public boolean connected() {
-        if(e!=null) {
+        if (e != null) {
             return false;
         }
         return s.isConnected();
