@@ -56,17 +56,21 @@ public class JIBIRC implements Runnable {
     //
     private Exception connectError = null;
 
-    public JIBIRC(JIBUser u, String Server, int Port, String nick, String user, String realname) {
+    public JIBIRC(JIBUser u, JIBIRCServer serv, String Server, int Port, String nick, String user, String realname) {
         this.u = u;
         //
         this.Server = Server;
         this.Port = Port;
-        serv = new JIBIRCServer();
-        serv.setServer(Server);
-        serv.setPort(Port);
-        serv.setSsl(!noSsl);
-        //
-        serv.resolve();
+        if (serv == null) {
+            serv = new JIBIRCServer();
+            serv.setServer(Server);
+            serv.setPort(Port);
+            serv.setSsl(!noSsl);
+            //
+            serv.resolve();
+        } else {
+            this.serv = serv;
+        }
         //
         this.nick = nick;
         this.user = user;
@@ -82,7 +86,7 @@ public class JIBIRC implements Runnable {
             myInfo = u.getIRCUserInfo();
         }
         //
-        ns = new JIBIRCNickServ(u,u.getIrcServer());
+        ns = new JIBIRCNickServ(u, serv);
         ns.init();
         log = new JIBIRCLog();
         connect();
