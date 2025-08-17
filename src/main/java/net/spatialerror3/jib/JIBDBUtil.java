@@ -52,7 +52,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        sql = "CREATE TABLE IF NOT EXISTS channels (id int auto_increment primary key, channel varchar(256));";
+        sql = "CREATE TABLE IF NOT EXISTS channels (id int auto_increment primary key, channel varchar(256), u varchar(256));";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
@@ -116,7 +116,7 @@ public class JIBDBUtil {
         }
     }
 
-    public void addChannel(String Channel) {
+    public void addChannel(JIBUser u, String Channel) {
         String sql = "INSERT INTO channels (channel) VALUES(?);";
         PreparedStatement ps2 = null;
         try {
@@ -128,7 +128,7 @@ public class JIBDBUtil {
         }
     }
 
-    public void removeChannel(String Channel) {
+    public void removeChannel(JIBUser u, String Channel) {
         String sql = "DELETE FROM channels WHERE channel = ?;";
         PreparedStatement ps2 = null;
         try {
@@ -141,7 +141,7 @@ public class JIBDBUtil {
 
     }
 
-    public String[] getChannels() {
+    public String[] getChannels(JIBUser u) {
         Vector<String> cv = new Vector<String>();
         String[] channels = new String[100];
         PreparedStatement ps5 = null;
