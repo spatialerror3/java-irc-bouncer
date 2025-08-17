@@ -178,6 +178,23 @@ public class JIBHandleClient implements Runnable {
                 if (msgextract[2].substring(1).startsWith("SET")) {
 
                 }
+                if (msgextract[2].substring(1).startsWith("SERVER")) {
+                    String mtp = msgextract[2].substring(1);
+                    String[] mtps = mtp.split(" ");
+                    if(mtps[0].equals("SERVER") && mtps.length >= 4) {
+                        String mtpHost = mtps[1];
+                        String mtpPort = mtps[2];
+                        String mtpSSL = mtps[3];
+                        int mtpPortInt = Integer.valueOf(mtpPort);
+                        boolean mtpSslBool = Boolean.valueOf(mtpSSL);
+                        JIBIRCServer tmpServ2 = new JIBIRCServer();
+                        tmpServ2.setServer(mtpHost);
+                        tmpServ2.setPort(mtpPortInt);
+                        tmpServ2.setSsl(mtpSslBool);
+                        tmpServ2.resolve();
+                        authed.addIrcServer(tmpServ2);
+                    }
+                }
             }
         }
         if (l.startsWith("PART")) {
