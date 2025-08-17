@@ -205,7 +205,7 @@ public class JIBIRC implements Runnable {
 
     public void onLogon() {
         this.ns.identify();
-        String[] chans = JavaIrcBouncer.jibDbUtil.getChannels();
+        String[] chans = JavaIrcBouncer.jibDbUtil.getChannels(u);
         for (int i = 0; i < chans.length; i++) {
             if (chans[i] != null) {
                 writeLine("JOIN " + chans[i] + "\r\n");
