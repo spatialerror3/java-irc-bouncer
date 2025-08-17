@@ -74,7 +74,7 @@ public class JIBHandleClient implements Runnable {
                     authed.setUser(JavaIrcBouncer.jibConfig.getValue("User"));
                     authed.setRealname(JavaIrcBouncer.jibConfig.getValue("Realname"));
                 }
-                if (authed.admin()) {
+                if (authed.admin() && authed.getUserId()==0) {
                     jibIRC = new JIBIRC(authed, JavaIrcBouncer.jibConfig.getValue("Server"), dstPort, JavaIrcBouncer.jibConfig.getValue("Nick"), JavaIrcBouncer.jibConfig.getValue("User"), JavaIrcBouncer.jibConfig.getValue("Realname"));
                     JavaIrcBouncer.jibIRC = jibIRC;
                 } else {
