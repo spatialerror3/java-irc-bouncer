@@ -99,7 +99,9 @@ public class JIBIRC implements Runnable {
         connecting = true;
         preLogon = true;
         JIBIRCServer tmpServ = u.getIrcServer();
-        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
+        tmpServ.resolve();
+        //u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
+        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting [SSL=" + tmpServ.getSsl() + "] to " + tmpServ.getServer() + " :" + tmpServ.getPort());
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user);
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname);
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICK= " + myInfo.nick);
