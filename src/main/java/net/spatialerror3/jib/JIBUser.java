@@ -104,9 +104,10 @@ public class JIBUser {
     }
 
     public JIBIRCServer getIrcServer() {
-        int pos = (int) (System.currentTimeMillis() % this.ircServers.size());
+        int pos = -1;
         JIBIRCServer ret = null;
         try {
+            pos = (int) (System.currentTimeMillis() % this.ircServers.size());
             ret = this.ircServers.elementAt(pos);
         } catch (Exception e) {
             ret = null;
