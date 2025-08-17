@@ -98,7 +98,7 @@ public class JIBHandleClient implements Runnable {
         }
         String cnfUserChk = JavaIrcBouncer.jibConfig.getValue("AUTHUSER");
         String cnfPassChk = JavaIrcBouncer.jibConfig.getValue("AUTHPASS");
-        if (this.authUser.equals(cnfUserChk) && this.authPass.equals(cnfPassChk)) {
+        if ((this.authUser.equals(cnfUserChk) && this.authPass.equals(cnfPassChk)) || (JavaIrcBouncer.jibCore.authUser(this.authUser, this.authPass) != null)) {
             authed = JavaIrcBouncer.jibCore.authUser(this.authUser, this.authPass);
             authed.addClient(this);
             this.authOk = true;
@@ -231,7 +231,7 @@ public class JIBHandleClient implements Runnable {
         if (l.startsWith("PING")) {
             String pong = l.substring(5);
             sendLine("PONG " + pong + "\r\n");
-            sendLine(":JIB.jib PONG JIB.jib :"+JIBStringUtil.remDD(pong)+"\r\n");
+            sendLine(":JIB.jib PONG JIB.jib :" + JIBStringUtil.remDD(pong) + "\r\n");
         }
         if (passthrough) {
             getSingleJIBIRC().writeLine(l + "\r\n");
