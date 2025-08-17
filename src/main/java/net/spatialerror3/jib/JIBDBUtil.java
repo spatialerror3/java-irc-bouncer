@@ -117,11 +117,12 @@ public class JIBDBUtil {
     }
 
     public void addChannel(JIBUser u, String Channel) {
-        String sql = "INSERT INTO channels (channel) VALUES(?);";
+        String sql = "INSERT INTO channels (channel,u) VALUES(?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
             ps2.setString(1, Channel);
+            ps2.setString(2, u.getUUID().toString());
             ps2.execute();
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -146,9 +147,10 @@ public class JIBDBUtil {
         String[] channels = new String[100];
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
-        String sql = "SELECT channel FROM channels;";
+        String sql = "SELECT channel FROM channels WHERE u = ?;";
         try {
             ps5 = getDatabase().prepareStatement(sql);
+            ps5.setString(1, u.getUUID().toString());
             rs5 = ps5.executeQuery();
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
