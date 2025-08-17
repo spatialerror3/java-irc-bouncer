@@ -52,6 +52,10 @@ public class JIBUser {
     public UUID getUUID() {
         return this.uuid;
     }
+    
+    public boolean admin() {
+        return this.admin;
+    }
 
     public void setJibIRC(JIBIRC jibIRC) {
         this.jibIRC = jibIRC;
