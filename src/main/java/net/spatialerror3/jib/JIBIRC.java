@@ -211,6 +211,10 @@ public class JIBIRC implements Runnable {
     }
 
     public void writeLine(String l) {
+        if (sock.connected() == false || connected == false) {
+            System.err.println("connecting=" + connecting + " connected=" + connected);
+            reconnect();
+        }
         sock.writeLine(l);
     }
 
