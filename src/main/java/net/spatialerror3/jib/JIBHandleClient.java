@@ -61,26 +61,28 @@ public class JIBHandleClient implements Runnable {
         JIBIRC jibIRC = null;
         if (authed.getJibIRC() == null) {
             if (JavaIrcBouncer.jibConfig.getValue("Server") != null) {
+                JIBIRCServer tmpServ = null;
                 if (authed.getIrcServer() == null) {
-                    JIBIRCServer tmpServ = new JIBIRCServer();
+                    tmpServ = new JIBIRCServer();
                     tmpServ.setServer(JavaIrcBouncer.jibConfig.getValue("Server"));
                     tmpServ.setPort(dstPort);
                     tmpServ.setSsl(JavaIrcBouncer.jibConfig.getValue("ClientNoSSL") == null);
                     tmpServ.setClientBind(JavaIrcBouncer.jibConfig.getValue("ClientBind"));
                     authed.addIrcServer(tmpServ);
+                } else {
+                    tmpServ = authed.getIrcServer();
                 }
                 if (authed.getIRCUserInfo() == null) {
                     authed.setNick(JavaIrcBouncer.jibConfig.getValue("Nick"));
                     authed.setUser(JavaIrcBouncer.jibConfig.getValue("User"));
                     authed.setRealname(JavaIrcBouncer.jibConfig.getValue("Realname"));
                 }
-                if (authed.admin() && authed.getUserId()==0) {
-                    jibIRC = new JIBIRC(authed, JavaIrcBouncer.jibConfig.getValue("Server"), dstPort, JavaIrcBouncer.jibConfig.getValue("Nick"), JavaIrcBouncer.jibConfig.getValue("User"), JavaIrcBouncer.jibConfig.getValue("Realname"));
+                if (authed.admin() && authed.getUserId() == 0) {
+                    jibIRC = new JIBIRC(authed, tmpServ, JavaIrcBouncer.jibConfig.getValue("Server"), dstPort, JavaIrcBouncer.jibConfig.getValue("Nick"), JavaIrcBouncer.jibConfig.getValue("User"), JavaIrcBouncer.jibConfig.getValue("Realname"));
                     JavaIrcBouncer.jibIRC = jibIRC;
                 } else {
-                    JIBIRCServer tmpServ2 = authed.getIrcServer();
-                    tmpServ2.resolve();
-                    jibIRC = new JIBIRC(authed, tmpServ2.getServer(), tmpServ2.getPort(), authed.getIRCUserInfo().nick, authed.getIRCUserInfo().user, authed.getIRCUserInfo().realname);
+                    tmpServ.resolve();
+                    jibIRC = new JIBIRC(authed, tmpServ, tmpServ.getServer(), tmpServ.getPort(), authed.getIRCUserInfo().nick, authed.getIRCUserInfo().user, authed.getIRCUserInfo().realname);
                 }
                 authed.setJibIRC(jibIRC);
             } else {
