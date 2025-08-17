@@ -98,6 +98,7 @@ public class JIBIRC implements Runnable {
         }
         connecting = true;
         preLogon = true;
+        JIBIRCServer tmpServ = u.getIrcServer();
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user);
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname);
@@ -118,11 +119,17 @@ public class JIBIRC implements Runnable {
             connecting = false;
         }
         InetAddress dst = null;
+        int dstport = -1;
         try {
             dst = InetAddress.getByName(this.Server);
+            dstport = Port;
         } catch (UnknownHostException ex) {
             System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             connecting = false;
+        }
+        if (tmpServ != null) {
+            dst = tmpServ.getResolved();
+            dstport = tmpServ.getPort();
         }
         if (!noSsl) {
             try {
@@ -138,7 +145,7 @@ public class JIBIRC implements Runnable {
             }
             SSLSocketFactory factory = (SSLSocketFactory) sslctx.getSocketFactory();
             try {
-                ircServer = (SSLSocket) factory.createSocket(dst, Port, clientBind, 0);
+                ircServer = (SSLSocket) factory.createSocket(dst, dstport, clientBind, 0);
             } catch (ConnectException ce) {
                 connectError = ce;
             } catch (IOException ex) {
@@ -147,7 +154,7 @@ public class JIBIRC implements Runnable {
             sock = new JIBSocket(ircServer);
         } else {
             try {
-                ircServerNoSsl = new Socket(dst, Port, clientBind, 0);
+                ircServerNoSsl = new Socket(dst, dstport, clientBind, 0);
             } catch (ConnectException ce) {
                 connectError = ce;
             } catch (IOException ex) {
