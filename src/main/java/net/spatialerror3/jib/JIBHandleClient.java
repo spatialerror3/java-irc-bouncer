@@ -111,7 +111,7 @@ public class JIBHandleClient implements Runnable {
 
     public void processLine(String l) {
         boolean passthrough = true;
-        if(l==null) {           
+        if (l == null) {
             // FIXME: HANDLE ERROR
             return;
         }
@@ -119,7 +119,17 @@ public class JIBHandleClient implements Runnable {
         System.err.println("l=" + l);
         if (l.startsWith("CAP")) {
             passthrough = false;
-            sendLine(l);
+            //sendLine(l); FIXME: IRSSI
+            if (l.startsWith("CAP LS")) {
+                sendLine("CAP * LS :\r\n");
+            }
+            if (l.startsWith("CAP REQ")) {
+                String capabs = l.substring(l.indexOf(':') + 1);
+                sendLine("CAP * ACK :" + capabs + "\r\n");
+            }
+            if (l.startsWith("CAP END")) {
+                sendLine("001 " + trackNick + " :JIB\r\n");
+            }
         }
         if (l.startsWith("NICK")) {
             passthrough = false;
@@ -146,10 +156,14 @@ public class JIBHandleClient implements Runnable {
             getSingleJIBIRC();
         }
         if (l.startsWith("JOIN")) {
-            String[] channels = l.substring(5).split(",");
-            for (int j = 0; j < channels.length; j++) {
-                getSingleJIBIRC().simulateJoin(channels[j]);
-                JavaIrcBouncer.jibDbUtil.addChannel(channels[j]);
+            if (!l.equals("JOIN :")) {
+                String[] channels = l.substring(5).split(",");
+                for (int j = 0; j < channels.length; j++) {
+                    getSingleJIBIRC().simulateJoin(channels[j]);
+                    JavaIrcBouncer.jibDbUtil.addChannel(channels[j]);
+                }
+            } else {
+                passthrough=false;
             }
         }
         if (l.startsWith("PRIVMSG")) {
@@ -181,7 +195,7 @@ public class JIBHandleClient implements Runnable {
                 if (msgextract[2].substring(1).startsWith("SERVER")) {
                     String mtp = msgextract[2].substring(1);
                     String[] mtps = mtp.split(" ");
-                    if(mtps[0].equals("SERVER") && mtps.length >= 4) {
+                    if (mtps[0].equals("SERVER") && mtps.length >= 4) {
                         String mtpHost = mtps[1];
                         String mtpPort = mtps[2];
                         String mtpSSL = mtps[3];
@@ -215,11 +229,11 @@ public class JIBHandleClient implements Runnable {
     public void run() {
         String l = null;
         String pl = "";
-        while (pl!=null) {
+        while (pl != null) {
             processError();
             l = sock.readLine();
             processLine(l);
-            pl=l;
+            pl = l;
         }
     }
 }
