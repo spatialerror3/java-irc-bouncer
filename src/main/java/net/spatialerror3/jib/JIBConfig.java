@@ -31,4 +31,22 @@ public class JIBConfig {
     public String getValue(String Key) {
         return kvStore.get(Key);
     }
+    
+    public void createUser(String userName, String pass) {
+        JIBUser u = JavaIrcBouncer.jibCore.createUser(userName, false);
+        u.setAuthToken(pass);
+    }
+    
+    public void createUser(String userName, String pass, String n, String id, String r, String server, int port) {
+        JIBUser u = JavaIrcBouncer.jibCore.createUser(userName, false);
+        u.setAuthToken(pass);
+        u.setNick(n);
+        u.setUser(id);
+        u.setRealname(r);
+        JIBIRCServer tmpServ = new JIBIRCServer();
+        tmpServ.setServer(server);
+        tmpServ.setPort(port);
+        tmpServ.setSsl(true);
+        u.addIrcServer(tmpServ);
+    }
 }
