@@ -109,6 +109,7 @@ public class JIBIRC implements Runnable {
         if (JavaIrcBouncer.jibConfig.getValue("ClientNoSSL") != null) {
             noSsl = true;
         }
+        noSsl = !tmpServ.getSsl();
         try {
             if (JavaIrcBouncer.jibConfig.getValue("ClientBind") != null) {
                 clientBind = InetAddress.getByName(JavaIrcBouncer.jibConfig.getValue("ClientBind"));
