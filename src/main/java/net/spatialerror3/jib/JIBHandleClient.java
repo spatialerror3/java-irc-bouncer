@@ -34,7 +34,7 @@ public class JIBHandleClient implements Runnable {
     }
 
     public void onAuthDone() {
-        String[] channels = JavaIrcBouncer.jibDbUtil.getChannels();
+        String[] channels = JavaIrcBouncer.jibDbUtil.getChannels(authed);
         getSingleJIBIRC().simulateNick(trackNick, null);
         for (int j = 0; j < channels.length; j++) {
             if (channels[j] != null) {
@@ -189,7 +189,7 @@ public class JIBHandleClient implements Runnable {
                 String[] channels = l.substring(5).split(",");
                 for (int j = 0; j < channels.length; j++) {
                     getSingleJIBIRC().simulateJoin(channels[j]);
-                    JavaIrcBouncer.jibDbUtil.addChannel(channels[j]);
+                    JavaIrcBouncer.jibDbUtil.addChannel(authed, channels[j]);
                 }
             } else {
                 passthrough = false;
@@ -242,7 +242,7 @@ public class JIBHandleClient implements Runnable {
         }
         if (l.startsWith("PART")) {
             String[] sp4 = l.split(" ", 3);
-            JavaIrcBouncer.jibDbUtil.removeChannel(sp4[1]);
+            JavaIrcBouncer.jibDbUtil.removeChannel(authed, sp4[1]);
         }
         if (l.startsWith("RAW")) {
             passthrough = false;
