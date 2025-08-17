@@ -110,6 +110,9 @@ public class JIBIRC implements Runnable {
             if (JavaIrcBouncer.jibConfig.getValue("ClientBind") != null) {
                 clientBind = InetAddress.getByName(JavaIrcBouncer.jibConfig.getValue("ClientBind"));
             }
+            if (this.serv.getClientBind() != null) {
+                clientBind = InetAddress.getByName(this.serv.getClientBind());
+            }
         } catch (UnknownHostException ex) {
             System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             connecting = false;
@@ -136,7 +139,7 @@ public class JIBIRC implements Runnable {
             SSLSocketFactory factory = (SSLSocketFactory) sslctx.getSocketFactory();
             try {
                 ircServer = (SSLSocket) factory.createSocket(dst, Port, clientBind, 0);
-            } catch(ConnectException ce) {
+            } catch (ConnectException ce) {
                 connectError = ce;
             } catch (IOException ex) {
                 System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -145,7 +148,7 @@ public class JIBIRC implements Runnable {
         } else {
             try {
                 ircServerNoSsl = new Socket(dst, Port, clientBind, 0);
-            } catch(ConnectException ce) {
+            } catch (ConnectException ce) {
                 connectError = ce;
             } catch (IOException ex) {
                 System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -269,11 +272,11 @@ public class JIBIRC implements Runnable {
         }
         return sock.getError();
     }
-    
+
     public Exception getConnectError() {
         return this.connectError;
     }
-    
+
     public void run() {
         String l = null;
         while (errorCounter < 15) {
