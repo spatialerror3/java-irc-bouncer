@@ -130,11 +130,12 @@ public class JIBDBUtil {
     }
 
     public void removeChannel(JIBUser u, String Channel) {
-        String sql = "DELETE FROM channels WHERE channel = ?;";
+        String sql = "DELETE FROM channels WHERE channel = ? AND u = ?;";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
             ps2.setString(1, Channel);
+            ps2.setString(2, u.getUUID().toString());
             ps2.execute();
         } catch (SQLException ex) {
             System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
