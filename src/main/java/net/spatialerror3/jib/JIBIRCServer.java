@@ -19,6 +19,7 @@ public class JIBIRCServer {
     private String server = null;
     private int port = 0;
     private boolean ssl = true;
+    private String password = null;
     //
     private String clientBind = null;
     //
@@ -68,6 +69,10 @@ public class JIBIRCServer {
 
     public void setSsl(boolean ssl) {
         this.ssl = ssl;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setClientBind(String clientBind) {
