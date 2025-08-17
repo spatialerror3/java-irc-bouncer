@@ -109,6 +109,13 @@ public class JIBHandleClient implements Runnable {
         this.inAuth = false;
     }
 
+    public String trackNick1() {
+        if (trackNick == null) {
+            return "*";
+        }
+        return trackNick;
+    }
+
     public void processLine(String l) {
         boolean passthrough = true;
         if (l == null) {
@@ -121,11 +128,11 @@ public class JIBHandleClient implements Runnable {
             passthrough = false;
             //sendLine(l); FIXME: IRSSI
             if (l.startsWith("CAP LS")) {
-                sendLine("CAP * LS :\r\n");
+                sendLine("CAP " + trackNick1() + " LS :\r\n");
             }
             if (l.startsWith("CAP REQ")) {
                 String capabs = l.substring(l.indexOf(':') + 1);
-                sendLine("CAP * ACK :" + capabs + "\r\n");
+                sendLine("CAP " + trackNick1() + " ACK :" + capabs + "\r\n");
             }
             if (l.startsWith("CAP END")) {
                 sendLine("001 " + trackNick + " :JIB\r\n");
@@ -163,7 +170,7 @@ public class JIBHandleClient implements Runnable {
                     JavaIrcBouncer.jibDbUtil.addChannel(channels[j]);
                 }
             } else {
-                passthrough=false;
+                passthrough = false;
             }
         }
         if (l.startsWith("PRIVMSG")) {
