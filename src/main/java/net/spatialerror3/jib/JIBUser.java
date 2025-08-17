@@ -48,6 +48,10 @@ public class JIBUser {
         }
         return null;
     }
+    
+    public long getUserId() {
+        return this.userId;
+    }
 
     public UUID getUUID() {
         return this.uuid;
