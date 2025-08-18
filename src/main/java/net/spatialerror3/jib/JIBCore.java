@@ -13,16 +13,17 @@ import java.util.Vector;
  * @author spatialerror3
  */
 public class JIBCore {
+
     Vector<JIBUser> users = null;
-    Hashtable<String,JIBUser> userMap = null;
-    Hashtable<UUID,JIBUser> userMap2 = null;
-    
+    Hashtable<String, JIBUser> userMap = null;
+    Hashtable<UUID, JIBUser> userMap2 = null;
+
     public JIBCore() {
         users = new Vector<JIBUser>();
-        userMap = new Hashtable<String,JIBUser>();
-        userMap2 = new Hashtable<UUID,JIBUser>();
+        userMap = new Hashtable<String, JIBUser>();
+        userMap2 = new Hashtable<UUID, JIBUser>();
     }
-    
+
     public JIBUser createUser(String userName, boolean admin) {
         JIBUser u = new JIBUser();
         u.setUserName(userName);
@@ -31,17 +32,20 @@ public class JIBCore {
         users.add(u);
         return u;
     }
-    
+
     public JIBUser getUser(String userName) {
         return userMap.get(userName);
     }
-    
+
     public JIBUser getUser(UUID uuid) {
         return userMap2.get(uuid);
     }
-    
+
     public JIBUser authUser(String userName, String authToken) {
         JIBUser u = getUser(userName);
+        if (u == null) {
+            return null;
+        }
         return u.auth(authToken);
     }
 }
