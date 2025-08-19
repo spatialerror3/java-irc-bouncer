@@ -92,6 +92,23 @@ public class JIBIRC implements Runnable {
         connect();
     }
 
+    public boolean connected() {
+        if (connecting == true) {
+            return true;
+        }
+        if (getConnectError() != null) {
+            return false;
+        }
+        if (getError() != null) {
+            return false;
+        }
+        if (connected == true) {
+            return true;
+        }
+
+        return false;
+    }
+
     private void connect() {
         SSLContext sslctx = null;
         if (connected == true) {
@@ -314,8 +331,8 @@ public class JIBIRC implements Runnable {
                     connected = false;
                 }
             }
-            System.err.println("connecting=" + connecting + " connected=" + connected);
-            if (sock.connected() == false || connected == false) {
+            System.err.println("connecting=" + connecting + " connected=" + connected + " connected()=" + connected());
+            if (sock.connected() == false || connected == false || connected() == false) {
                 reconnect();
             }
             try {
