@@ -22,6 +22,7 @@ import javax.net.ssl.TrustManager;
  */
 public class JIBIRC implements Runnable {
 
+    private static boolean DEBUGGING = false;
     private SSLSocket ircServer = null;
     private Socket ircServerNoSsl = null;
     private JIBSocket sock = null;
@@ -236,7 +237,9 @@ public class JIBIRC implements Runnable {
     }
 
     public void processLine(String l) {
-        System.err.println(this + " l=" + l);
+        if (DEBUGGING) {
+            System.err.println(this + " l=" + l);
+        }
         if (preLogon) {
             String[] sp5 = l.split(" ", 3);
             if (sp5.length > 1 && sp5[1].equals("005")) {
