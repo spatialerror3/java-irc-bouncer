@@ -245,7 +245,10 @@ public class JIBHandleClient implements Runnable {
         }
         if (l.startsWith("PART")) {
             String[] sp4 = l.split(" ", 3);
+            JIBUserInfo tmpWho = new JIBUserInfo();
+            tmpWho.nick = trackNick1();
             JavaIrcBouncer.jibDbUtil.removeChannel(authed, sp4[1]);
+            getSingleJIBIRC().simulatePART(this, sp4[1], tmpWho);
         }
         if (l.startsWith("RAW")) {
             passthrough = false;
