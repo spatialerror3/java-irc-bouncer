@@ -205,42 +205,46 @@ public class JIBHandleClient implements Runnable {
             if (msgextract[1].equals("*jib")) {
                 passthrough = false;
                 sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "YOU ARE " + authed.getUUID() + "\r\n");
-                sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "REPLAY" + "\r\n");
-                sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + msgextract[2].substring(1) + "\r\n");
-                if (msgextract[2].substring(1).startsWith("REPLAY")) {
-                    Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog().iterator();
-                    while (logReplay.hasNext()) {
-                        sendLine(logReplay.next() + "\r\n");
+                if (authed != null) {
+                    sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "REPLAY" + "\r\n");
+                    sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + msgextract[2].substring(1) + "\r\n");
+                    if (msgextract[2].substring(1).startsWith("REPLAY")) {
+                        Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog().iterator();
+                        while (logReplay.hasNext()) {
+                            sendLine(logReplay.next() + "\r\n");
+                        }
                     }
-                }
-                if (msgextract[2].substring(1).startsWith("CONNECT")) {
+                    if (msgextract[2].substring(1).startsWith("CONNECT")) {
 
-                }
-                if (msgextract[2].substring(1).startsWith("DISCONNECT")) {
-
-                }
-                if (msgextract[2].substring(1).startsWith("RECONNECT")) {
-
-                }
-                if (msgextract[2].substring(1).startsWith("SET")) {
-
-                }
-                if (msgextract[2].substring(1).startsWith("SERVER")) {
-                    String mtp = msgextract[2].substring(1);
-                    String[] mtps = mtp.split(" ");
-                    if (mtps[0].equals("SERVER") && mtps.length >= 4) {
-                        String mtpHost = mtps[1];
-                        String mtpPort = mtps[2];
-                        String mtpSSL = mtps[3];
-                        int mtpPortInt = Integer.valueOf(mtpPort);
-                        boolean mtpSslBool = Boolean.valueOf(mtpSSL);
-                        JIBIRCServer tmpServ2 = new JIBIRCServer();
-                        tmpServ2.setServer(mtpHost);
-                        tmpServ2.setPort(mtpPortInt);
-                        tmpServ2.setSsl(mtpSslBool);
-                        tmpServ2.resolve();
-                        authed.addIrcServer(tmpServ2);
                     }
+                    if (msgextract[2].substring(1).startsWith("DISCONNECT")) {
+
+                    }
+                    if (msgextract[2].substring(1).startsWith("RECONNECT")) {
+
+                    }
+                    if (msgextract[2].substring(1).startsWith("SET")) {
+
+                    }
+                    if (msgextract[2].substring(1).startsWith("SERVER")) {
+                        String mtp = msgextract[2].substring(1);
+                        String[] mtps = mtp.split(" ");
+                        if (mtps[0].equals("SERVER") && mtps.length >= 4) {
+                            String mtpHost = mtps[1];
+                            String mtpPort = mtps[2];
+                            String mtpSSL = mtps[3];
+                            int mtpPortInt = Integer.valueOf(mtpPort);
+                            boolean mtpSslBool = Boolean.valueOf(mtpSSL);
+                            JIBIRCServer tmpServ2 = new JIBIRCServer();
+                            tmpServ2.setServer(mtpHost);
+                            tmpServ2.setPort(mtpPortInt);
+                            tmpServ2.setSsl(mtpSslBool);
+                            tmpServ2.resolve();
+                            authed.addIrcServer(tmpServ2);
+                        }
+                    }
+                } else {
+                    sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "Live long and prosper!" + "\r\n");
                 }
             }
         }
