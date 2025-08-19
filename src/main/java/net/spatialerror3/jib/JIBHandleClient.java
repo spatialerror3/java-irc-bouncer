@@ -13,6 +13,7 @@ import java.util.Iterator;
  */
 public class JIBHandleClient implements Runnable {
 
+    private static boolean DEBUGGING = false;
     JIBSocket sock = null;
     private boolean inAuth = true;
     private String authUser = null;
@@ -149,7 +150,9 @@ public class JIBHandleClient implements Runnable {
             return;
         }
         String[] sp = l.split(" ");
-        System.err.println("l=" + l);
+        if (DEBUGGING) {
+            System.err.println(this + " l=" + l);
+        }
         if (l.startsWith("CAP")) {
             passthrough = false;
             //sendLine(l); FIXME: IRSSI
