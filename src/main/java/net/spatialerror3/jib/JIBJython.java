@@ -18,6 +18,8 @@ public class JIBJython {
     public JIBJython() {
         interp = new PythonInterpreter();
         interp.set("a", this);
+        interp.set("config", rJIBConfig());
+        interp.set("configurator", rJIBConfig());
     }
 
     public void loadConfig() {
