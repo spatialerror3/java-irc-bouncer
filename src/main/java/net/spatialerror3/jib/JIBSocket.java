@@ -63,7 +63,10 @@ public class JIBSocket {
         BW = new BufferedWriter(OSW);
     }
 
-    public void writeLine(String l) {
+    public JIBSocket writeLine(String l) {
+        if (getError() != null) {
+            return null;
+        }
         try {
             BW.write(l);
             BW.flush();
@@ -74,15 +77,18 @@ public class JIBSocket {
                 e = ex;
             }
             System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            return null;
         } catch (IOException ex) {
             if (e == null) {
                 e = ex;
             }
             System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            return null;
         }
         if (JIBSocket.SOCKETDEBUGGING) {
             System.err.println(this.s + " writeLine()=" + JIBStringUtil.remEOL(l));
         }
+        return this;
     }
 
     public String readLine() {
