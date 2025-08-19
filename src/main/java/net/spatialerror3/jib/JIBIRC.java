@@ -235,12 +235,13 @@ public class JIBIRC implements Runnable {
         u.writeAllClients(l);
     }
 
-    public void simulateNick(String oldnick, String newnick) {
+    public String simulateNick(String oldnick, String newnick) {
         if (newnick == null) {
             newnick = myInfo.nick;
         }
         String nickSim = ":" + oldnick + " NICK " + newnick;
         u.writeAllClients(nickSim + "\r\n");
+        return newnick;
     }
 
     public void simulateJoin(String chan) {
