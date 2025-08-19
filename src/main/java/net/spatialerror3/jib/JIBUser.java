@@ -43,7 +43,7 @@ public class JIBUser {
     }
 
     public JIBUser auth(String authToken) {
-        if (authToken.equals(authToken)) {
+        if (this.authToken.equals(authToken)) {
             return this;
         }
         return null;
