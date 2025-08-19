@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  *
@@ -68,6 +69,11 @@ public class JIBSocket {
             BW.flush();
             OSW.flush();
             OS.flush();
+        } catch (SocketException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (IOException ex) {
             if (e == null) {
                 e = ex;
@@ -88,6 +94,11 @@ public class JIBSocket {
                     e = new NullPointerException();
                 }
             }
+        } catch (SocketException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (IOException ex) {
             if (e == null) {
                 e = ex;
