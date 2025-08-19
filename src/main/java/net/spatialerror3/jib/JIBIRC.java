@@ -270,6 +270,16 @@ public class JIBIRC implements Runnable {
         }
     }
 
+    public void simulatePART(String chan, JIBUserInfo who) {
+        String partSim = ":" + who.nuh() + " PART " + chan;
+        u.writeAllClients(partSim + "\r\n");
+    }
+
+    public void simulatePART(JIBHandleClient skip, String chan, JIBUserInfo who) {
+        String partSim = ":" + who.nuh() + " PART " + chan;
+        u.writeAllClients(skip, partSim + "\r\n");
+    }
+
     public void simulatePRIVMSG(String chan, String msg) {
         String msgSim = ":" + myInfo.nuh() + " PRIVMSG " + chan + " :" + msg;
         u.writeAllClients(msgSim + "\r\n");
