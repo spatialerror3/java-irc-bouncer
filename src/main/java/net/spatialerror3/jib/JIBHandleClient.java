@@ -231,6 +231,9 @@ public class JIBHandleClient implements Runnable {
                     if (msgextract[2].substring(1).startsWith("RECONNECT")) {
 
                     }
+                    if (msgextract[2].substring(1).startsWith("JUMP")) {
+
+                    }
                     if (msgextract[2].substring(1).startsWith("SET")) {
 
                     }
@@ -241,14 +244,30 @@ public class JIBHandleClient implements Runnable {
                             String mtpHost = mtps[1];
                             String mtpPort = mtps[2];
                             String mtpSSL = mtps[3];
+                            String mtpNSACCT = mtps[4];
+                            String mtpNSPASS = mtps[5];
+                            String[] mtpCHANS = mtps[6].split(",");
                             int mtpPortInt = Integer.valueOf(mtpPort);
                             boolean mtpSslBool = Boolean.valueOf(mtpSSL);
                             JIBIRCServer tmpServ2 = new JIBIRCServer();
                             tmpServ2.setServer(mtpHost);
                             tmpServ2.setPort(mtpPortInt);
                             tmpServ2.setSsl(mtpSslBool);
+                            if (mtps.length >= 5) {
+                                tmpServ2.setNickServUser(mtpNSACCT);
+                            }
+                            if (mtps.length >= 6) {
+                                tmpServ2.setNickServPass(mtpNSPASS);
+                            }
+                            if (mtps.length >= 7) {
+                                for (int j = 0; j < mtpCHANS.length; j++) {
+                                    tmpServ2.addChannel(mtpCHANS[j]);
+                                }
+                            }
                             tmpServ2.resolve();
                             authed.addIrcServer(tmpServ2);
+                        } else {
+                            // FIXME: PROVIDE HELP
                         }
                     }
                 } else {
