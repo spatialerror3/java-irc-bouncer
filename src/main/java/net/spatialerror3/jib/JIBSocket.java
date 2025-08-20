@@ -112,7 +112,9 @@ public class JIBSocket {
     public String readLine() {
         String l = null;
         try {
-            l = BR.readLine();
+            if (BR != null) {
+                l = BR.readLine();
+            }
             if (l == null) {
                 if (e == null) {
                     e = new NullPointerException();
