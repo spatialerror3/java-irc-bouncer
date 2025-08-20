@@ -22,9 +22,11 @@ public class JIBIRCNickServ {
     }
 
     public void init() {
-        if (u.getUserId() == 0 && u.admin() == true) {
-            nickServAccount = JavaIrcBouncer.jibConfig.getValue("NICKSERVUSER");
-            nickServPass = JavaIrcBouncer.jibConfig.getValue("NICKSERVPASS");
+        if (serv.getNickServUser() == null || serv.getNickServPass() == null) {
+            if (u.getUserId() == 0 && u.admin() == true) {
+                nickServAccount = JavaIrcBouncer.jibConfig.getValue("NICKSERVUSER");
+                nickServPass = JavaIrcBouncer.jibConfig.getValue("NICKSERVPASS");
+            }
         } else {
             nickServAccount = serv.getNickServUser();
             nickServPass = serv.getNickServPass();
