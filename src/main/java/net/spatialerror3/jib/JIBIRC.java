@@ -48,6 +48,7 @@ public class JIBIRC implements Runnable {
     //
     private JIBIRCLog log = null;
     //
+    private long connects = 0;
     private boolean connected = false;
     private boolean connecting = false;
     //
@@ -120,11 +121,12 @@ public class JIBIRC implements Runnable {
             return;
         }
         connecting = true;
+        connects++;
         preLogon = true;
         JIBIRCServer tmpServ = u.getIrcServer();
         tmpServ.resolve();
         //u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
-        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting [SSL=" + tmpServ.getSsl() + "] to " + tmpServ.getServer() + " :" + tmpServ.getPort());
+        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting (#" + connects + ") [SSL=" + tmpServ.getSsl() + "] to " + tmpServ.getServer() + " :" + tmpServ.getPort());
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user);
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname);
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICK= " + myInfo.nick);
