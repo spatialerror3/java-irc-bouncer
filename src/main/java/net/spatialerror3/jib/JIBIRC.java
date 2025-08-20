@@ -254,6 +254,12 @@ public class JIBIRC implements Runnable {
             if (sp5.length > 1 && sp5[1].equals("005")) {
                 onLogon();
             }
+            if (sp5.length > 1 && sp5[1].equals("255")) {
+                onLogon();
+            }
+            if (sp5.length > 1 && sp5[1].equals("376")) {
+                onLogon();
+            }
         }
         if (l == null || l.startsWith("ERROR")) {
             errorCounter++;
