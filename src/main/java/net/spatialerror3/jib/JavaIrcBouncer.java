@@ -9,6 +9,7 @@ package net.spatialerror3.jib;
  */
 public class JavaIrcBouncer {
     
+    public static JIBDebug jibDebug = null;
     public static JIBCore jibCore = null;
     public static JIBConfig jibConfig = null;
     public static JIBSysEnv jibSysEnv = null;
@@ -19,6 +20,7 @@ public class JavaIrcBouncer {
     
     public static void main(String[] args) {
         System.setProperty("python.import.site", "false");
+        jibDebug = new JIBDebug();
         jibCore = new JIBCore();
         jibConfig = new JIBConfig();
         jibConfig.parseArgs(args);
