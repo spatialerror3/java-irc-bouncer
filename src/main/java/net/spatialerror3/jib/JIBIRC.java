@@ -58,6 +58,7 @@ public class JIBIRC implements Runnable {
     private Exception connectError = null;
 
     public JIBIRC(JIBUser u, JIBIRCServer serv, String Server, int Port, String nick, String user, String realname) {
+        JIBIRC.DEBUGGING = JavaIrcBouncer.jibDebug.debug();
         this.u = u;
         //
         this.Server = Server;
