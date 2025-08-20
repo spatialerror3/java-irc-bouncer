@@ -23,6 +23,17 @@ public class JIBStringUtil {
         return r;
     }
     
+    public static String remEOL2(String s) {
+        String r = null;
+        if(s==null) {
+            return s;
+        }
+        r = s.replaceAll("\r\n", "");
+        r = r.replaceAll("\n", "");
+        r = r.replaceAll("\r", "");
+        return r;
+    }
+    
     public static String remDD(String s) {
         if(s==null) {
             return s;
