@@ -43,6 +43,7 @@ public class JIBIRC implements Runnable {
     //
     private boolean preLogon = true;
     private JIBIRCNickServ ns = null;
+    private JIBIRCPerform perform = null;
     //
     private int errorCounter = 0;
     //
@@ -91,6 +92,7 @@ public class JIBIRC implements Runnable {
         //
         ns = new JIBIRCNickServ(u, serv);
         ns.init();
+        perform = new JIBIRCPerform(u, serv);
         log = new JIBIRCLog();
         connect();
     }
@@ -226,6 +228,7 @@ public class JIBIRC implements Runnable {
 
     public void onLogon() {
         this.ns.identify();
+        this.perform.perform();
         String[] chans = JavaIrcBouncer.jibDbUtil.getChannels(u);
         for (int i = 0; i < chans.length; i++) {
             if (chans[i] != null) {
