@@ -116,7 +116,7 @@ public class JIBHandleClient implements Runnable {
     }
 
     public void sendLine(String l) {
-        sock.writeLine(l + "\r\n");
+        sock.writeLineNoEOL(l);
     }
 
     public void checkUserPass() {
