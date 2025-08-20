@@ -266,6 +266,7 @@ public class JIBHandleClient implements Runnable {
                             }
                             tmpServ2.resolve();
                             authed.addIrcServer(tmpServ2);
+                            sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "ADDED IRC SERVER" + "\r\n");
                         } else {
                             // FIXME: PROVIDE HELP
                         }
