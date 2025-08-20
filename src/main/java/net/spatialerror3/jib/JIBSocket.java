@@ -64,7 +64,7 @@ public class JIBSocket {
     }
 
     public JIBSocket writeLineNoEOL(String l) {
-        return writeLine(JIBStringUtil.remEOL(l) + "\r\n");
+        return writeLine(JIBStringUtil.remEOL2(l) + "\r\n");
     }
 
     public JIBSocket writeLine(String l) {
