@@ -35,10 +35,10 @@ public class JIBIRCNickServ {
 
     public void identify() {
         if (serv.getNickServUser() != null && serv.getNickServPass() != null) {
-            if (serv.getNetType().equals(JIBIRCNetType.NetType.LIBERA)) {
+            if (serv.getNetType() == JIBIRCNetType.NetType.LIBERA) {
                 u.getJibIRC().writeLine("PRIVMSG NickServ :IDENTIFY " + serv.getNickServUser() + " " + serv.getNickServPass() + "\r\n");
             }
-            if (serv.getNetType().equals(JIBIRCNetType.NetType.OFTC)) {
+            if (serv.getNetType() == JIBIRCNetType.NetType.OFTC) {
                 u.getJibIRC().writeLine("PRIVMSG NickServ :IDENTIFY " + serv.getNickServPass() + "\r\n");
             }
         }
