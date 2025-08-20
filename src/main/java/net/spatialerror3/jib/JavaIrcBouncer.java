@@ -35,6 +35,10 @@ public class JavaIrcBouncer {
         jibSysEnv.envToConfig("ClientNoSSL");
         jibSysEnv.envToConfig("NICKSERVUSER");
         jibSysEnv.envToConfig("NICKSERVPASS");
+        jibSysEnv.envToConfig("DEBUGGING");
+        if (jibConfig.getValue("DEBUGGING") != null) {
+            jibDebug.setDebugging(true);
+        }
         jibDbUtil = new JIBDBUtil();
         jibDbUtil.initSchema();
         jibJython = new JIBJython();
