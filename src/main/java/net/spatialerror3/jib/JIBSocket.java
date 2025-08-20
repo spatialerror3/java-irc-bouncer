@@ -63,6 +63,10 @@ public class JIBSocket {
         BW = new BufferedWriter(OSW);
     }
 
+    public JIBSocket writeLineNoEOL(String l) {
+        return writeLine(JIBStringUtil.remEOL(l) + "\r\n");
+    }
+
     public JIBSocket writeLine(String l) {
         if (getError() != null) {
             return null;
