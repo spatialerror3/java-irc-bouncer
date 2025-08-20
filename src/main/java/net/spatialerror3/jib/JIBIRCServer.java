@@ -21,6 +21,9 @@ public class JIBIRCServer {
     private boolean ssl = true;
     private String password = null;
     //
+    private String nickServUser = null;
+    private String nickServPass = null;
+    //
     private String clientBind = null;
     //
     private boolean ipv6 = false;
@@ -45,6 +48,14 @@ public class JIBIRCServer {
 
     public boolean getSsl() {
         return this.ssl;
+    }
+
+    public String getNickServUser() {
+        return this.nickServUser;
+    }
+
+    public String getNickServPass() {
+        return this.nickServPass;
     }
 
     public String getClientBind() {
@@ -73,6 +84,14 @@ public class JIBIRCServer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setNickServUser(String nickServUser) {
+        this.nickServUser = nickServUser;
+    }
+
+    public void setNickServPass(String nickServPass) {
+        this.nickServPass = nickServPass;
     }
 
     public void setClientBind(String clientBind) {
