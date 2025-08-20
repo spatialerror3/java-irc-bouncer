@@ -230,8 +230,16 @@ public class JIBIRC implements Runnable {
     }
 
     public void onLogon() {
-        this.ns.identify();
-        this.perform.perform();
+        try {
+            this.ns.identify();
+        } catch (Exception e) {
+            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
+        }
+        try {
+            this.perform.perform();
+        } catch (Exception e) {
+            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
+        }
         String[] chans = JavaIrcBouncer.jibDbUtil.getChannels(u);
         for (int i = 0; i < chans.length; i++) {
             if (chans[i] != null) {
