@@ -94,8 +94,10 @@ public class JIBHandleClient implements Runnable {
                     }
                 }
                 if (authed.admin() && authed.getUserId() == 0) {
-                    tmpServ.setNickServUser(JavaIrcBouncer.jibConfig.getValue("NICKSERVUSER"));
-                    tmpServ.setNickServPass(JavaIrcBouncer.jibConfig.getValue("NICKSERVPASS"));
+                    if (tmpServ != null) {
+                        tmpServ.setNickServUser(JavaIrcBouncer.jibConfig.getValue("NICKSERVUSER"));
+                        tmpServ.setNickServPass(JavaIrcBouncer.jibConfig.getValue("NICKSERVPASS"));
+                    }
                     jibIRC = new JIBIRC(authed, tmpServ, JavaIrcBouncer.jibConfig.getValue("Server"), dstPort, JavaIrcBouncer.jibConfig.getValue("Nick"), JavaIrcBouncer.jibConfig.getValue("User"), JavaIrcBouncer.jibConfig.getValue("Realname"));
                     JavaIrcBouncer.jibIRC = jibIRC;
                 } else {
