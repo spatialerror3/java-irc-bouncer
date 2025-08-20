@@ -171,19 +171,19 @@ public class JIBHandleClient implements Runnable {
         if (l.startsWith("NICK")) {
             passthrough = false;
             trackNick = l.substring(5);
-            sendLine(l);
+            //sendLine(l);
         }
         if (l.startsWith("USER")) {
             passthrough = false;
             this.authUser = sp[1];
             checkUserPass();
-            sendLine(l);
+            //sendLine(l);
         }
         if (l.startsWith("PASS")) {
             passthrough = false;
             this.authPass = l.substring(5);
             checkUserPass();
-            sendLine(l);
+            //sendLine(l);
         }
         if (l.startsWith("QUIT")) {
             passthrough = false;
@@ -267,7 +267,7 @@ public class JIBHandleClient implements Runnable {
         }
         if (l.startsWith("PING")) {
             String pong = l.substring(5);
-            sendLine("PONG " + pong + "\r\n");
+            sendLine("PONG JIB.jib " + pong + "\r\n");
             sendLine(":JIB.jib PONG JIB.jib :" + JIBStringUtil.remDD(pong) + "\r\n");
         }
         if (passthrough) {
