@@ -43,24 +43,38 @@ public class JIBSocket {
         }
         try {
             IS = s.getInputStream();
+        } catch (SocketException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (IOException ex) {
             if (e == null) {
                 e = ex;
             }
             System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        ISR = new InputStreamReader(IS);
-        BR = new BufferedReader(ISR);
+        if (IS != null) {
+            ISR = new InputStreamReader(IS);
+            BR = new BufferedReader(ISR);
+        }
         try {
             OS = s.getOutputStream();
+        } catch (SocketException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (IOException ex) {
             if (e == null) {
                 e = ex;
             }
             System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        OSW = new OutputStreamWriter(OS);
-        BW = new BufferedWriter(OSW);
+        if (OS != null) {
+            OSW = new OutputStreamWriter(OS);
+            BW = new BufferedWriter(OSW);
+        }
     }
 
     public JIBSocket writeLineNoEOL(String l) {
