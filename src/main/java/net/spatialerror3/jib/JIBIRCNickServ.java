@@ -34,12 +34,12 @@ public class JIBIRCNickServ {
     }
 
     public void identify() {
-        if (nickServAccount != null && nickServPass != null) {
+        if (serv.getNickServUser() != null && serv.getNickServPass() != null) {
             if (serv.getNetType().equals(JIBIRCNetType.NetType.LIBERA)) {
-                u.getJibIRC().writeLine("PRIVMSG NickServ :IDENTIFY " + nickServAccount + " " + nickServPass + "\r\n");
+                u.getJibIRC().writeLine("PRIVMSG NickServ :IDENTIFY " + serv.getNickServUser() + " " + serv.getNickServPass() + "\r\n");
             }
             if (serv.getNetType().equals(JIBIRCNetType.NetType.OFTC)) {
-                u.getJibIRC().writeLine("PRIVMSG NickServ :IDENTIFY " + nickServPass + "\r\n");
+                u.getJibIRC().writeLine("PRIVMSG NickServ :IDENTIFY " + serv.getNickServPass() + "\r\n");
             }
         }
     }
