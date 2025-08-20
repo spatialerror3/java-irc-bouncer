@@ -267,7 +267,7 @@ public class JIBHandleClient implements Runnable {
         }
         if (l.startsWith("PING")) {
             String pong = l.substring(5);
-            sendLine("PONG JIB.jib " + pong + "\r\n");
+            //sendLine("PONG JIB.jib " + pong + "\r\n");
             sendLine(":JIB.jib PONG JIB.jib :" + JIBStringUtil.remDD(pong) + "\r\n");
         }
         if (passthrough) {
