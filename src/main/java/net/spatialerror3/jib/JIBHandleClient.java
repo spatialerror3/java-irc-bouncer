@@ -158,14 +158,14 @@ public class JIBHandleClient implements Runnable {
             passthrough = false;
             //sendLine(l); FIXME: IRSSI
             if (l.startsWith("CAP LS")) {
-                sendLine("CAP " + trackNick1() + " LS :\r\n");
+                sendLine(":JIB.jib CAP " + trackNick1() + " LS :\r\n");
             }
             if (l.startsWith("CAP REQ")) {
                 String capabs = l.substring(l.indexOf(':') + 1);
-                sendLine("CAP " + trackNick1() + " ACK :" + capabs + "\r\n");
+                sendLine(":JIB.jib CAP " + trackNick1() + " ACK :" + capabs + "\r\n");
             }
             if (l.startsWith("CAP END")) {
-                sendLine("001 " + trackNick + " :JIB\r\n");
+                sendLine(":JIB.jib 001 " + trackNick + " :JIB\r\n");
             }
         }
         if (l.startsWith("NICK")) {
