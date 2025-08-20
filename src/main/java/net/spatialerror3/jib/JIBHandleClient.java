@@ -31,7 +31,7 @@ public class JIBHandleClient implements Runnable {
     }
 
     public void onConnect() {
-        sendLine("");
+        //sendLine("");
         sendLine(":JIB.jib NOTICE " + "*" + " :AUTHENTICATION MANDATORY\r\n");
     }
 
