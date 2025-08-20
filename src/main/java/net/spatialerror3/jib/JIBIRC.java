@@ -21,7 +21,7 @@ import javax.net.ssl.TrustManager;
  * @author spatialerror3
  */
 public class JIBIRC implements Runnable {
-    
+
     private static boolean DEBUGGING = false;
     private SSLSocket ircServer = null;
     private Socket ircServerNoSsl = null;
@@ -58,7 +58,7 @@ public class JIBIRC implements Runnable {
     private Thread t3 = null;
     //
     private Exception connectError = null;
-    
+
     public JIBIRC(JIBUser u, JIBIRCServer serv, String Server, int Port, String nick, String user, String realname) {
         JIBIRC.DEBUGGING = JavaIrcBouncer.jibDebug.debug();
         this.u = u;
@@ -93,11 +93,13 @@ public class JIBIRC implements Runnable {
         ns = new JIBIRCNickServ(u, serv);
         ns.init();
         perform = new JIBIRCPerform(u, serv);
-        perform.performListAdd("JOIN :" + serv.getChannels() + "\r\n");
+        if (serv.getChannels().length() > 0) {
+            perform.performListAdd("JOIN :" + serv.getChannels() + "\r\n");
+        }
         log = new JIBIRCLog();
         connect();
     }
-    
+
     public boolean connected() {
         if (connecting == true) {
             return true;
@@ -111,10 +113,10 @@ public class JIBIRC implements Runnable {
         if (connected == true) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     private void connect() {
         SSLContext sslctx = null;
         if (connected == true) {
@@ -203,7 +205,7 @@ public class JIBIRC implements Runnable {
         }
         connecting = false;
     }
-    
+
     public void reconnect() {
         System.err.println("reconnect() called...");
         if (sock.connected() == false || connected == false) {
@@ -214,7 +216,7 @@ public class JIBIRC implements Runnable {
             connect();
         }
     }
-    
+
     public void onConnect() {
         ping1 = new JIBPinger(sock);
         ping1.setPingStr();
@@ -226,7 +228,7 @@ public class JIBIRC implements Runnable {
         t4.start();
         ping1.doPing();
     }
-    
+
     public void onLogon() {
         this.ns.identify();
         this.perform.perform();
@@ -238,11 +240,11 @@ public class JIBIRC implements Runnable {
         }
         preLogon = false;
     }
-    
+
     public void writeLine(String l) {
         sock.writeLine(l);
     }
-    
+
     public void processLine(String l) {
         if (DEBUGGING) {
             System.err.println(this + " l=" + l);
@@ -261,7 +263,7 @@ public class JIBIRC implements Runnable {
         }
         u.writeAllClients(l);
     }
-    
+
     public String simulateNick(String oldnick, String newnick) {
         if (newnick == null) {
             newnick = myInfo.nick;
@@ -270,7 +272,7 @@ public class JIBIRC implements Runnable {
         u.writeAllClients(nickSim + "\r\n");
         return newnick;
     }
-    
+
     public void simulateJoin(String chan) {
         String joinSim = ":" + myInfo.nuh() + " JOIN " + chan + " * :" + realname;
         String joinSim2 = ":" + myInfo.nuh() + " JOIN :" + chan;
@@ -280,7 +282,7 @@ public class JIBIRC implements Runnable {
             u.writeAllClients(joinSim2 + "\r\n");
         }
     }
-    
+
     public void simulateJoin(String chan, String nick) {
         String joinSim = ":" + nick + " JOIN " + chan + " * :" + realname;
         String joinSim2 = ":" + nick + " JOIN :" + chan;
@@ -297,38 +299,38 @@ public class JIBIRC implements Runnable {
             u.writeAllClients(":JIB.jib 315 " + nick + " " + chan + " :End of /WHO list.\r\n");
         }
     }
-    
+
     public void simulatePART(String chan, JIBUserInfo who) {
         String partSim = ":" + who.nuh() + " PART " + chan;
         u.writeAllClients(partSim + "\r\n");
     }
-    
+
     public void simulatePART(JIBHandleClient skip, String chan, JIBUserInfo who) {
         String partSim = ":" + who.nuh() + " PART " + chan;
         u.writeAllClients(skip, partSim + "\r\n");
     }
-    
+
     public void simulatePRIVMSG(String chan, String msg) {
         String msgSim = ":" + myInfo.nuh() + " PRIVMSG " + chan + " :" + msg;
         u.writeAllClients(msgSim + "\r\n");
     }
-    
+
     public void simulatePRIVMSG(JIBHandleClient skip, String chan, String msg) {
         String msgSim = ":" + myInfo.nuh() + " PRIVMSG " + chan + " :" + msg;
         u.writeAllClients(skip, msgSim + "\r\n");
     }
-    
+
     public Exception getError() {
         if (sock.getError() != null) {
             connected = false;
         }
         return sock.getError();
     }
-    
+
     public Exception getConnectError() {
         return this.connectError;
     }
-    
+
     public void run() {
         String l = null;
         while (errorCounter < 15) {
