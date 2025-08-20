@@ -72,6 +72,12 @@ public class JIBIRCServer {
 
     public void setServer(String server) {
         this.server = server;
+        if (this.server.equals("irc.oftc.net")) {
+            setNetType(JIBIRCNetType.NetType.OFTC);
+        }
+        if (this.server.equals("irc.libera.chat")) {
+            setNetType(JIBIRCNetType.NetType.LIBERA);
+        }
     }
 
     public void setPort(int port) {
