@@ -25,6 +25,7 @@ public class JIBHandleClient implements Runnable {
     private String trackNick = null;
 
     public JIBHandleClient(Socket cs) {
+        JIBHandleClient.DEBUGGING = JavaIrcBouncer.jibDebug.debug();
         sock = new JIBSocket(cs);
         onConnect();
     }
