@@ -8,6 +8,8 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -24,6 +26,8 @@ public class JIBIRCServer {
     private String nickServUser = null;
     private String nickServPass = null;
     //
+    private ArrayList<String> channels = null;
+    //
     private String clientBind = null;
     //
     private boolean ipv6 = false;
@@ -31,7 +35,7 @@ public class JIBIRCServer {
     private InetAddress resolved = null;
 
     public JIBIRCServer() {
-
+        channels = new ArrayList<String>();
     }
 
     public JIBIRCNetType.NetType getNetType() {
@@ -56,6 +60,20 @@ public class JIBIRCServer {
 
     public String getNickServPass() {
         return this.nickServPass;
+    }
+
+    public String getChannels() {
+        StringBuilder sb1 = new StringBuilder();
+        Iterator<String> it1 = this.channels.iterator();
+        long i = 0;
+        while (it1.hasNext()) {
+            if (i > 0) {
+                sb1.append(",");
+            }
+            sb1.append(it1.next());
+            i++;
+        }
+        return sb1.toString();
     }
 
     public String getClientBind() {
@@ -98,6 +116,10 @@ public class JIBIRCServer {
 
     public void setNickServPass(String nickServPass) {
         this.nickServPass = nickServPass;
+    }
+
+    public void addChannel(String chan) {
+        this.channels.add(chan);
     }
 
     public void setClientBind(String clientBind) {
