@@ -90,12 +90,6 @@ public class JIBIRC implements Runnable {
             myInfo = u.getIRCUserInfo();
         }
         //
-        ns = new JIBIRCNickServ(u, serv);
-        ns.init();
-        perform = new JIBIRCPerform(u, serv);
-        if (serv.getChannels().length() > 0) {
-            perform.performListAdd("JOIN :" + serv.getChannels() + "\r\n");
-        }
         log = new JIBIRCLog();
         connect();
     }
@@ -130,6 +124,12 @@ public class JIBIRC implements Runnable {
         preLogon = true;
         JIBIRCServer tmpServ = u.getIrcServer();
         tmpServ.resolve();
+        ns = new JIBIRCNickServ(u, serv);
+        ns.init();
+        perform = new JIBIRCPerform(u, serv);
+        if (serv.getChannels().length() > 0) {
+            perform.performListAdd("JOIN :" + serv.getChannels() + "\r\n");
+        }
         //u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting (#" + connects + ") [SSL=" + tmpServ.getSsl() + "] to " + tmpServ.getServer() + " :" + tmpServ.getPort() + " (RESOLVED: " + tmpServ.getResolved() + ")");
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user);
