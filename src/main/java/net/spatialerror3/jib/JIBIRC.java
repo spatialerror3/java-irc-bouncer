@@ -127,7 +127,7 @@ public class JIBIRC implements Runnable {
         ns = new JIBIRCNickServ(u, tmpServ);
         ns.init();
         perform = new JIBIRCPerform(u, tmpServ);
-        if (serv.getChannels().length() > 0) {
+        if (tmpServ.getChannels().length() > 0) {
             perform.performListAdd("JOIN :" + tmpServ.getChannels() + "\r\n");
         }
         //u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
