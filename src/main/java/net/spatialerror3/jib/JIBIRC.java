@@ -103,7 +103,11 @@ public class JIBIRC implements Runnable {
         //FIXME: 
         //connect(null);
     }
-
+    
+    public String getNick() {
+        return this.nick;
+    }
+    
     public boolean connected() {
         if (connecting == true) {
             return true;
