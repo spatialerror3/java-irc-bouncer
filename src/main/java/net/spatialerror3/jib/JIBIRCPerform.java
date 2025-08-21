@@ -34,7 +34,8 @@ public class JIBIRCPerform {
     public void perform() {
         Iterator<String> it3 = performList.iterator();
         while (it3.hasNext()) {
-            u.getJibIRC().writeLine(it3.next() + "\r\n");
+            String ple = it3.next();
+            u.getJibIRC().writeLine(ple + "\r\n");
         }
     }
 }
