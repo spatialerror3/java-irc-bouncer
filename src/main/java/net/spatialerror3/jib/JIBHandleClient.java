@@ -68,7 +68,7 @@ public class JIBHandleClient implements Runnable {
         if (authed.getJibIRC() == null) {
             if (JavaIrcBouncer.jibConfig.getValue("Server") != null) {
                 JIBIRCServer tmpServ = null;
-                if (authed.getIrcServer() == null) {
+                if (authed.getIrcServer() == null && authed.getUserId() == 0 && authed.admin() == true) {
                     tmpServ = new JIBIRCServer();
                     tmpServ.setServer(JavaIrcBouncer.jibConfig.getValue("Server"));
                     tmpServ.setPort(dstPort);
@@ -102,12 +102,16 @@ public class JIBHandleClient implements Runnable {
                     jibIRC = new JIBIRC(authed, tmpServ);
                     JavaIrcBouncer.jibIRC = jibIRC;
                 } else {
-                    tmpServ.resolve();
+                    if (tmpServ != null) {
+                        tmpServ.resolve();
+                    }
                     JIBUserInfo tmpui2 = new JIBUserInfo();
                     tmpui2.setNick(authed.getIRCUserInfo().getNick());
                     tmpui2.setUser(authed.getIRCUserInfo().getUser());
                     tmpui2.setRealname(authed.getIRCUserInfo().getRealname());
-                    tmpServ.setUserInfo(tmpui2);
+                    if (tmpServ != null) {
+                        tmpServ.setUserInfo(tmpui2);
+                    }
                     jibIRC = new JIBIRC(authed, tmpServ);
                 }
                 authed.setJibIRC(jibIRC);
