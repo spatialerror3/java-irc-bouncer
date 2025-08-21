@@ -3,12 +3,15 @@
  */
 package net.spatialerror3.jib;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  *
  * @author spatialerror3
  */
 public class JavaIrcBouncer {
-    
+    private static final Logger log = LogManager.getLogger(JavaIrcBouncer.class);
     public static JIBDebug jibDebug = null;
     public static JIBCore jibCore = null;
     public static JIBConfig jibConfig = null;
@@ -59,6 +62,7 @@ public class JavaIrcBouncer {
         Thread t1 = new Thread(jib1);
         t1.start();
         jibHttpServ = new JIBHTTPServer(-1);
+        log.info("Up...");
         while (true) {
             try {
                 Thread.sleep(60000);
