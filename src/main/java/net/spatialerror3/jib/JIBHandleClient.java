@@ -98,11 +98,17 @@ public class JIBHandleClient implements Runnable {
                         tmpServ.setNickServUser(JavaIrcBouncer.jibConfig.getValue("NICKSERVUSER"));
                         tmpServ.setNickServPass(JavaIrcBouncer.jibConfig.getValue("NICKSERVPASS"));
                     }
-                    jibIRC = new JIBIRC(authed, tmpServ, JavaIrcBouncer.jibConfig.getValue("Server"), dstPort, JavaIrcBouncer.jibConfig.getValue("Nick"), JavaIrcBouncer.jibConfig.getValue("User"), JavaIrcBouncer.jibConfig.getValue("Realname"));
+                    tmpServ.setUserInfo(authed.getIRCUserInfo());
+                    jibIRC = new JIBIRC(authed, tmpServ);
                     JavaIrcBouncer.jibIRC = jibIRC;
                 } else {
                     tmpServ.resolve();
-                    jibIRC = new JIBIRC(authed, tmpServ, tmpServ.getServer(), tmpServ.getPort(), authed.getIRCUserInfo().nick, authed.getIRCUserInfo().user, authed.getIRCUserInfo().realname);
+                    JIBUserInfo tmpui2 = new JIBUserInfo();
+                    tmpui2.setNick(authed.getIRCUserInfo().getNick());
+                    tmpui2.setUser(authed.getIRCUserInfo().getUser());
+                    tmpui2.setRealname(authed.getIRCUserInfo().getRealname());
+                    tmpServ.setUserInfo(tmpui2);
+                    jibIRC = new JIBIRC(authed, tmpServ);
                 }
                 authed.setJibIRC(jibIRC);
             } else {
