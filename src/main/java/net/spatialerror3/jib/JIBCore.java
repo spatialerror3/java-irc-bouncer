@@ -14,6 +14,7 @@ import java.util.Vector;
  */
 public class JIBCore {
 
+    private static long userCnt = 0;
     Vector<JIBUser> users = null;
     Hashtable<String, JIBUser> userMap = null;
     Hashtable<UUID, JIBUser> userMap2 = null;
@@ -26,11 +27,16 @@ public class JIBCore {
 
     public JIBUser createUser(String userName, boolean admin) {
         JIBUser u = new JIBUser();
+        userCnt++;
         u.setUserName(userName);
         userMap.put(userName, u);
         userMap2.put(u.getUUID(), u);
         users.add(u);
         return u;
+    }
+    
+    public long getUserCount() {
+        return JIBCore.userCnt;
     }
 
     public JIBUser getUser(String userName) {
