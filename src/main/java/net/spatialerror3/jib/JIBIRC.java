@@ -58,27 +58,29 @@ public class JIBIRC implements Runnable {
     private Thread t3 = null;
     //
     private Exception connectError = null;
-
-    public JIBIRC(JIBUser u, JIBIRCServer serv, String Server, int Port, String nick, String user, String realname) {
+    
+    public JIBIRC(JIBUser u, JIBIRCServer serv) {
         JIBIRC.DEBUGGING = JavaIrcBouncer.jibDebug.debug();
         this.u = u;
         //
-        this.Server = Server;
-        this.Port = Port;
         if (serv == null) {
-            serv = new JIBIRCServer();
-            serv.setServer(Server);
-            serv.setPort(Port);
-            serv.setSsl(!noSsl);
+            this.serv = u.getIrcServer();
+            //serv.setServer(Server);
+            //serv.setPort(Port);
+            //serv.setSsl(!noSsl);
             //
-            serv.resolve();
+            this.serv.resolve();
+            serv = this.serv;
         } else {
             this.serv = serv;
         }
         //
-        this.nick = nick;
-        this.user = user;
-        this.realname = realname;
+        this.Server = serv.getServer();
+        this.Port = serv.getPort();
+        //
+        this.nick = serv.getUserInfo().getNick();
+        this.user = serv.getUserInfo().getUser();
+        this.realname = serv.getUserInfo().getRealname();
         //
         myInfo = new JIBUserInfo();
         myInfo.nick = this.nick;
