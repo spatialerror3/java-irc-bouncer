@@ -234,6 +234,9 @@ public class JIBIRC implements Runnable {
     }
 
     public void onLogon() {
+        if (DEBUGGING) {
+            System.err.println("onLogon()");
+        }
         try {
             this.ns.identify();
         } catch (Exception e) {
@@ -254,10 +257,16 @@ public class JIBIRC implements Runnable {
         } catch (Exception e) {
             System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
         }
+        if (DEBUGGING) {
+            System.err.println("preLogon=false");
+        }
         preLogon = false;
     }
 
     public void writeLine(String l) {
+        if (DEBUGGING) {
+            System.err.println(this + " writeLine()=" + JIBStringUtil.remEOL2(l));
+        }
         sock.writeLine(l);
     }
 
