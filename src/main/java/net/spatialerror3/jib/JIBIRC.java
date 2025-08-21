@@ -103,11 +103,11 @@ public class JIBIRC implements Runnable {
         //FIXME: 
         //connect(null);
     }
-    
+
     public String getNick() {
         return this.nick;
     }
-    
+
     public boolean connected() {
         if (connecting == true) {
             return true;
@@ -342,6 +342,16 @@ public class JIBIRC implements Runnable {
                 }
                 if (sp5.length > 1 && sp5[1].equals("436")) {
                     writeLine("NICK C" + JIBStringUtil.randHexString().substring(0, 8) + "\r\n");
+                }
+            }
+        }
+        String[] lsp = l.split(" ");
+        if (lsp.length > 2) {
+            if (lsp[1].equals("NICK")) {
+                JIBUserInfo src = JIBUserInfo.parseNUH(lsp[0]);
+                String srcNewNick = lsp[2];
+                if (src.getNick().equals(this.nick)) {
+                    this.nick = srcNewNick;
                 }
             }
         }
