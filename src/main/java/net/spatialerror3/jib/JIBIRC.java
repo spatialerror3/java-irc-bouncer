@@ -71,11 +71,16 @@ public class JIBIRC implements Runnable {
             //serv.setPort(Port);
             //serv.setSsl(!noSsl);
             //
-            this.serv.resolve();
+            if (this.serv != null) {
+                this.serv.resolve();
+            }
             serv = this.serv;
         } else {
             this.serv = serv;
         }
+    }
+
+    public void init() {
         //
         this.Server = serv.getServer();
         this.Port = serv.getPort();
@@ -95,7 +100,8 @@ public class JIBIRC implements Runnable {
         }
         //
         log = new JIBIRCLog();
-        connect(null);
+        //FIXME: 
+        //connect(null);
     }
 
     public boolean connected() {
@@ -115,6 +121,17 @@ public class JIBIRC implements Runnable {
         return false;
     }
 
+    public void connect2(JIBIRCServer serv) {
+        if (serv == null) {
+            this.serv = u.getIrcServer();
+        } else {
+            this.serv = serv;
+        }
+        this.serv.setUserInfo(u.getIRCUserInfo());
+        init();
+        connect(serv);
+    }
+
     private void connect(JIBIRCServer serv) {
         SSLContext sslctx = null;
         if (connected == true) {
@@ -127,88 +144,95 @@ public class JIBIRC implements Runnable {
         keepDisconnected = false;
         connects++;
         preLogon = true;
-        JIBIRCServer tmpServ = u.getIrcServer();
-        tmpServ.resolve();
-        ns = new JIBIRCNickServ(u, tmpServ);
-        ns.init();
-        perform = new JIBIRCPerform(u, tmpServ);
-        if (tmpServ.getChannels().length() > 0) {
-            perform.performListAdd("JOIN :" + tmpServ.getChannels() + "\r\n");
-        }
-        //u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
-        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting (#" + connects + ") [SSL=" + tmpServ.getSsl() + "] to " + tmpServ.getServer() + " :" + tmpServ.getPort() + " (RESOLVED: " + tmpServ.getResolved() + ")");
-        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user);
-        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname);
-        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICK= " + myInfo.nick);
-        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICKSERV " + (tmpServ.getNickServUser() != null) + " " + (tmpServ.getNickServPass() != null));
-        u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :CHANNELS " + tmpServ.getChannels());
-        InetAddress clientBind = null;
-        if (JavaIrcBouncer.jibConfig.getValue("ClientNoSSL") != null) {
-            noSsl = true;
-        }
-        noSsl = !tmpServ.getSsl();
-        try {
-            if (JavaIrcBouncer.jibConfig.getValue("ClientBind") != null) {
-                clientBind = InetAddress.getByName(JavaIrcBouncer.jibConfig.getValue("ClientBind"));
-            }
-            if (this.serv.getClientBind() != null) {
-                clientBind = InetAddress.getByName(this.serv.getClientBind());
-            }
-        } catch (UnknownHostException ex) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            connecting = false;
-        }
-        InetAddress dst = null;
-        int dstport = -1;
-        try {
-            dst = InetAddress.getByName(this.Server);
-            dstport = Port;
-        } catch (UnknownHostException ex) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-            connecting = false;
+        JIBIRCServer tmpServ = null;
+        if (serv == null) {
+            tmpServ = u.getIrcServer();
+        } else {
+            tmpServ = serv;
         }
         if (tmpServ != null) {
-            dst = tmpServ.getResolved();
-            dstport = tmpServ.getPort();
-        }
-        if (!noSsl) {
-            try {
-                sslctx = SSLContext.getInstance("TLS");
-            } catch (NoSuchAlgorithmException ex) {
-                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            tmpServ.resolve();
+            ns = new JIBIRCNickServ(u, tmpServ);
+            ns.init();
+            perform = new JIBIRCPerform(u, tmpServ);
+            if (tmpServ.getChannels().length() > 0) {
+                perform.performListAdd("JOIN :" + tmpServ.getChannels() + "\r\n");
             }
-            TrustManager[] tm = new TrustManager[]{new JIBSSLTrustManager()};
-            try {
-                sslctx.init(null, tm, null);
-            } catch (KeyManagementException ex) {
-                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            //u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
+            u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting (#" + connects + ") [SSL=" + tmpServ.getSsl() + "] to " + tmpServ.getServer() + " :" + tmpServ.getPort() + " (RESOLVED: " + tmpServ.getResolved() + ")");
+            u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :USER= " + myInfo.user);
+            u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :REALNAME= " + myInfo.realname);
+            u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICK= " + myInfo.nick);
+            u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :NICKSERV " + (tmpServ.getNickServUser() != null) + " " + (tmpServ.getNickServPass() != null));
+            u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :CHANNELS " + tmpServ.getChannels());
+            InetAddress clientBind = null;
+            if (JavaIrcBouncer.jibConfig.getValue("ClientNoSSL") != null) {
+                noSsl = true;
             }
-            SSLSocketFactory factory = (SSLSocketFactory) sslctx.getSocketFactory();
+            noSsl = !tmpServ.getSsl();
             try {
-                ircServer = (SSLSocket) factory.createSocket(dst, dstport, clientBind, 0);
-            } catch (ConnectException ce) {
-                connectError = ce;
-            } catch (IOException ex) {
+                if (JavaIrcBouncer.jibConfig.getValue("ClientBind") != null) {
+                    clientBind = InetAddress.getByName(JavaIrcBouncer.jibConfig.getValue("ClientBind"));
+                }
+                if (this.serv.getClientBind() != null) {
+                    clientBind = InetAddress.getByName(this.serv.getClientBind());
+                }
+            } catch (UnknownHostException ex) {
                 System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                connecting = false;
             }
-            sock = new JIBSocket(ircServer);
-        } else {
+            InetAddress dst = null;
+            int dstport = -1;
             try {
-                ircServerNoSsl = new Socket(dst, dstport, clientBind, 0);
-            } catch (ConnectException ce) {
-                connectError = ce;
-            } catch (IOException ex) {
+                dst = InetAddress.getByName(this.Server);
+                dstport = Port;
+            } catch (UnknownHostException ex) {
                 System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                connecting = false;
             }
-            sock = new JIBSocket(ircServerNoSsl);
-        }
-        if (sock != null && sock.getError() == null) {
-            connected = true;
-            onConnect();
-        }
-        if (t3 == null) {
-            t3 = new Thread(this);
-            t3.start();
+            if (tmpServ != null) {
+                dst = tmpServ.getResolved();
+                dstport = tmpServ.getPort();
+            }
+            if (!noSsl) {
+                try {
+                    sslctx = SSLContext.getInstance("TLS");
+                } catch (NoSuchAlgorithmException ex) {
+                    System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                TrustManager[] tm = new TrustManager[]{new JIBSSLTrustManager()};
+                try {
+                    sslctx.init(null, tm, null);
+                } catch (KeyManagementException ex) {
+                    System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                SSLSocketFactory factory = (SSLSocketFactory) sslctx.getSocketFactory();
+                try {
+                    ircServer = (SSLSocket) factory.createSocket(dst, dstport, clientBind, 0);
+                } catch (ConnectException ce) {
+                    connectError = ce;
+                } catch (IOException ex) {
+                    System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                sock = new JIBSocket(ircServer);
+            } else {
+                try {
+                    ircServerNoSsl = new Socket(dst, dstport, clientBind, 0);
+                } catch (ConnectException ce) {
+                    connectError = ce;
+                } catch (IOException ex) {
+                    System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                sock = new JIBSocket(ircServerNoSsl);
+            }
+            if (sock != null && sock.getError() == null) {
+                connected = true;
+                onConnect();
+            }
+            if (t3 == null) {
+                t3 = new Thread(this);
+                t3.start();
+            }
         }
         connecting = false;
     }
@@ -303,6 +327,18 @@ public class JIBIRC implements Runnable {
                 if (sp5.length > 1 && sp5[1].equals("376")) {
                     onLogon();
                 }
+                if (sp5.length > 1 && sp5[1].equals("431")) {
+                    writeLine("NICK C" + JIBStringUtil.randHexString().substring(0, 8) + "\r\n");
+                }
+                if (sp5.length > 1 && sp5[1].equals("432")) {
+                    writeLine("NICK C" + JIBStringUtil.randHexString().substring(0, 8) + "\r\n");
+                }
+                if (sp5.length > 1 && sp5[1].equals("433")) {
+                    writeLine("NICK C" + JIBStringUtil.randHexString().substring(0, 8) + "\r\n");
+                }
+                if (sp5.length > 1 && sp5[1].equals("436")) {
+                    writeLine("NICK C" + JIBStringUtil.randHexString().substring(0, 8) + "\r\n");
+                }
             }
         }
         if (log != null) {
@@ -313,7 +349,11 @@ public class JIBIRC implements Runnable {
 
     public String simulateNick(String oldnick, String newnick) {
         if (newnick == null) {
-            newnick = myInfo.nick;
+            if (myInfo != null && myInfo.nick != null && myInfo.nick.length() > 0) {
+                newnick = myInfo.nick;
+            } else {
+                newnick = "u" + Long.toString(u.getUserId());
+            }
         }
         String nickSim = ":" + oldnick + " NICK " + newnick;
         u.writeAllClients(nickSim + "\r\n");
