@@ -124,11 +124,11 @@ public class JIBIRC implements Runnable {
         preLogon = true;
         JIBIRCServer tmpServ = u.getIrcServer();
         tmpServ.resolve();
-        ns = new JIBIRCNickServ(u, serv);
+        ns = new JIBIRCNickServ(u, tmpServ);
         ns.init();
-        perform = new JIBIRCPerform(u, serv);
+        perform = new JIBIRCPerform(u, tmpServ);
         if (serv.getChannels().length() > 0) {
-            perform.performListAdd("JOIN :" + serv.getChannels() + "\r\n");
+            perform.performListAdd("JOIN :" + tmpServ.getChannels() + "\r\n");
         }
         //u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting to " + this.Server + " :" + this.Port);
         u.writeAllClients(":JIB.jib NOTICE " + myInfo.nick + " :Connecting (#" + connects + ") [SSL=" + tmpServ.getSsl() + "] to " + tmpServ.getServer() + " :" + tmpServ.getPort() + " (RESOLVED: " + tmpServ.getResolved() + ")");
