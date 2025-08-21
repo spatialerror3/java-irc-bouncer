@@ -17,6 +17,8 @@
  */
 package net.spatialerror3.jib;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
@@ -31,6 +33,7 @@ public class JIBHTTPHandler extends Handler.Abstract {
     @Override
     public boolean handle(Request rqst, Response rspns, Callback clbck) throws Exception {
         System.err.println(this + " handle() rqst=" + rqst + " rspns=" + rspns + " clbck=" + clbck);
+        rspns.write(true, ByteBuffer.wrap("JIB\n".getBytes(StandardCharsets.UTF_8)), clbck);
         return true;
     }
 
