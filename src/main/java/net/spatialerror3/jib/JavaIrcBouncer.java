@@ -17,6 +17,7 @@ public class JavaIrcBouncer {
     public static JIBServer jibServ = null;
     public static JIBIRC jibIRC = null;
     public static JIBJython jibJython = null;
+    public static JIBHTTPServer jibHttpServ = null;
     
     public static void main(String[] args) {
         System.setProperty("python.import.site", "false");
@@ -57,6 +58,7 @@ public class JavaIrcBouncer {
         JavaIrcBouncer.jibServ = jib1;
         Thread t1 = new Thread(jib1);
         t1.start();
+        jibHttpServ = new JIBHTTPServer(-1);
         while (true) {
             try {
                 Thread.sleep(60000);
