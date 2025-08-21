@@ -207,7 +207,9 @@ public class JIBIRC implements Runnable {
     }
 
     public void reconnect() {
-        System.err.println("reconnect() called...");
+        if (DEBUGGING) {
+            System.err.println("reconnect() called...");
+        }
         if (sock.connected() == false || connected == false) {
             errorCounter = 0;
             connecting = false;
@@ -240,11 +242,15 @@ public class JIBIRC implements Runnable {
         } catch (Exception e) {
             System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
         }
-        String[] chans = JavaIrcBouncer.jibDbUtil.getChannels(u);
-        for (int i = 0; i < chans.length; i++) {
-            if (chans[i] != null) {
-                writeLine("JOIN " + chans[i] + "\r\n");
+        try {
+            String[] chans = JavaIrcBouncer.jibDbUtil.getChannels(u);
+            for (int i = 0; i < chans.length; i++) {
+                if (chans[i] != null) {
+                    writeLine("JOIN " + chans[i] + "\r\n");
+                }
             }
+        } catch (Exception e) {
+            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
         }
         preLogon = false;
     }
@@ -257,20 +263,21 @@ public class JIBIRC implements Runnable {
         if (DEBUGGING) {
             System.err.println(this + " l=" + l);
         }
-        if (preLogon) {
-            String[] sp5 = l.split(" ", 3);
-            if (sp5.length > 1 && sp5[1].equals("005")) {
-                onLogon();
-            }
-            if (sp5.length > 1 && sp5[1].equals("255")) {
-                onLogon();
-            }
-            if (sp5.length > 1 && sp5[1].equals("376")) {
-                onLogon();
-            }
-        }
         if (l == null || l.startsWith("ERROR")) {
             errorCounter++;
+        } else {
+            if (preLogon) {
+                String[] sp5 = l.split(" ", 3);
+                if (sp5.length > 1 && sp5[1].equals("005")) {
+                    onLogon();
+                }
+                if (sp5.length > 1 && sp5[1].equals("255")) {
+                    onLogon();
+                }
+                if (sp5.length > 1 && sp5[1].equals("376")) {
+                    onLogon();
+                }
+            }
         }
         if (log != null) {
             log.processLine(l);
@@ -357,7 +364,9 @@ public class JIBIRC implements Runnable {
                     connected = false;
                 }
             }
-            System.err.println("connecting=" + connecting + " connected=" + connected + " connected()=" + connected());
+            if (DEBUGGING) {
+                System.err.println("connecting=" + connecting + " connected=" + connected + " connected()=" + connected());
+            }
             if (sock.connected() == false || connected == false || connected() == false) {
                 reconnect();
             }
