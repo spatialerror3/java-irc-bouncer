@@ -9,12 +9,45 @@ package net.spatialerror3.jib;
  * @author spatialerror3
  */
 public class JIBUserInfo {
+
     public String nick;
     public String user;
     public String host;
     public String realname;
-    
+
+    public String getNick() {
+        return this.nick;
+    }
+
+    public String getUser() {
+        return this.user;
+    }
+
+    public String getHost() {
+        return this.host;
+    }
+
+    public String getRealname() {
+        return this.realname;
+    }
+
     public String nuh() {
-        return nick+"!"+user+"@"+host;
+        return nick + "!" + user + "@" + host;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
     }
 }
