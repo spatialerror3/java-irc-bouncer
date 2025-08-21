@@ -35,6 +35,17 @@ public class JIBHandleClient implements Runnable {
         sendLine(":JIB.jib NOTICE " + "*" + " :AUTHENTICATION MANDATORY\r\n");
     }
 
+    public void refreshNick() {
+        String nickInIRC = null;
+        if (inAuth == false && getSingleJIBIRC() != null) {
+            nickInIRC = getSingleJIBIRC().getNick();
+            if (!nickInIRC.equals(trackNick) && nickInIRC != null && nickInIRC.length() > 0) {
+                String setTrackNick = getSingleJIBIRC().simulateNick(trackNick, nickInIRC);
+                trackNick = setTrackNick;
+            }
+        }
+    }
+
     public void onAuthDone() {
         String[] channels = JavaIrcBouncer.jibDbUtil.getChannels(authed);
         String setTrackNick = getSingleJIBIRC().simulateNick(trackNick, null);
@@ -246,7 +257,8 @@ public class JIBHandleClient implements Runnable {
                         authed.getJibIRC().reconnect();
                     }
                     if (msgextract[2].substring(1).startsWith("JUMP")) {
-
+                        authed.getJibIRC().disconnect(null);
+                        authed.getJibIRC().connect2(null);
                     }
                     if (msgextract[2].substring(1).startsWith("SET")) {
                         if (msgextract[2].substring(1).startsWith("SET NICK")) {
@@ -297,6 +309,7 @@ public class JIBHandleClient implements Runnable {
                 } else {
                     sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "Live long and prosper!" + "\r\n");
                 }
+                refreshNick();
             }
         }
         if (l.startsWith("PART")) {
