@@ -349,7 +349,7 @@ public class JIBIRC implements Runnable {
         if (lsp.length > 2) {
             if (lsp[1].equals("NICK")) {
                 JIBUserInfo src = JIBUserInfo.parseNUH(lsp[0]);
-                String srcNewNick = lsp[2];
+                String srcNewNick = JIBStringUtil.remDD(lsp[2]);
                 if (src.getNick().equals(this.nick)) {
                     this.nick = srcNewNick;
                 }
