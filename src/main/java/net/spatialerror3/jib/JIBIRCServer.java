@@ -23,6 +23,8 @@ public class JIBIRCServer {
     private boolean ssl = true;
     private String password = null;
     //
+    private JIBUserInfo userinfo = null;
+    //
     private String nickServUser = null;
     private String nickServPass = null;
     //
@@ -52,6 +54,10 @@ public class JIBIRCServer {
 
     public boolean getSsl() {
         return this.ssl;
+    }
+
+    public JIBUserInfo getUserInfo() {
+        return this.userinfo;
     }
 
     public String getNickServUser() {
@@ -108,6 +114,10 @@ public class JIBIRCServer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setUserInfo(JIBUserInfo userinfo) {
+        this.userinfo = userinfo;
     }
 
     public void setNickServUser(String nickServUser) {
