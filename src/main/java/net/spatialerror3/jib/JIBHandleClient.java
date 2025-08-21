@@ -219,7 +219,11 @@ public class JIBHandleClient implements Runnable {
         }
         if (l.startsWith("PRIVMSG")) {
             String[] msgextract = l.split(" ", 3);
-            getSingleJIBIRC().simulatePRIVMSG(this, sp[1], msgextract[2].substring(1));
+            try {
+                getSingleJIBIRC().simulatePRIVMSG(this, sp[1], msgextract[2].substring(1));
+            } catch (Exception e) {
+
+            }
             if (msgextract[1].equals("*jib")) {
                 passthrough = false;
                 sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "YOU ARE " + authed.getUUID() + "\r\n");
@@ -233,19 +237,28 @@ public class JIBHandleClient implements Runnable {
                         }
                     }
                     if (msgextract[2].substring(1).startsWith("CONNECT")) {
-
+                        authed.getJibIRC().connect2(null);
                     }
                     if (msgextract[2].substring(1).startsWith("DISCONNECT")) {
-
+                        authed.getJibIRC().disconnect(null);
                     }
                     if (msgextract[2].substring(1).startsWith("RECONNECT")) {
-
+                        authed.getJibIRC().reconnect();
                     }
                     if (msgextract[2].substring(1).startsWith("JUMP")) {
 
                     }
                     if (msgextract[2].substring(1).startsWith("SET")) {
-
+                        if (msgextract[2].substring(1).startsWith("SET NICK")) {
+                            String toset = msgextract[2].substring(10);
+                            JIBUserInfo tmpUserInfo = new JIBUserInfo();
+                            tmpUserInfo.setNick(toset);
+                            tmpUserInfo.setUser(toset);
+                            tmpUserInfo.setRealname(toset);
+                            authed.setNick(toset);
+                            authed.setUser(toset);
+                            authed.setRealname(toset);
+                        }
                     }
                     if (msgextract[2].substring(1).startsWith("SERVER")) {
                         String mtp = msgextract[2].substring(1);
