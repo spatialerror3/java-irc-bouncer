@@ -58,7 +58,9 @@ public class JIBIRC implements Runnable {
     private Thread t3 = null;
     //
     private Exception connectError = null;
-    
+    //
+    private boolean keepDisconnected = false;
+
     public JIBIRC(JIBUser u, JIBIRCServer serv) {
         JIBIRC.DEBUGGING = JavaIrcBouncer.jibDebug.debug();
         this.u = u;
@@ -93,7 +95,7 @@ public class JIBIRC implements Runnable {
         }
         //
         log = new JIBIRCLog();
-        connect();
+        connect(null);
     }
 
     public boolean connected() {
@@ -113,7 +115,7 @@ public class JIBIRC implements Runnable {
         return false;
     }
 
-    private void connect() {
+    private void connect(JIBIRCServer serv) {
         SSLContext sslctx = null;
         if (connected == true) {
             return;
@@ -122,6 +124,7 @@ public class JIBIRC implements Runnable {
             return;
         }
         connecting = true;
+        keepDisconnected = false;
         connects++;
         preLogon = true;
         JIBIRCServer tmpServ = u.getIrcServer();
@@ -210,16 +213,26 @@ public class JIBIRC implements Runnable {
         connecting = false;
     }
 
+    public void disconnect(JIBIRCServer serv) {
+        if (this.serv.equals(serv)) {
+            // FIXME: disconnect from server
+            this.keepDisconnected = true;
+        }
+    }
+
     public void reconnect() {
         if (DEBUGGING) {
             System.err.println("reconnect() called...");
+        }
+        if (this.keepDisconnected == true) {
+            return;
         }
         if (sock.connected() == false || connected == false) {
             errorCounter = 0;
             connecting = false;
             connected = false;
             preLogon = true;
-            connect();
+            connect(null);
         }
     }
 
