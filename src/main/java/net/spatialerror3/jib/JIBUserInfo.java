@@ -50,4 +50,16 @@ public class JIBUserInfo {
     public void setRealname(String realname) {
         this.realname = realname;
     }
+
+    public static JIBUserInfo parseNUH(String containsNUH) {
+        JIBUserInfo ret = null;
+        String tmp1 = JIBStringUtil.remDD(containsNUH);
+        String[] tmp2 = tmp1.split("!", 2);
+        String[] tmp3 = (tmp2[1]).split("@", 2);
+        ret = new JIBUserInfo();
+        ret.setNick(tmp2[0]);
+        ret.setUser(tmp3[0]);
+        ret.setHost(tmp3[1]);
+        return ret;
+    }
 }
