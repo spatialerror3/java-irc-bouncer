@@ -244,9 +244,6 @@ public class JIBHandleClient implements Runnable {
                             String mtpHost = mtps[1];
                             String mtpPort = mtps[2];
                             String mtpSSL = mtps[3];
-                            String mtpNSACCT = mtps[4];
-                            String mtpNSPASS = mtps[5];
-                            String[] mtpCHANS = mtps[6].split(",");
                             int mtpPortInt = Integer.valueOf(mtpPort);
                             boolean mtpSslBool = Boolean.valueOf(mtpSSL);
                             JIBIRCServer tmpServ2 = new JIBIRCServer();
@@ -254,12 +251,15 @@ public class JIBHandleClient implements Runnable {
                             tmpServ2.setPort(mtpPortInt);
                             tmpServ2.setSsl(mtpSslBool);
                             if (mtps.length >= 5) {
+                                String mtpNSACCT = mtps[4];
                                 tmpServ2.setNickServUser(mtpNSACCT);
                             }
                             if (mtps.length >= 6) {
+                                String mtpNSPASS = mtps[5];
                                 tmpServ2.setNickServPass(mtpNSPASS);
                             }
                             if (mtps.length >= 7) {
+                                String[] mtpCHANS = mtps[6].split(",");
                                 for (int j = 0; j < mtpCHANS.length; j++) {
                                     tmpServ2.addChannel(mtpCHANS[j]);
                                 }
