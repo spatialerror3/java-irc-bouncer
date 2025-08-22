@@ -25,13 +25,26 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JIBCommand {
+
     private static final Logger log = LogManager.getLogger(JIBCommand.class);
 
     public JIBCommand() {
-        
+
     }
-    
+
     public void processCommand(JIBHandleClient hc, JIBUser authed, String message) {
-        
+        String[] excmd = message.split(" ", 2);
+        if (excmd.equals("GET")) {
+            String[] params = excmd[1].split(" ", 2);
+            if (params[0].equals("NICK")) {
+                hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + params[0] + "= " + authed.getIRCUserInfo().getNick() + "\r\n");
+            }
+            if (params[0].equals("USER")) {
+                hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + params[0] + "= " + authed.getIRCUserInfo().getUser() + "\r\n");
+            }
+            if (params[0].equals("REALNAME")) {
+                hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + params[0] + "= " + authed.getIRCUserInfo().getRealname() + "\r\n");
+            }
+        }
     }
 }
