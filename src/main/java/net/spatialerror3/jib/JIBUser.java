@@ -54,6 +54,10 @@ public class JIBUser implements Serializable {
     public long getUserId() {
         return this.userId;
     }
+    
+    public String getUserName() {
+        return this.userName;
+    }
 
     public UUID getUUID() {
         return this.uuid;
