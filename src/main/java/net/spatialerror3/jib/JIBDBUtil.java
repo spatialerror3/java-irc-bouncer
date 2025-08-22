@@ -112,7 +112,7 @@ public class JIBDBUtil {
     }
 
     public long getUsersMaxUserId() {
-        long userIdMax = 0;
+        long userIdMax = -1;
         String sql = "SELECT userId FROM users;";
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
