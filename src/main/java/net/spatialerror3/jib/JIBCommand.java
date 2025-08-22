@@ -46,5 +46,17 @@ public class JIBCommand {
                 hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + params[0] + "= " + authed.getIRCUserInfo().getRealname() + "\r\n");
             }
         }
+        if (excmd[0].equals("SET")) {
+            String[] params = excmd[1].split(" ", 2);
+            if (params[0].equals("NICK")) {
+                authed.setNick(params[1]);
+            }
+            if (params[0].equals("USER")) {
+                authed.setUser(params[1]);
+            }
+            if (params[0].equals("REALNAME")) {
+                authed.setRealname(params[1]);
+            }
+        }
     }
 }
