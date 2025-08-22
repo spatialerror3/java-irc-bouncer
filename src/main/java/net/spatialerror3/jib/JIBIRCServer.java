@@ -4,6 +4,7 @@
  */
 package net.spatialerror3.jib;
 
+import java.io.Serializable;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -15,8 +16,9 @@ import java.util.Iterator;
  *
  * @author spatialerror3
  */
-public class JIBIRCServer {
+public class JIBIRCServer implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private JIBIRCNetType.NetType netType = JIBIRCNetType.NetType.GENERIC;
     private String server = null;
     private int port = 0;
