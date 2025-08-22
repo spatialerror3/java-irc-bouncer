@@ -44,7 +44,7 @@ public class JIBCore {
 
     public JIBUser createUser(String userName, boolean admin, boolean nodb) {
         if (getUser(userName) != null) {
-            return null;
+            return getUser(userName);
         }
         JIBUser u = new JIBUser();
         userCnt++;
