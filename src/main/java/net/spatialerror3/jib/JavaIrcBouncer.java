@@ -19,6 +19,7 @@ public class JavaIrcBouncer {
     public static JIBSysEnv jibSysEnv = null;
     public static JIBDBUtil jibDbUtil = null;
     public static JIBServer jibServ = null;
+    public static JIBServerSSL jibServSsl = null;
     public static JIBIRC jibIRC = null;
     public static JIBJython jibJython = null;
     public static JIBHTTPServer jibHttpServ = null;
@@ -42,6 +43,10 @@ public class JavaIrcBouncer {
         jibSysEnv.envToConfig("ClientNoSSL");
         jibSysEnv.envToConfig("NICKSERVUSER");
         jibSysEnv.envToConfig("NICKSERVPASS");
+        jibSysEnv.envToConfig("TRUSTSTORENAME");
+        jibSysEnv.envToConfig("TRUSTSTOREPASSWORD");
+        jibSysEnv.envToConfig("KEYSTORENAME");
+        jibSysEnv.envToConfig("KEYSTOREPASSWORD");
         jibSysEnv.envToConfig("DEBUGGING");
         if (jibConfig.getValue("DEBUGGING") != null) {
             jibDebug.setDebugging(true);
@@ -72,6 +77,11 @@ public class JavaIrcBouncer {
         JavaIrcBouncer.jibServ = jib1;
         Thread t1 = new Thread(jib1);
         t1.start();
+        JIBServerSSL jib2 = null;
+        jib2 = new JIBServerSSL(jib1);
+        JavaIrcBouncer.jibServSsl = jib2;
+        Thread t2 = new Thread(jib2);
+        t2.start();
         jibHttpServ = new JIBHTTPServer(-1);
         jibCommand = new JIBCommand();
         jibShutdown = new JIBShutdown();
