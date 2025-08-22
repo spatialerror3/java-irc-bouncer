@@ -49,7 +49,7 @@ public class JavaIrcBouncer {
         jibJython.loadConfig();
         if (jibConfig.getValue("AUTHPASS") == null) {
             jibConfig.setValue("AUTHPASS", JIBStringUtil.randHexString());
-            System.err.println("Setting AUTHPASS for admin user to: " + jibConfig.getValue("AUTHPASS"));
+            log.info("Setting AUTHPASS for admin user to: " + jibConfig.getValue("AUTHPASS"));
         }
         if (jibConfig.getValue("AUTHUSER") != null) {
             jibCore.createUser(jibConfig.getValue("AUTHUSER"), true).setAuthToken(jibConfig.getValue("AUTHPASS"));
