@@ -99,6 +99,7 @@ public class JIBUser implements Serializable {
 
     public void addIrcServer(JIBIRCServer ircServer) {
         ircServers.add(ircServer);
+        JavaIrcBouncer.jibDbUtil.addServer(this, ircServer);
     }
 
     public Vector<JIBIRCServer> getIrcServers() {
