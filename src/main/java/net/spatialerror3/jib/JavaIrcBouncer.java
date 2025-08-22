@@ -55,6 +55,7 @@ public class JavaIrcBouncer {
         }
         jibDbUtil = new JIBDBUtil(h2dbfile);
         jibDbUtil.initSchema();
+        jibDbUtil.loadUsers();
         jibJython = new JIBJython();
         jibJython.loadConfig();
         if (jibConfig.getValue("AUTHPASS") == null) {
