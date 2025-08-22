@@ -43,6 +43,9 @@ public class JIBCore {
     }
 
     public JIBUser createUser(String userName, boolean admin, boolean nodb) {
+        if (getUser(userName) != null) {
+            return null;
+        }
         JIBUser u = new JIBUser();
         userCnt++;
         long newUserId = JavaIrcBouncer.jibDbUtil.getUsersMaxUserId();
