@@ -111,6 +111,29 @@ public class JIBDBUtil {
         return r;
     }
 
+    public long getUsersMaxUserId() {
+        long userIdMax = 0;
+        String sql = "SELECT userId FROM users;";
+        PreparedStatement ps5 = null;
+        ResultSet rs5 = null;
+        try {
+            ps5 = getDatabase().prepareStatement(sql);
+            rs5 = ps5.executeQuery();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        try {
+            while (rs5 != null && rs5.next()) {
+                if (rs5.getLong(1) > userIdMax) {
+                    userIdMax = rs5.getLong(1);
+                }
+            }
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        return userIdMax;
+    }
+
     public void loadUsers() {
         String sql = "SELECT userId,_uuid,username,admin FROM users;";
         PreparedStatement ps5 = null;
