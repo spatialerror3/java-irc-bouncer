@@ -261,6 +261,8 @@ public class JIBHandleClient implements Runnable {
                         authed.getJibIRC().connect2(null);
                     }
                     if (msgextract[2].substring(1).startsWith("SET")) {
+                        String[] sp5 = msgextract[2].substring(1).split(" ");
+                        String[] sp6 = msgextract[2].substring(1).split(" ", 3);
                         if (msgextract[2].substring(1).startsWith("SET NICK")) {
                             String toset = msgextract[2].substring(10);
                             JIBUserInfo tmpUserInfo = new JIBUserInfo();
@@ -270,6 +272,20 @@ public class JIBHandleClient implements Runnable {
                             authed.setNick(toset);
                             authed.setUser(toset);
                             authed.setRealname(toset);
+                        }
+                        if (authed.admin() && sp5[0].equals("SET")) {
+                            JavaIrcBouncer.jibConfig.setValue(sp5[1], sp5[2]);
+                        }
+                        if (sp5[0].equals("SET")) {
+                            if (sp5[1].equals("NICK")) {
+                                authed.setNick(sp5[2]);
+                            }
+                            if (sp5[1].equals("USER")) {
+                                authed.setUser(sp5[2]);
+                            }
+                            if (sp5[1].equals("REALNAME")) {
+                                authed.setRealname(sp6[2]);
+                            }
                         }
                     }
                     if (msgextract[2].substring(1).startsWith("SERVER")) {
