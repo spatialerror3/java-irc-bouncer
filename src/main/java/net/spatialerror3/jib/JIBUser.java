@@ -4,6 +4,7 @@
  */
 package net.spatialerror3.jib;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.Vector;
@@ -12,8 +13,9 @@ import java.util.Vector;
  *
  * @author spatialerror3
  */
-public class JIBUser {
+public class JIBUser implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private static long userIdCnt = 0;
     private long userId = userIdCnt++;
     private UUID uuid = UUID.randomUUID();
