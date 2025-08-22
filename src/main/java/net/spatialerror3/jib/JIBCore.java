@@ -39,7 +39,7 @@ public class JIBCore {
     }
 
     public JIBUser createUser(String userName, boolean admin) {
-        return createUser(userName, admin);
+        return createUser(userName, admin, false);
     }
 
     public JIBUser createUser(String userName, boolean admin, boolean nodb) {
