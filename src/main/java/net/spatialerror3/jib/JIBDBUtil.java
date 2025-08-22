@@ -109,7 +109,15 @@ public class JIBDBUtil {
 
         return r;
     }
-
+    
+    public void addUser(JIBUser u) {
+        
+    }
+    
+    public void removeUser(JIBUser u) {
+        
+    }
+    
     public void addServer(JIBUser u, String Server, int Port) {
         String sql = "INSERT INTO servers (server,port,u) VALUES(?,?,?);";
         PreparedStatement ps2 = null;
