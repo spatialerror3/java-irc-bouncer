@@ -43,7 +43,13 @@ public class JavaIrcBouncer {
         if (jibConfig.getValue("DEBUGGING") != null) {
             jibDebug.setDebugging(true);
         }
-        jibDbUtil = new JIBDBUtil();
+        String h2dbfile = null;
+        if(jibConfig.getValue("H2DBFILE") != null) {
+            h2dbfile = jibConfig.getValue("H2DBFILE");
+        } else {
+            h2dbfile = "mem:test";
+        }
+        jibDbUtil = new JIBDBUtil(h2dbfile);
         jibDbUtil.initSchema();
         jibJython = new JIBJython();
         jibJython.loadConfig();
