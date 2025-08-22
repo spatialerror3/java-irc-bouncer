@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JavaIrcBouncer {
+
     private static final Logger log = LogManager.getLogger(JavaIrcBouncer.class);
     public static JIBDebug jibDebug = null;
     public static JIBCore jibCore = null;
@@ -43,8 +44,9 @@ public class JavaIrcBouncer {
         if (jibConfig.getValue("DEBUGGING") != null) {
             jibDebug.setDebugging(true);
         }
+        jibSysEnv.envToConfig("H2DBFILE");
         String h2dbfile = null;
-        if(jibConfig.getValue("H2DBFILE") != null) {
+        if (jibConfig.getValue("H2DBFILE") != null) {
             h2dbfile = jibConfig.getValue("H2DBFILE");
         } else {
             h2dbfile = "mem:test";
