@@ -109,15 +109,27 @@ public class JIBDBUtil {
 
         return r;
     }
-    
+
     public void addUser(JIBUser u) {
-        
+        String sql = "INSERT INTO users (userId,_uuid,username,admin) VALUES(?,?,?,?);";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setLong(1, u.getUserId());
+            ps2.setString(2, u.getUUID().toString());
+            ps2.setString(3, u.getUserName());
+            ps2.setBoolean(4, u.admin());
+            ps2.execute();
+            getDatabase().commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
     }
-    
+
     public void removeUser(JIBUser u) {
-        
+
     }
-    
+
     public void addServer(JIBUser u, String Server, int Port) {
         String sql = "INSERT INTO servers (server,port,u) VALUES(?,?,?);";
         PreparedStatement ps2 = null;
@@ -194,6 +206,7 @@ public class JIBDBUtil {
             ps2.setString(1, Channel);
             ps2.setString(2, u.getUUID().toString());
             ps2.execute();
+            getDatabase().commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
