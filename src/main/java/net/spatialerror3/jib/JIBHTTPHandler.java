@@ -33,8 +33,7 @@ public class JIBHTTPHandler extends Handler.Abstract {
     @Override
     public boolean handle(Request rqst, Response rspns, Callback clbck) throws Exception {
         System.err.println(this + " handle() rqst=" + rqst + " rspns=" + rspns + " clbck=" + clbck);
-        rspns.write(true, ByteBuffer.wrap(("userCount=" + JavaIrcBouncer.jibCore.getUserCount() + "\n").getBytes(StandardCharsets.UTF_8)), clbck);
-        rspns.write(true, ByteBuffer.wrap("JIB\n".getBytes(StandardCharsets.UTF_8)), clbck);
+        rspns.write(true, ByteBuffer.wrap(("userCount=" + JavaIrcBouncer.jibCore.getUserCount() + "\n" + "JIB\n").getBytes(StandardCharsets.UTF_8)), clbck);
         return true;
     }
 
