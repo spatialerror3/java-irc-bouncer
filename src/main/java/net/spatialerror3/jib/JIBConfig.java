@@ -4,13 +4,15 @@
  */
 package net.spatialerror3.jib;
 
+import java.io.Serializable;
 import java.util.Hashtable;
 
 /**
  *
  * @author spatialerror3
  */
-public class JIBConfig {
+public class JIBConfig implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Hashtable<String,String> kvStore = null;
     
     public JIBConfig() {
