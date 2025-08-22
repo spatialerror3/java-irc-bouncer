@@ -239,6 +239,7 @@ public class JIBHandleClient implements Runnable {
                 passthrough = false;
                 sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "YOU ARE " + authed.getUUID() + "\r\n");
                 if (authed != null) {
+                    JavaIrcBouncer.jibCommand.processCommand(this, authed, JIBStringUtil.remDD(msgextract[2]));
                     sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "REPLAY" + "\r\n");
                     sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + msgextract[2].substring(1) + "\r\n");
                     if (msgextract[2].substring(1).startsWith("REPLAY")) {
