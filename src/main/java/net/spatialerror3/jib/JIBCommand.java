@@ -34,6 +34,19 @@ public class JIBCommand {
 
     public void processCommand(JIBHandleClient hc, JIBUser authed, String message) {
         String[] excmd = message.split(" ", 2);
+        if (excmd[0].startsWith("CONNECT")) {
+            authed.getJibIRC().connect2(null);
+        }
+        if (excmd[0].startsWith("DISCONNECT")) {
+            authed.getJibIRC().disconnect(null);
+        }
+        if (excmd[0].startsWith("RECONNECT")) {
+            authed.getJibIRC().reconnect();
+        }
+        if (excmd[0].startsWith("JUMP")) {
+            authed.getJibIRC().disconnect(null);
+            authed.getJibIRC().connect2(null);
+        }
         if (excmd[0].equals("GET")) {
             String[] params = excmd[1].split(" ", 2);
             if (params[0].equals("NICK")) {
