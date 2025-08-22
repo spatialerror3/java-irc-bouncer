@@ -4,12 +4,15 @@
  */
 package net.spatialerror3.jib;
 
+import java.io.Serializable;
+
 /**
  *
  * @author spatialerror3
  */
-public class JIBUserInfo {
+public class JIBUserInfo implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     public String nick;
     public String user;
     public String host;
