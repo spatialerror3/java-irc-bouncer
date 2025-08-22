@@ -34,7 +34,7 @@ public class JIBCommand {
 
     public void processCommand(JIBHandleClient hc, JIBUser authed, String message) {
         String[] excmd = message.split(" ", 2);
-        if (excmd.equals("GET")) {
+        if (excmd[0].equals("GET")) {
             String[] params = excmd[1].split(" ", 2);
             if (params[0].equals("NICK")) {
                 hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + params[0] + "= " + authed.getIRCUserInfo().getNick() + "\r\n");
