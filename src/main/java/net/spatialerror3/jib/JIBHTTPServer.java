@@ -17,6 +17,8 @@
  */
 package net.spatialerror3.jib;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -27,6 +29,7 @@ import org.eclipse.jetty.server.ServerConnector;
  */
 public class JIBHTTPServer {
 
+    private static final Logger log = LogManager.getLogger(JIBHTTPServer.class);
     private int Port = -1;
 
     public JIBHTTPServer(int Port) {
@@ -46,10 +49,7 @@ public class JIBHTTPServer {
         try {
             server.start();
         } catch (Exception ex) {
-            System.err.println("ex=" + ex);
-            if (ex != null) {
-                ex.printStackTrace();
-            }
+            log.error("Error Starting HTTP Server", ex);
         }
     }
 }
