@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.*;
 import java.util.Iterator;
 import java.util.Vector;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -15,6 +17,7 @@ import java.util.Vector;
  */
 public class JIBServer implements Runnable {
 
+    private static final Logger log = LogManager.getLogger(JIBServer.class);
     ServerSocket ss = null;
     Vector<JIBHandleClient> clients = new Vector<JIBHandleClient>();
 
@@ -34,6 +37,10 @@ public class JIBServer implements Runnable {
             System.getLogger(JIBServer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
 
+    }
+
+    public Vector<JIBHandleClient> getClientsVector() {
+        return this.clients;
     }
 
     public void cleanErrorClients() {
