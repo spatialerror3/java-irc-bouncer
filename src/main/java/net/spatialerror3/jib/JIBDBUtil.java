@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -108,6 +109,29 @@ public class JIBDBUtil {
         }
 
         return r;
+    }
+
+    public void loadUsers() {
+        String sql = "SELECT userId,_uuid,username,admin FROM users;";
+        PreparedStatement ps5 = null;
+        ResultSet rs5 = null;
+        try {
+            ps5 = getDatabase().prepareStatement(sql);
+            rs5 = ps5.executeQuery();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        try {
+            while (rs5 != null && rs5.next()) {
+                JIBUser tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(4));
+                tmpu.setUserId(rs5.getLong(1));
+                tmpu.setUUID((UUID) rs5.getObject("_uuid"));
+
+                log.debug("Contains User=" + rs5.getString(3));
+            }
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
     }
 
     public void addUser(JIBUser u) {
