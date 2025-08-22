@@ -25,7 +25,7 @@ public class JavaIrcBouncer {
     public static JIBHTTPServer jibHttpServ = null;
     public static JIBCommand jibCommand = null;
     public static JIBShutdown jibShutdown = null;
-    
+
     public static void main(String[] args) {
         System.setProperty("python.import.site", "false");
         jibDebug = new JIBDebug();
@@ -78,10 +78,12 @@ public class JavaIrcBouncer {
         Thread t1 = new Thread(jib1);
         t1.start();
         JIBServerSSL jib2 = null;
-        jib2 = new JIBServerSSL(jib1);
-        JavaIrcBouncer.jibServSsl = jib2;
-        Thread t2 = new Thread(jib2);
-        t2.start();
+        if (jibConfig.getValue("TRUSTSTORENAME") != null && jibConfig.getValue("KEYSTORENAME") != null) {
+            jib2 = new JIBServerSSL(jib1);
+            JavaIrcBouncer.jibServSsl = jib2;
+            Thread t2 = new Thread(jib2);
+            t2.start();
+        }
         jibHttpServ = new JIBHTTPServer(-1);
         jibCommand = new JIBCommand();
         jibShutdown = new JIBShutdown();
