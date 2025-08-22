@@ -4,11 +4,14 @@
  */
 package net.spatialerror3.jib;
 
+import java.io.Serializable;
+
 /**
  *
  * @author spatialerror3
  */
-public class JIBIRCNetType {
+public class JIBIRCNetType implements Serializable {
+    private static final long serialVersionUID = 1L;
     public enum NetType {
         GENERIC,
         LIBERA,
