@@ -20,12 +20,13 @@ import org.h2.tools.Server;
  */
 public class JIBDBUtil {
     private static final Logger log = LogManager.getLogger(JIBDBUtil.class);
-
+    private String dbFile = null;
     private Connection conn = null;
     private Server server = null;
 
-    public JIBDBUtil() {
+    public JIBDBUtil(String dbFile) {
         log.debug("JIBDBUtil() this="+this);
+        this.dbFile=dbFile;
         getDatabase();
         if (JavaIrcBouncer.jibConfig.getValue("H2SERVER") != null) {
             try {
@@ -41,7 +42,7 @@ public class JIBDBUtil {
     public Connection getDatabase() {
         if (conn == null) {
             try {
-                conn = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "");
+                conn = DriverManager.getConnection("jdbc:h2:"+this.dbFile, "sa", "");
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
