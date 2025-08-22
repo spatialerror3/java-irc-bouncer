@@ -80,7 +80,7 @@ public class JIBUser implements Serializable {
         return this.uuid;
     }
 
-    private void setUUID(UUID _uuid) {
+    public void setUUID(UUID _uuid) {
         this.uuid = _uuid;
     }
 
