@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.h2.tools.Server;
 
 /**
@@ -17,11 +19,13 @@ import org.h2.tools.Server;
  * @author spatialerror3
  */
 public class JIBDBUtil {
+    private static final Logger log = LogManager.getLogger(JIBDBUtil.class);
 
     private Connection conn = null;
     private Server server = null;
 
     public JIBDBUtil() {
+        log.debug("JIBDBUtil() this="+this);
         getDatabase();
         if (JavaIrcBouncer.jibConfig.getValue("H2SERVER") != null) {
             try {
@@ -31,6 +35,7 @@ public class JIBDBUtil {
                 e.printStackTrace();
             }
         }
+        log.debug("JIBDBUtil() this="+this+" conn="+this.conn);
     }
 
     public Connection getDatabase() {
@@ -38,53 +43,52 @@ public class JIBDBUtil {
             try {
                 conn = DriverManager.getConnection("jdbc:h2:mem:test", "sa", "");
             } catch (SQLException ex) {
-                System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                log.error((String) null, ex);
             }
         }
         return conn;
     }
 
     public void initSchema() {
-        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer);";
+        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, u varchar(256));";
         try {
             PreparedStatement ps1 = getDatabase().prepareStatement(sql);
             ps1.execute();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         sql = "CREATE TABLE IF NOT EXISTS channels (id int auto_increment primary key, channel varchar(256), u varchar(256));";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         sql = "CREATE TABLE IF NOT EXISTS clientauth (id int auto_increment primary key, username varchar(256), password varchar(256));";
         try {
             PreparedStatement ps3 = getDatabase().prepareStatement(sql);
             ps3.execute();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513));";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), admin boolean);";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         try {
             getDatabase().commit();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error((String) null, e);
         }
     }
 
@@ -96,23 +100,24 @@ public class JIBDBUtil {
             r = rs.getRow();
             rs.beforeFirst();
         } catch (Exception e) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
+            log.error((String) null, e);
             r = 0;
         }
 
         return r;
     }
 
-    public void addServer(String Server, int Port) {
-        String sql = "INSERT INTO servers (server,port) VALUES(?,?);";
+    public void addServer(JIBUser u, String Server, int Port) {
+        String sql = "INSERT INTO servers (server,port,u) VALUES(?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
             ps2.setString(1, Server);
             ps2.setInt(2, Port);
+            ps2.setString(3, u.getUUID().toString());
             ps2.execute();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
     }
 
@@ -125,7 +130,7 @@ public class JIBDBUtil {
             ps2.setString(2, u.getUUID().toString());
             ps2.execute();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
     }
 
@@ -138,7 +143,7 @@ public class JIBDBUtil {
             ps2.setString(2, u.getUUID().toString());
             ps2.execute();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
 
     }
@@ -154,7 +159,7 @@ public class JIBDBUtil {
             ps5.setString(1, u.getUUID().toString());
             rs5 = ps5.executeQuery();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         try {
             //if (rs5 != null) {
@@ -165,7 +170,7 @@ public class JIBDBUtil {
                 System.err.println("Contains Channel=" + rs5.getString(1));
             }
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         channels = (String[]) cv.toArray(channels);
         return channels;
@@ -182,7 +187,7 @@ public class JIBDBUtil {
             ps2.execute();
             getDatabase().commit();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
     }
 
@@ -194,12 +199,12 @@ public class JIBDBUtil {
         try {
             ps8 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         try {
             rs8 = ps8.executeQuery();
         } catch (SQLException ex) {
-            System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         if (rs8 != null) {
             String replayStr = null;
@@ -217,7 +222,7 @@ public class JIBDBUtil {
                 }
                 replay.add(replayStr);
             } catch (SQLException ex) {
-                System.getLogger(JIBDBUtil.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                log.error((String) null, ex);
             }
         }
         return replay;
