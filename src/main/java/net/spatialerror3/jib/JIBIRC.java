@@ -255,7 +255,7 @@ public class JIBIRC implements Runnable {
         if (this.keepDisconnected == true) {
             return;
         }
-        if (sock.connected() == false || connected == false) {
+        if (sock == null || sock.connected() == false || connected == false) {
             errorCounter = 0;
             connecting = false;
             connected = false;
