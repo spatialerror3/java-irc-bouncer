@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -123,6 +124,60 @@ public class JIBDBUtil {
         }
     }
 
+    public void addServer(JIBUser u, JIBIRCServer serv) {
+        addServer(u, serv.getServer(), serv.getPort());
+    }
+
+    public void removeServer(JIBUser u, JIBIRCServer serv) {
+        String sql = "DELETE FROM servers WHERE server = ? AND port = ? AND u = ?;";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, serv.getServer());
+            ps2.setInt(2, serv.getPort());
+            ps2.setString(3, u.getUUID().toString());
+            ps2.execute();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+    }
+
+    public ArrayList<JIBIRCServer> getServers(JIBUser u) {
+        String sql = "SELECT u, server, port FROM servers WHERE u = ?;";
+        ArrayList<JIBIRCServer> ret = null;
+        ret = new ArrayList<JIBIRCServer>();
+        PreparedStatement ps5 = null;
+        ResultSet rs5 = null;
+
+        try {
+            ps5 = getDatabase().prepareStatement(sql);
+            ps5.setString(1, u.getUUID().toString());
+            rs5 = ps5.executeQuery();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+
+        try {
+            //if (rs5 != null) {
+            //    rs5.first();
+            //}
+            while (rs5 != null && rs5.next()) {
+                JIBIRCServer tmp1 = new JIBIRCServer();
+                tmp1.setServer(rs5.getString(2));
+                tmp1.setPort(rs5.getInt(3));
+                tmp1.setSsl(true);
+                tmp1.setIpv6(false);
+
+                log.debug("Contains Server=" + tmp1 + " tmp1.getServer()=" + tmp1.getServer() + " tmp1.getPort()=" + tmp1.getPort());
+                ret.add(tmp1);
+            }
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+
+        return ret;
+    }
+
     public void addChannel(JIBUser u, String Channel) {
         String sql = "INSERT INTO channels (channel,u) VALUES(?,?);";
         PreparedStatement ps2 = null;
@@ -147,7 +202,6 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-
     }
 
     public String[] getChannels(JIBUser u) {
@@ -169,7 +223,7 @@ public class JIBDBUtil {
             //}
             while (rs5 != null && rs5.next()) {
                 cv.add(rs5.getString(1));
-                System.err.println("Contains Channel=" + rs5.getString(1));
+                log.debug("Contains Channel=" + rs5.getString(1));
             }
         } catch (SQLException ex) {
             log.error((String) null, ex);
@@ -213,7 +267,7 @@ public class JIBDBUtil {
             String logUser = null;
             String logTarget = null;
             String logMessage = null;
-            System.err.println("rs8 rowCnt=" + cntResultSet(rs8));
+            log.debug("rs8 rowCnt=" + cntResultSet(rs8));
             try {
                 rs8.beforeFirst();
                 while (rs8.next()) {
