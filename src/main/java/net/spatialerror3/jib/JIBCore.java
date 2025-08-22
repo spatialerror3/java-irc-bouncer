@@ -39,23 +39,32 @@ public class JIBCore {
     }
 
     public JIBUser createUser(String userName, boolean admin) {
+        return createUser(userName, admin);
+    }
+
+    public JIBUser createUser(String userName, boolean admin, boolean nodb) {
         JIBUser u = new JIBUser();
         userCnt++;
+        long newUserId = JavaIrcBouncer.jibDbUtil.getUsersMaxUserId();
+        ++newUserId;
+        u.setUserId(newUserId);
         u.setUserName(userName);
         userMap.put(userName, u);
         userMap2.put(u.getUUID(), u);
         users.add(u);
-        JavaIrcBouncer.jibDbUtil.addUser(u);
+        if (!nodb) {
+            JavaIrcBouncer.jibDbUtil.addUser(u);
+        }
         return u;
     }
-    
+
     public void removeUser(JIBUser u) {
         userMap.remove(u.getUserName(), u);
         userMap2.remove(u.getUUID(), u);
         users.remove(u);
         JavaIrcBouncer.jibDbUtil.removeUser(u);
     }
-    
+
     public long getUserCount() {
         return JIBCore.userCnt;
     }
