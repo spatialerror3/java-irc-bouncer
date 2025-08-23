@@ -177,7 +177,7 @@ public class JIBDBUtil {
     public void removeUser(JIBUser u) {
 
     }
-    
+
     public void addClientAuth(JIBUser u, String authToken) {
         String sql = "INSERT INTO clientauth (username,password) VALUES(?,?);";
         PreparedStatement ps2 = null;
@@ -367,6 +367,32 @@ public class JIBDBUtil {
     }
 
     public boolean checkUserPass(String User, String Pass) {
+        String sql = "SELECT COUNT(*) FROM clientauth WHERE username = ? AND password = ?;";
+        PreparedStatement ps9 = null;
+        ResultSet rs9 = null;
+        try {
+            ps9 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        try {
+            rs9 = ps9.executeQuery();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        if (rs9 != null) {
+            try {
+                while (rs9.next()) {
+                    if (rs9.getInt(1) > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            } catch (SQLException se) {
+                log.error((String) null, se);
+            }
+        }
         return false;
     }
 }
