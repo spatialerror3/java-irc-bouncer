@@ -17,6 +17,7 @@
  */
 package net.spatialerror3.jib;
 
+import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +34,18 @@ public class JIBPeriodic implements Runnable {
     }
 
     public void run() {
-
+        Iterator<JIBUser> users = JavaIrcBouncer.jibCore.getUsers();
+        while (users.hasNext()) {
+            JIBUser user = users.next();
+            if (user.getIrcServer() != null) {
+                if (user.getJibIRC() == null) {
+                    user.setJibIRC(new JIBIRC(user, user.getIrcServer()));
+                } else {
+                    if (!user.getJibIRC().connected()) {
+                        user.getJibIRC().connect2(null);
+                    }
+                }
+            }
+        }
     }
 }
