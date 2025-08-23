@@ -17,13 +17,19 @@
  */
 package net.spatialerror3.jib;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  *
  * @author spatialerror3
  */
 public class JIBIRCLog {
-    public JIBIRCLog() {
-        
+    private static final Logger log = LogManager.getLogger(JIBIRCLog.class);
+    private JIBUser u = null;
+    
+    public JIBIRCLog(JIBUser u) {
+        this.u=u;
     }
     
     public void processLine(String l) {
