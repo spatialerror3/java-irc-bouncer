@@ -20,6 +20,7 @@ package net.spatialerror3.jib;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -80,6 +81,10 @@ public class JIBCore {
 
     public JIBUser getUser(UUID uuid) {
         return userMap2.get(uuid);
+    }
+    
+    public Iterator<JIBUser> getUsers() {
+        return this.users.iterator();
     }
 
     public JIBUser authUser(String userName, String authToken) {
