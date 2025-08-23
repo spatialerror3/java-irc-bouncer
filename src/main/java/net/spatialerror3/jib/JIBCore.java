@@ -17,6 +17,8 @@
  */
 package net.spatialerror3.jib;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.UUID;
 import java.util.Vector;
@@ -28,14 +30,14 @@ import java.util.Vector;
 public class JIBCore {
 
     private static long userCnt = 0;
-    Vector<JIBUser> users = null;
-    Hashtable<String, JIBUser> userMap = null;
-    Hashtable<UUID, JIBUser> userMap2 = null;
+    ArrayList<JIBUser> users = null;
+    HashMap<String, JIBUser> userMap = null;
+    HashMap<UUID, JIBUser> userMap2 = null;
 
     public JIBCore() {
-        users = new Vector<JIBUser>();
-        userMap = new Hashtable<String, JIBUser>();
-        userMap2 = new Hashtable<UUID, JIBUser>();
+        users = new ArrayList<JIBUser>();
+        userMap = new HashMap<String, JIBUser>();
+        userMap2 = new HashMap<UUID, JIBUser>();
     }
 
     public JIBUser createUser(String userName, boolean admin) {
