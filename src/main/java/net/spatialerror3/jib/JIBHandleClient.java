@@ -250,7 +250,7 @@ public class JIBHandleClient implements Runnable {
             try {
                 getSingleJIBIRC().simulatePRIVMSG(this, sp[1], msgextract[2].substring(1));
             } catch (Exception e) {
-
+                log.error((String) null, e);
             }
             if (msgextract[1].equals("*jib")) {
                 passthrough = false;
@@ -338,9 +338,21 @@ public class JIBHandleClient implements Runnable {
         String l = null;
         String pl = "";
         while (pl != null) {
-            processError();
-            l = sock.readLine();
-            processLine(l);
+            try {
+                processError();
+            } catch (Exception ex1) {
+                log.error((String) null, ex1);
+            }
+            try {
+                l = sock.readLine();
+            } catch (Exception ex2) {
+                log.error((String) null, ex2);
+            }
+            try {
+                processLine(l);
+            } catch (Exception ex3) {
+                log.error((String) null, ex3);
+            }
             pl = l;
         }
     }
