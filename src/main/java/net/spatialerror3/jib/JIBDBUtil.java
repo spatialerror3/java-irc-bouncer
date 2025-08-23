@@ -273,6 +273,9 @@ public class JIBDBUtil {
     }
 
     public void addChannel(JIBUser u, String Channel) {
+        if (containsChannel(u, Channel) != 0) {
+            return;
+        }
         String sql = "INSERT INTO channels (channel,u) VALUES(?,?);";
         PreparedStatement ps2 = null;
         try {
@@ -287,6 +290,9 @@ public class JIBDBUtil {
     }
 
     public void removeChannel(JIBUser u, String Channel) {
+        if (containsChannel(u, Channel) < 1) {
+            return;
+        }
         String sql = "DELETE FROM channels WHERE channel = ? AND u = ?;";
         PreparedStatement ps2 = null;
         try {
@@ -325,6 +331,25 @@ public class JIBDBUtil {
         }
         channels = (String[]) cv.toArray(channels);
         return channels;
+    }
+
+    public long containsChannel(JIBUser u, String chan) {
+        long count = -1;
+        PreparedStatement ps5 = null;
+        ResultSet rs5 = null;
+        String sql = "SELECT channel FROM channels WHERE u = ? AND channel = ?;";
+        try {
+            ps5 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ps5.setString(1, u.getUUID().toString());
+            ps5.setString(2, chan);
+            rs5 = ps5.executeQuery();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        if (rs5 != null) {
+            count = cntResultSet(rs5);
+        }
+        return count;
     }
 
     public void logUserTargetMessage(String logUser, String logTarget, String logMessage) {
