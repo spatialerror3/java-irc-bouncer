@@ -24,6 +24,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -31,6 +33,7 @@ import java.util.Iterator;
  */
 public class JIBIRCServer implements Serializable {
 
+    private static final Logger log = LogManager.getLogger(JIBIRCServer.class);
     private static final long serialVersionUID = 1L;
     private JIBIRCNetType.NetType netType = JIBIRCNetType.NetType.GENERIC;
     private String server = null;
@@ -159,7 +162,7 @@ public class JIBIRCServer implements Serializable {
         try {
             this.resolved = InetAddress.getByName(this.server);
         } catch (UnknownHostException ex) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
     }
 
@@ -168,7 +171,7 @@ public class JIBIRCServer implements Serializable {
         try {
             addrs = InetAddress.getAllByName(this.server);
         } catch (UnknownHostException ex) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         if (ipv6 == false) {
             for (int i = 0; i < addrs.length; i++) {
