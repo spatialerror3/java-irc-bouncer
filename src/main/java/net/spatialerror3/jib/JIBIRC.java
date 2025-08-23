@@ -115,7 +115,7 @@ public class JIBIRC implements Runnable {
             myInfo = u.getIRCUserInfo();
         }
         //
-        ircLog = new JIBIRCLog();
+        ircLog = new JIBIRCLog(this.u);
         //FIXME: 
         //connect(null);
     }
