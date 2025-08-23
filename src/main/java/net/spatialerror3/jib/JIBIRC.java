@@ -270,7 +270,7 @@ public class JIBIRC implements Runnable {
 
     public void reconnect() {
         if (DEBUGGING) {
-            System.err.println("reconnect() called...");
+            log.debug("reconnect() called...");
         }
         if (this.keepDisconnected == true) {
             return;
@@ -298,7 +298,7 @@ public class JIBIRC implements Runnable {
 
     public void onLogon() {
         if (DEBUGGING) {
-            System.err.println("onLogon()");
+            log.debug("onLogon()");
         }
         try {
             this.ns.identify();
@@ -321,21 +321,21 @@ public class JIBIRC implements Runnable {
             log.error((String) null, e);
         }
         if (DEBUGGING) {
-            System.err.println("preLogon=false");
+            log.debug("preLogon=false");
         }
         preLogon = false;
     }
 
     public void writeLine(String l) {
         if (DEBUGGING) {
-            System.err.println(this + " writeLine()=" + JIBStringUtil.remEOL2(l));
+            log.debug(this + " writeLine()=" + JIBStringUtil.remEOL2(l));
         }
         sock.writeLine(l);
     }
 
     public void processLine(String l) {
         if (DEBUGGING) {
-            System.err.println(this + " l=" + l);
+            log.debug(this + " l=" + l);
         }
         if (l == null || l.startsWith("ERROR")) {
             errorCounter++;
@@ -461,14 +461,22 @@ public class JIBIRC implements Runnable {
             while (getError() == null && sock.connected() == true) {
                 l = sock.readLine();
                 if (l != null) {
-                    ping1.processLine(l);
-                    processLine(l);
+                    try {
+                        ping1.processLine(l);
+                    } catch (Exception ex1) {
+                        log.error("ping1.processLine(...)", ex1);
+                    }
+                    try {
+                        processLine(l);
+                    } catch (Exception ex2) {
+                        log.error("processLine(...)", ex2);
+                    }
                 } else {
                     connected = false;
                 }
             }
             if (DEBUGGING) {
-                System.err.println("connecting=" + connecting + " connected=" + connected + " connected()=" + connected());
+                log.debug("connecting=" + connecting + " connected=" + connected + " connected()=" + connected());
             }
             if (sock.connected() == false || connected == false || connected() == false) {
                 reconnect();
