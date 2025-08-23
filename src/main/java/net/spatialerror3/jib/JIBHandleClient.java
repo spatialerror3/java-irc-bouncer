@@ -174,7 +174,7 @@ public class JIBHandleClient implements Runnable {
             onAuthDone();
         } else {
             sendLine("ERROR :Auth failed\r\n");
-            log.warn("AUTH FAILED FOR USER "+this.authUser);
+            log.warn("AUTH FAILED FOR USER " + this.authUser);
         }
         this.inAuth = false;
     }
@@ -328,7 +328,9 @@ public class JIBHandleClient implements Runnable {
             sendLine(":JIB.jib PONG JIB.jib :" + JIBStringUtil.remDD(pong) + "\r\n");
         }
         if (passthrough) {
-            getSingleJIBIRC().writeLine(l + "\r\n");
+            if (getSingleJIBIRC() != null) {
+                getSingleJIBIRC().writeLine(l + "\r\n");
+            }
         }
     }
 
