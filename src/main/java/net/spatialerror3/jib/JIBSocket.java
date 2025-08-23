@@ -1,6 +1,19 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Copyright (C) 2025 spatialerror3
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package net.spatialerror3.jib;
 
@@ -13,6 +26,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -20,6 +35,7 @@ import java.net.SocketException;
  */
 public class JIBSocket {
 
+    private static final Logger log = LogManager.getLogger(JIBSocket.class);
     private static boolean SOCKETDEBUGGING = false;
     //
     Socket s = null;
@@ -47,12 +63,12 @@ public class JIBSocket {
             if (e == null) {
                 e = ex;
             }
-            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         } catch (IOException ex) {
             if (e == null) {
                 e = ex;
             }
-            System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         if (IS != null) {
             ISR = new InputStreamReader(IS);
@@ -64,12 +80,12 @@ public class JIBSocket {
             if (e == null) {
                 e = ex;
             }
-            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         } catch (IOException ex) {
             if (e == null) {
                 e = ex;
             }
-            System.getLogger(JIBHandleClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         if (OS != null) {
             OSW = new OutputStreamWriter(OS);
@@ -94,13 +110,13 @@ public class JIBSocket {
             if (e == null) {
                 e = ex;
             }
-            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
             return null;
         } catch (IOException ex) {
             if (e == null) {
                 e = ex;
             }
-            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
             return null;
         }
         if (JIBSocket.SOCKETDEBUGGING) {
@@ -124,12 +140,12 @@ public class JIBSocket {
             if (e == null) {
                 e = ex;
             }
-            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         } catch (IOException ex) {
             if (e == null) {
                 e = ex;
             }
-            System.getLogger(JIBSocket.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            log.error((String) null, ex);
         }
         if (JIBSocket.SOCKETDEBUGGING) {
             System.err.println(this.s + " readLine()=" + JIBStringUtil.remEOL(l));
