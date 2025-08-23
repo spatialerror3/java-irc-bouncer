@@ -18,6 +18,7 @@
 package net.spatialerror3.jib;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
@@ -26,10 +27,10 @@ import java.util.Hashtable;
  */
 public class JIBConfig implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Hashtable<String,String> kvStore = null;
+    private HashMap<String,String> kvStore = null;
     
     public JIBConfig() {
-        kvStore = new Hashtable<String,String>();
+        kvStore = new HashMap<String,String>();
     }
     
     public void parseArgs(String[] args) {
