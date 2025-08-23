@@ -17,16 +17,22 @@
  */
 package net.spatialerror3.jib;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  *
  * @author spatialerror3
  */
 public class JIBPeriodic implements Runnable {
+
+    private static final Logger log = LogManager.getLogger(JIBPeriodic.class);
+
     public JIBPeriodic() {
-        
+        log.debug("JIBPeriodic() " + this);
     }
-    
+
     public void run() {
-        
+
     }
 }
