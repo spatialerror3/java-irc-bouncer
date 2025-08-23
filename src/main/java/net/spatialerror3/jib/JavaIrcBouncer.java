@@ -39,6 +39,7 @@ public class JavaIrcBouncer {
     public static JIBHTTPServer jibHttpServ = null;
     public static JIBCommand jibCommand = null;
     public static JIBShutdown jibShutdown = null;
+    public static JIBPeriodic jibPeriodic = null;
 
     public static void main(String[] args) {
         System.setProperty("python.import.site", "false");
@@ -102,12 +103,19 @@ public class JavaIrcBouncer {
         jibCommand = new JIBCommand();
         jibShutdown = new JIBShutdown();
         Runtime.getRuntime().addShutdownHook(jibShutdown);
+        jibPeriodic = new JIBPeriodic();
         log.info("Up...");
         while (true) {
             try {
                 Thread.sleep(60000);
             } catch (InterruptedException ex) {
                 System.getLogger(JavaIrcBouncer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+            try {
+                Thread jibPeriodicThread = new Thread(JavaIrcBouncer.jibPeriodic);
+                jibPeriodicThread.start();
+            } catch (Exception ex) {
+                log.error("jibPeriodicThread", ex);
             }
         }
     }
