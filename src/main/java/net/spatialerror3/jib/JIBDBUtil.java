@@ -177,6 +177,19 @@ public class JIBDBUtil {
     public void removeUser(JIBUser u) {
 
     }
+    
+    public void addClientAuth(JIBUser u, String authToken) {
+        String sql = "INSERT INTO clientauth (username,password) VALUES(?,?);";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, u.getUserName());
+            ps2.setString(2, authToken);
+            ps2.execute();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+    }
 
     public void addServer(JIBUser u, String Server, int Port) {
         String sql = "INSERT INTO servers (server,port,u) VALUES(?,?,?);";
