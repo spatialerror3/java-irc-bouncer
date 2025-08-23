@@ -442,8 +442,11 @@ public class JIBIRC implements Runnable {
     }
 
     public Exception getError() {
-        if (sock.getError() != null) {
+        if (sock != null && sock.getError() != null) {
             connected = false;
+        }
+        if (sock == null) {
+            return null;
         }
         return sock.getError();
     }
