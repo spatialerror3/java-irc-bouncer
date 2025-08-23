@@ -28,6 +28,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -35,6 +37,7 @@ import javax.net.ssl.TrustManager;
  */
 public class JIBIRC implements Runnable {
 
+    private static final Logger log = LogManager.getLogger(JIBIRC.class);
     private static boolean DEBUGGING = false;
     private SSLSocket ircServer = null;
     private Socket ircServerNoSsl = null;
@@ -60,7 +63,7 @@ public class JIBIRC implements Runnable {
     //
     private int errorCounter = 0;
     //
-    private JIBIRCLog log = null;
+    private JIBIRCLog ircLog = null;
     //
     private long connects = 0;
     private boolean connected = false;
@@ -112,7 +115,7 @@ public class JIBIRC implements Runnable {
             myInfo = u.getIRCUserInfo();
         }
         //
-        log = new JIBIRCLog();
+        ircLog = new JIBIRCLog();
         //FIXME: 
         //connect(null);
     }
@@ -195,7 +198,7 @@ public class JIBIRC implements Runnable {
                     clientBind = InetAddress.getByName(this.serv.getClientBind());
                 }
             } catch (UnknownHostException ex) {
-                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                log.error((String) null, ex);
                 connecting = false;
             }
             InetAddress dst = null;
@@ -204,24 +207,28 @@ public class JIBIRC implements Runnable {
                 dst = InetAddress.getByName(this.Server);
                 dstport = Port;
             } catch (UnknownHostException ex) {
-                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                log.error((String) null, ex);
                 connecting = false;
             }
             if (tmpServ != null) {
                 dst = tmpServ.getResolved();
                 dstport = tmpServ.getPort();
             }
+            if (dst == null) {
+                connecting = false;
+                return;
+            }
             if (!noSsl) {
                 try {
                     sslctx = SSLContext.getInstance("TLS");
                 } catch (NoSuchAlgorithmException ex) {
-                    System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    log.error((String) null, ex);
                 }
                 TrustManager[] tm = new TrustManager[]{new JIBSSLTrustManager()};
                 try {
                     sslctx.init(null, tm, null);
                 } catch (KeyManagementException ex) {
-                    System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    log.error((String) null, ex);
                 }
                 SSLSocketFactory factory = (SSLSocketFactory) sslctx.getSocketFactory();
                 try {
@@ -229,7 +236,7 @@ public class JIBIRC implements Runnable {
                 } catch (ConnectException ce) {
                     connectError = ce;
                 } catch (IOException ex) {
-                    System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    log.error((String) null, ex);
                 }
                 sock = new JIBSocket(ircServer);
             } else {
@@ -238,7 +245,7 @@ public class JIBIRC implements Runnable {
                 } catch (ConnectException ce) {
                     connectError = ce;
                 } catch (IOException ex) {
-                    System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    log.error((String) null, ex);
                 }
                 sock = new JIBSocket(ircServerNoSsl);
             }
@@ -296,12 +303,12 @@ public class JIBIRC implements Runnable {
         try {
             this.ns.identify();
         } catch (Exception e) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
+            log.error((String) null, e);
         }
         try {
             this.perform.perform();
         } catch (Exception e) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
+            log.error((String) null, e);
         }
         try {
             String[] chans = JavaIrcBouncer.jibDbUtil.getChannels(u);
@@ -311,7 +318,7 @@ public class JIBIRC implements Runnable {
                 }
             }
         } catch (Exception e) {
-            System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, e);
+            log.error((String) null, e);
         }
         if (DEBUGGING) {
             System.err.println("preLogon=false");
@@ -368,8 +375,8 @@ public class JIBIRC implements Runnable {
                 }
             }
         }
-        if (log != null) {
-            log.processLine(l);
+        if (ircLog != null) {
+            ircLog.processLine(l);
         }
         u.writeAllClients(l);
     }
@@ -466,7 +473,7 @@ public class JIBIRC implements Runnable {
             try {
                 Thread.sleep(30000);
             } catch (InterruptedException ex) {
-                System.getLogger(JIBIRC.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                log.error((String) null, ex);
             }
         }
         if (t3 != null) {
