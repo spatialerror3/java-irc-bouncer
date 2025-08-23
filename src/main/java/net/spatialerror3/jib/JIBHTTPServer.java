@@ -38,8 +38,8 @@ public class JIBHTTPServer {
         }
         //
         Server server = new Server();
-        int acceptors = 1;
-        int selectors = 1;
+        int acceptors = 4;
+        int selectors = 4;
         ServerConnector connector = new ServerConnector(server, acceptors, selectors, new HttpConnectionFactory());
         connector.setPort(this.Port);
         connector.setHost("0.0.0.0");
