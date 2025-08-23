@@ -32,6 +32,7 @@ public class JIBShutdown extends Thread {
     }
     
     public void run() {
-        
+        log.debug("Shutting down...");
+        JavaIrcBouncer.jibQuartz.shutdown();
     }
 }
