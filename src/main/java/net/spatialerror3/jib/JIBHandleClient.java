@@ -19,6 +19,8 @@ package net.spatialerror3.jib;
 
 import java.net.Socket;
 import java.util.Iterator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -26,6 +28,7 @@ import java.util.Iterator;
  */
 public class JIBHandleClient implements Runnable {
 
+    private static final Logger log = LogManager.getLogger(JIBHandleClient.class);
     private static boolean DEBUGGING = false;
     JIBSocket sock = null;
     private boolean inAuth = true;
@@ -171,6 +174,7 @@ public class JIBHandleClient implements Runnable {
             onAuthDone();
         } else {
             sendLine("ERROR :Auth failed\r\n");
+            log.warn("AUTH FAILED FOR USER "+this.authUser);
         }
         this.inAuth = false;
     }
@@ -252,7 +256,11 @@ public class JIBHandleClient implements Runnable {
                 passthrough = false;
                 sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "YOU ARE " + authed.getUUID() + "\r\n");
                 if (authed != null) {
-                    JavaIrcBouncer.jibCommand.processCommand(this, authed, JIBStringUtil.remDD(msgextract[2]));
+                    try {
+                        JavaIrcBouncer.jibCommand.processCommand(this, authed, JIBStringUtil.remDD(msgextract[2]));
+                    } catch (Exception e) {
+                        log.error("jibCommand.processCommand(...)", e);
+                    }
                     sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "REPLAY" + "\r\n");
                     sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + msgextract[2].substring(1) + "\r\n");
                     if (msgextract[2].substring(1).startsWith("REPLAY")) {
