@@ -39,7 +39,7 @@ public class JIBIRCLog {
             String logUser = sp8[0];
             String logTarget = sp8[2];
             String logMessage = sp8[3];
-            JavaIrcBouncer.jibDbUtil.logUserTargetMessage(logUser, logTarget, logMessage);
+            JavaIrcBouncer.jibDbUtil.logUserTargetMessage(this.u, logUser, logTarget, logMessage);
         }
     }
 }
