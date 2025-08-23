@@ -352,7 +352,7 @@ public class JIBDBUtil {
         return count;
     }
 
-    public void logUserTargetMessage(String logUser, String logTarget, String logMessage) {
+    public void logUserTargetMessage(JIBUser u, String logUser, String logTarget, String logMessage) {
         String sql = "INSERT INTO log1 (loguser,logtarget,logmessage) VALUES(?,?,?);";
         PreparedStatement ps2 = null;
         try {
