@@ -72,6 +72,6 @@ USER appuser
 # Copy the executable from the "package" stage.
 COPY --from=package build/target/java-irc-bouncer-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
 
-EXPOSE 7667
+EXPOSE 7667 7668 7680
 
 ENTRYPOINT [ "java", "-Dpython.import.site=false", "-jar", "app.jar" ]
