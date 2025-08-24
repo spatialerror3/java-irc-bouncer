@@ -407,9 +407,9 @@ public class JIBDBUtil {
         }
     }
 
-    public Vector<String> replayLog(JIBUser u) {
+    public ArrayList<String> replayLog(JIBUser u) {
         String sql = "SELECT loguser,logtarget,logmessage FROM log1 WHERE u = ?;";
-        Vector<String> replay = new Vector<String>();
+        ArrayList<String> replay = new ArrayList<String>();
         PreparedStatement ps8 = null;
         ResultSet rs8 = null;
         try {
