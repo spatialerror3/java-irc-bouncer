@@ -56,6 +56,7 @@ public class JIBCommand {
                 JIBIRCServer lss = svi.next();
                 hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "SERVER[" + lss.getUUID() + "]" + "= " + lss.getServer() + "\r\n");
             }
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "DONE LISTING SERVERS" + "\r\n");
         }
         if (excmd[0].startsWith("DELSERVER")) {
             String[] params = excmd[1].split(" ", 2);
