@@ -201,7 +201,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public void refreshUser(JIBUser u) {
         String sql = "UPDATE users SET opt = ? WHERE _uuid = ?;";
         PreparedStatement ps2 = null;
@@ -443,6 +443,19 @@ public class JIBDBUtil {
             }
         }
         return replay;
+    }
+
+    public void clearLog(JIBUser u) {
+        String sql = "DELETE FROM log1 WHERE u = ?;";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, u.getUUID().toString());
+            ps2.execute();
+            getDatabase().commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
     }
 
     public boolean checkUserPass(String User, String Pass) {
