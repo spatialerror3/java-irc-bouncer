@@ -162,7 +162,10 @@ public class JIBHandleClient implements Runnable {
     }
 
     public void checkUserPass() {
-        if (this.authUser == null || this.authPass == null) {
+        if (this.authUser == null) {
+            return;
+        }
+        if (this.authPass == null) {
             return;
         }
         String cnfUserChk = JavaIrcBouncer.jibConfig.getValue("AUTHUSER");
