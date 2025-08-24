@@ -65,7 +65,7 @@ public class JIBCommand {
             while (svi.hasNext()) {
                 JIBIRCServer dss = svi.next();
                 if (dss.getUUID().toString().equals(params[0])) {
-                    authed.getIrcServers().remove(dss);
+                    svi.remove();
                     JavaIrcBouncer.jibDbUtil.removeServer(authed, dss);
                     hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "SERVER[" + dss.getUUID() + "]" + " DELETED" + "\r\n");
                 }
