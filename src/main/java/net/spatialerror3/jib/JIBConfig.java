@@ -65,4 +65,20 @@ public class JIBConfig implements Serializable {
         tmpServ.setSsl(true);
         u.addIrcServer(tmpServ);
     }
+    
+    public void createUser(String userName, String pass, String n, String id, String r, String server, int port, String nsacct, String nspass, String chans) {
+        JIBUser u = JavaIrcBouncer.jibCore.createUser(userName, false);
+        u.setAuthToken(pass);
+        u.setNick(n);
+        u.setUser(id);
+        u.setRealname(r);
+        JIBIRCServer tmpServ = new JIBIRCServer();
+        tmpServ.setServer(server);
+        tmpServ.setPort(port);
+        tmpServ.setSsl(true);
+        tmpServ.setNickServUser(nsacct);
+        tmpServ.setNickServPass(nspass);
+        tmpServ.addChannels(chans);
+        u.addIrcServer(tmpServ);
+    }
 }
