@@ -17,6 +17,8 @@
  */
 package net.spatialerror3.jib;
 
+import java.util.Iterator;
+import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,6 +48,27 @@ public class JIBCommand {
         if (excmd[0].startsWith("JUMP")) {
             authed.getJibIRC().disconnect(null);
             authed.getJibIRC().connect2(null);
+        }
+        if (excmd[0].startsWith("LISTSERVERS")) {
+            Vector<JIBIRCServer> sv = authed.getIrcServers();
+            Iterator<JIBIRCServer> svi = sv.iterator();
+            while (svi.hasNext()) {
+                JIBIRCServer lss = svi.next();
+                hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "SERVER[" + lss.getUUID() + "]" + "= " + lss.getServer() + "\r\n");
+            }
+        }
+        if (excmd[0].startsWith("DELSERVER")) {
+            String[] params = excmd[1].split(" ", 2);
+            Vector<JIBIRCServer> sv = authed.getIrcServers();
+            Iterator<JIBIRCServer> svi = sv.iterator();
+            while (svi.hasNext()) {
+                JIBIRCServer dss = svi.next();
+                if (dss.getUUID().toString().equals(params[0])) {
+                    authed.getIrcServers().remove(dss);
+                    JavaIrcBouncer.jibDbUtil.removeServer(authed, dss);
+                    hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "SERVER[" + dss.getUUID() + "]" + " DELETED" + "\r\n");
+                }
+            }
         }
         if (excmd[0].equals("GET")) {
             String[] params = excmd[1].split(" ", 2);
