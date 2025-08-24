@@ -68,7 +68,7 @@ public class JIBIRCServer implements Serializable {
     public void setUUID(UUID _uuid) {
         this.uuid = _uuid;
     }
-    
+
     public JIBIRCNetType.NetType getNetType() {
         return this.netType;
     }
@@ -159,6 +159,13 @@ public class JIBIRCServer implements Serializable {
 
     public void addChannel(String chan) {
         this.channels.add(chan);
+    }
+
+    public void addChannels(String chans) {
+        String[] chta = chans.split(",");
+        for (int j = 0; j < chta.length; j++) {
+            this.channels.add(chta[j]);
+        }
     }
 
     public void setClientBind(String clientBind) {
