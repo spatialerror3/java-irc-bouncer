@@ -24,6 +24,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,6 +36,8 @@ public class JIBIRCServer implements Serializable {
 
     private static final Logger log = LogManager.getLogger(JIBIRCServer.class);
     private static final long serialVersionUID = 1L;
+    private UUID uuid = UUID.randomUUID();
+    //
     private JIBIRCNetType.NetType netType = JIBIRCNetType.NetType.GENERIC;
     private String server = null;
     private int port = 0;
@@ -58,6 +61,14 @@ public class JIBIRCServer implements Serializable {
         channels = new ArrayList<String>();
     }
 
+    public UUID getUUID() {
+        return this.uuid;
+    }
+
+    public void setUUID(UUID _uuid) {
+        this.uuid = _uuid;
+    }
+    
     public JIBIRCNetType.NetType getNetType() {
         return this.netType;
     }
