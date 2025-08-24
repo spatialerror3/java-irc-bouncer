@@ -138,7 +138,7 @@ public class JIBCommand {
             while (logReplay.hasNext()) {
                 String logReplayStr = logReplay.next();
                 hc.sendLine(logReplayStr + "\r\n");
-                log.debug("LOGREPLAY " + logReplayStr);
+                //log.debug("LOGREPLAY " + logReplayStr);
             }
         }
         if (excmd[0].equals("HELP")) {
