@@ -264,7 +264,7 @@ public class JIBHandleClient implements Runnable {
                     sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "REPLAY" + "\r\n");
                     sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + msgextract[2].substring(1) + "\r\n");
                     if (msgextract[2].substring(1).startsWith("REPLAY")) {
-                        Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog().iterator();
+                        Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog(authed).iterator();
                         while (logReplay.hasNext()) {
                             sendLine(logReplay.next() + "\r\n");
                         }
