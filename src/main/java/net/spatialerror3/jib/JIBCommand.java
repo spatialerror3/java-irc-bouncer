@@ -133,6 +133,14 @@ public class JIBCommand {
                 authed.setRealname(params[1]);
             }
         }
+        if (excmd[0].startsWith("REPLAY")) {
+            Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog(authed).iterator();
+            while (logReplay.hasNext()) {
+                String logReplayStr = logReplay.next();
+                hc.sendLine(logReplayStr + "\r\n");
+                log.debug("LOGREPLAY " + logReplayStr);
+            }
+        }
         if (excmd[0].equals("HELP")) {
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "AVAILABLE COMMANDS:" + "\r\n");
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - LISTSERVERS" + "\r\n");
