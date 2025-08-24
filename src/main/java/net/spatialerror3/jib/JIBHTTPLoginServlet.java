@@ -54,6 +54,7 @@ public class JIBHTTPLoginServlet extends HttpServlet {
             if (pass != null && user != null && pass.length() > 0 && user.length() > 0) {
                 JIBUser u = null;
                 if ((u = JavaIrcBouncer.jibCore.authUser(user, pass)) != null) {
+                    resp.getWriter().write("<br>IDENTIFIED AS " + u.getUUID().toString());
                     resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
                     resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
                 } else {
