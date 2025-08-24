@@ -88,7 +88,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-        sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513));";
+        sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513), u varchar(256));";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
@@ -188,7 +188,16 @@ public class JIBDBUtil {
     }
 
     public void removeUser(JIBUser u) {
-
+        String sql = "DELETE FROM users WHERE _uuid = ?;";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setLong(1, u.getUserId());
+            ps2.execute();
+            getDatabase().commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
     }
 
     public void addClientAuth(JIBUser u, String authToken) {
@@ -353,13 +362,14 @@ public class JIBDBUtil {
     }
 
     public void logUserTargetMessage(JIBUser u, String logUser, String logTarget, String logMessage) {
-        String sql = "INSERT INTO log1 (loguser,logtarget,logmessage) VALUES(?,?,?);";
+        String sql = "INSERT INTO log1 (loguser,logtarget,logmessage,u) VALUES(?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
             ps2.setString(1, logUser.substring(1));
             ps2.setString(2, logTarget);
             ps2.setString(3, logMessage.substring(1));
+            ps2.setString(4, u.getUUID().toString());
             ps2.execute();
             getDatabase().commit();
         } catch (SQLException ex) {
@@ -367,13 +377,14 @@ public class JIBDBUtil {
         }
     }
 
-    public Vector<String> replayLog() {
-        String sql = "SELECT loguser,logtarget,logmessage FROM log1;";
+    public Vector<String> replayLog(JIBUser u) {
+        String sql = "SELECT loguser,logtarget,logmessage FROM log1 WHERE u = ?;";
         Vector<String> replay = new Vector<String>();
         PreparedStatement ps8 = null;
         ResultSet rs8 = null;
         try {
             ps8 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ps8.setString(1, u.getUUID().toString());
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
