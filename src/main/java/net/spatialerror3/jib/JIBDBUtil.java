@@ -67,7 +67,7 @@ public class JIBDBUtil {
     }
 
     public void initSchema() {
-        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, u varchar(256));";
+        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, ssl boolean, ipv6 boolean, u varchar(256));";
         try {
             PreparedStatement ps1 = getDatabase().prepareStatement(sql);
             ps1.execute();
@@ -214,7 +214,7 @@ public class JIBDBUtil {
     }
 
     public void addServer(JIBUser u, String Server, int Port) {
-        String sql = "INSERT INTO servers (server,port,u) VALUES(?,?,?);";
+        String sql = "INSERT INTO servers (server,port,u,ssl,ipv6) VALUES(?,?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
@@ -228,7 +228,19 @@ public class JIBDBUtil {
     }
 
     public void addServer(JIBUser u, JIBIRCServer serv) {
-        addServer(u, serv.getServer(), serv.getPort());
+        String sql = "INSERT INTO servers (server,port,u,ssl,ipv6) VALUES(?,?,?,?,?);";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, serv.getServer());
+            ps2.setInt(2, serv.getPort());
+            ps2.setString(3, u.getUUID().toString());
+            ps2.setBoolean(4, serv.getSsl());
+            ps2.setBoolean(5, serv.getIpv6());
+            ps2.execute();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
     }
 
     public void removeServer(JIBUser u, JIBIRCServer serv) {
