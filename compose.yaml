@@ -23,6 +23,7 @@ services:
       - 7667:7667
       - 7668:7668
       - 7680:7680
+      - 7643:7643
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
