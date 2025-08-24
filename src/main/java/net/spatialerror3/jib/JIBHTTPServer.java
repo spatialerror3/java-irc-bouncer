@@ -48,6 +48,8 @@ public class JIBHTTPServer {
         server.setDefaultHandler(new JIBHTTPHandler());
         try {
             server.start();
+        } catch (UnsupportedOperationException uoe1) {
+            log.debug("Unsupported Operation", uoe1);
         } catch (Exception ex) {
             log.error("Error Starting HTTP Server", ex);
         }
