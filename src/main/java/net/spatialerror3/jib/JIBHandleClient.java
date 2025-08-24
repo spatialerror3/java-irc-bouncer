@@ -264,46 +264,12 @@ public class JIBHandleClient implements Runnable {
                     } catch (Exception e) {
                         log.error("jibCommand.processCommand(...)", e);
                     }
-                    sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "REPLAY" + "\r\n");
-                    sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + msgextract[2].substring(1) + "\r\n");
+                    //sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "REPLAY" + "\r\n");
+                    //sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + msgextract[2].substring(1) + "\r\n");
                     if (msgextract[2].substring(1).startsWith("REPLAY")) {
                         Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog(authed).iterator();
                         while (logReplay.hasNext()) {
                             sendLine(logReplay.next() + "\r\n");
-                        }
-                    }
-                    if (msgextract[2].substring(1).startsWith("SERVER")) {
-                        String mtp = msgextract[2].substring(1);
-                        String[] mtps = mtp.split(" ");
-                        if (mtps[0].equals("SERVER") && mtps.length >= 4) {
-                            String mtpHost = mtps[1];
-                            String mtpPort = mtps[2];
-                            String mtpSSL = mtps[3];
-                            int mtpPortInt = Integer.valueOf(mtpPort);
-                            boolean mtpSslBool = Boolean.valueOf(mtpSSL);
-                            JIBIRCServer tmpServ2 = new JIBIRCServer();
-                            tmpServ2.setServer(mtpHost);
-                            tmpServ2.setPort(mtpPortInt);
-                            tmpServ2.setSsl(mtpSslBool);
-                            if (mtps.length >= 5) {
-                                String mtpNSACCT = mtps[4];
-                                tmpServ2.setNickServUser(mtpNSACCT);
-                            }
-                            if (mtps.length >= 6) {
-                                String mtpNSPASS = mtps[5];
-                                tmpServ2.setNickServPass(mtpNSPASS);
-                            }
-                            if (mtps.length >= 7) {
-                                String[] mtpCHANS = mtps[6].split(",");
-                                for (int j = 0; j < mtpCHANS.length; j++) {
-                                    tmpServ2.addChannel(mtpCHANS[j]);
-                                }
-                            }
-                            tmpServ2.resolve();
-                            authed.addIrcServer(tmpServ2);
-                            sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick + " :" + "ADDED IRC SERVER" + "\r\n");
-                        } else {
-                            // FIXME: PROVIDE HELP
                         }
                     }
                 } else {
