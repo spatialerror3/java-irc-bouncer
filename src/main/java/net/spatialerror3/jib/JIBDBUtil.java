@@ -67,7 +67,7 @@ public class JIBDBUtil {
     }
 
     public void initSchema() {
-        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, ssl boolean, ipv6 boolean, u varchar(256));";
+        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, ssl boolean, ipv6 boolean, u varchar(256), opt object(10000000));";
         try {
             PreparedStatement ps1 = getDatabase().prepareStatement(sql);
             ps1.execute();
@@ -95,7 +95,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-        sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), admin boolean);";
+        sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), admin boolean, opt object(10000000));";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
@@ -149,7 +149,7 @@ public class JIBDBUtil {
     }
 
     public void loadUsers() {
-        String sql = "SELECT userId,_uuid,username,admin FROM users;";
+        String sql = "SELECT userId,_uuid,username,admin,opt FROM users;";
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
         try {
@@ -160,6 +160,7 @@ public class JIBDBUtil {
         }
         try {
             while (rs5 != null && rs5.next()) {
+                JIBUser opt = rs5.getObject("opt", JIBUser.class);
                 JIBUser tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(4));
                 tmpu.setUserId(rs5.getLong(1));
                 tmpu.setUUID((UUID) rs5.getObject("_uuid"));
@@ -172,7 +173,7 @@ public class JIBDBUtil {
     }
 
     public void addUser(JIBUser u) {
-        String sql = "INSERT INTO users (userId,_uuid,username,admin) VALUES(?,?,?,?);";
+        String sql = "INSERT INTO users (userId,_uuid,username,admin,opt) VALUES(?,?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
@@ -180,6 +181,7 @@ public class JIBDBUtil {
             ps2.setString(2, u.getUUID().toString());
             ps2.setString(3, u.getUserName());
             ps2.setBoolean(4, u.admin());
+            ps2.setObject(5, u);
             ps2.execute();
             getDatabase().commit();
         } catch (SQLException ex) {
@@ -228,7 +230,7 @@ public class JIBDBUtil {
     }
 
     public void addServer(JIBUser u, JIBIRCServer serv) {
-        String sql = "INSERT INTO servers (server,port,u,ssl,ipv6) VALUES(?,?,?,?,?);";
+        String sql = "INSERT INTO servers (server,port,u,ssl,ipv6,opt) VALUES(?,?,?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
@@ -237,6 +239,7 @@ public class JIBDBUtil {
             ps2.setString(3, u.getUUID().toString());
             ps2.setBoolean(4, serv.getSsl());
             ps2.setBoolean(5, serv.getIpv6());
+            ps2.setObject(6, serv);
             ps2.execute();
         } catch (SQLException ex) {
             log.error((String) null, ex);
@@ -258,7 +261,7 @@ public class JIBDBUtil {
     }
 
     public ArrayList<JIBIRCServer> getServers(JIBUser u) {
-        String sql = "SELECT u, server, port FROM servers WHERE u = ?;";
+        String sql = "SELECT u, server, port, opt FROM servers WHERE u = ?;";
         ArrayList<JIBIRCServer> ret = null;
         ret = new ArrayList<JIBIRCServer>();
         PreparedStatement ps5 = null;
@@ -277,6 +280,7 @@ public class JIBDBUtil {
             //    rs5.first();
             //}
             while (rs5 != null && rs5.next()) {
+                JIBIRCServer opt = rs5.getObject("opt", JIBIRCServer.class);
                 JIBIRCServer tmp1 = new JIBIRCServer();
                 tmp1.setServer(rs5.getString(2));
                 tmp1.setPort(rs5.getInt(3));
