@@ -70,6 +70,7 @@ public class JIBCommand {
                     hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "SERVER[" + dss.getUUID() + "]" + " DELETED" + "\r\n");
                 }
             }
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "DONE DELETE SERVER" + "\r\n");
         }
         if (excmd[0].equals("GET")) {
             String[] params = excmd[1].split(" ", 2);
