@@ -54,6 +54,10 @@ public class JIBDBUtil {
         }
         log.debug("JIBDBUtil() this=" + this + " conn=" + this.conn);
     }
+    
+    public void shutdown() {
+        
+    }
 
     public Connection getDatabase() {
         if (conn == null) {
