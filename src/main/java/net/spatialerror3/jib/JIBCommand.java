@@ -72,6 +72,43 @@ public class JIBCommand {
             }
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "DONE DELETE SERVER" + "\r\n");
         }
+        if (excmd[0].startsWith("SERVER")) {
+            String mtp = message;
+            String[] mtps = mtp.split(" ");
+            if (mtps[0].equals("SERVER") && mtps.length >= 4) {
+                String mtpHost = mtps[1];
+                String mtpPort = mtps[2];
+                String mtpSSL = mtps[3];
+                int mtpPortInt = Integer.valueOf(mtpPort);
+                boolean mtpSslBool = Boolean.valueOf(mtpSSL);
+                JIBIRCServer tmpServ2 = new JIBIRCServer();
+                tmpServ2.setServer(mtpHost);
+                tmpServ2.setPort(mtpPortInt);
+                tmpServ2.setSsl(mtpSslBool);
+                if (mtps.length >= 5) {
+                    String mtpNSACCT = mtps[4];
+                    tmpServ2.setNickServUser(mtpNSACCT);
+                }
+                if (mtps.length >= 6) {
+                    String mtpNSPASS = mtps[5];
+                    tmpServ2.setNickServPass(mtpNSPASS);
+                }
+                if (mtps.length >= 7) {
+                    String[] mtpCHANS = mtps[6].split(",");
+                    for (int j = 0; j < mtpCHANS.length; j++) {
+                        tmpServ2.addChannel(mtpCHANS[j]);
+                    }
+                }
+                tmpServ2.resolve();
+                authed.addIrcServer(tmpServ2);
+                hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "ADDED IRC SERVER" + "\r\n");
+            } else {
+                hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "SERVER [host] [port] [ssl] [nsacct] [nspass] [chans]" + "\r\n");
+            }
+        }
+        if (excmd[0].equals("ADDSERVER")) {
+
+        }
         if (excmd[0].equals("GET")) {
             String[] params = excmd[1].split(" ", 2);
             if (params[0].equals("NICK")) {
@@ -95,6 +132,23 @@ public class JIBCommand {
             if (params[0].equals("REALNAME")) {
                 authed.setRealname(params[1]);
             }
+        }
+        if (excmd[0].equals("HELP")) {
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "AVAILABLE COMMANDS:" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - LISTSERVERS" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - ADDSERVER" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - DELSERVER" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - CONNECT" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - DISCONNECT" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - RECONNECT" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - JUMP" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - SET NICK" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - SET USER" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - SET REALNAME" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - GET NICK" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - GET USER" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - GET REALNAME" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - REPLAY" + "\r\n");
         }
     }
 }
