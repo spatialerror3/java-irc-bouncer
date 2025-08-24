@@ -75,6 +75,12 @@
             <artifactId>jetty-server</artifactId>
             <version>12.1.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty.ee10/jetty-ee10-servlet -->
+        <dependency>
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-servlet</artifactId>
+            <version>12.1.0</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
