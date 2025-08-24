@@ -37,6 +37,7 @@ public class JavaIrcBouncer {
     public static JIBIRC jibIRC = null;
     public static JIBJython jibJython = null;
     public static JIBHTTPServer jibHttpServ = null;
+    public static JIBHTTPSServer jibHttpsServ = null;
     public static JIBCommand jibCommand = null;
     public static JIBShutdown jibShutdown = null;
     public static JIBPeriodic jibPeriodic = null;
@@ -102,6 +103,9 @@ public class JavaIrcBouncer {
             t2.start();
         }
         jibHttpServ = new JIBHTTPServer(-1);
+        if (jibConfig.getValue("TRUSTSTORENAME") != null && jibConfig.getValue("KEYSTORENAME") != null) {
+            jibHttpsServ = new JIBHTTPSServer(-1);
+        }
         jibCommand = new JIBCommand();
         jibShutdown = new JIBShutdown();
         Runtime.getRuntime().addShutdownHook(jibShutdown);
