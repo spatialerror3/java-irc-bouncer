@@ -436,8 +436,8 @@ public class JIBDBUtil {
                     logTarget = rs8.getString(2);
                     logMessage = rs8.getString(3);
                     replayStr = ":" + logUser + " PRIVMSG " + logTarget + " :" + logMessage + "\r\n";
+                    replay.add(replayStr);
                 }
-                replay.add(replayStr);
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
