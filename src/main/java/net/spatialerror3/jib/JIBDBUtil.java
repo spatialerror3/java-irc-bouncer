@@ -201,6 +201,20 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
+    
+    public void refreshUser(JIBUser u) {
+        String sql = "UPDATE users SET opt = ? WHERE _uuid = ?;";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setObject(1, u);
+            ps2.setString(2, u.getUUID().toString());
+            ps2.execute();
+            getDatabase().commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+    }
 
     public void addClientAuth(JIBUser u, String authToken) {
         String sql = "INSERT INTO clientauth (username,password) VALUES(?,?);";
