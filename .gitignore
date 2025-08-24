@@ -29,9 +29,6 @@ nbactions.xml
 config.jy
 /bridge/
 
-mvnw
-mvnw.cmd
-.mvn
 bridge
 
 server-deployment.yaml
