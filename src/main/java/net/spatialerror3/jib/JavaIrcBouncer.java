@@ -67,6 +67,7 @@ public class JavaIrcBouncer {
         if (jibConfig.getValue("DEBUGGING") != null) {
             jibDebug.setDebugging(true);
         }
+        jibSysEnv.envToConfig("H2SERVER");
         jibSysEnv.envToConfig("H2DBFILE");
         String h2dbfile = null;
         if (jibConfig.getValue("H2DBFILE") != null) {
