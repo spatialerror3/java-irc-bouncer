@@ -18,7 +18,7 @@
 package net.spatialerror3.jib;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,7 +50,7 @@ public class JIBCommand {
             authed.getJibIRC().connect2(null);
         }
         if (excmd[0].startsWith("LISTSERVERS")) {
-            Vector<JIBIRCServer> sv = authed.getIrcServers();
+            ArrayList<JIBIRCServer> sv = authed.getIrcServers();
             Iterator<JIBIRCServer> svi = sv.iterator();
             while (svi.hasNext()) {
                 JIBIRCServer lss = svi.next();
@@ -60,7 +60,7 @@ public class JIBCommand {
         }
         if (excmd[0].startsWith("DELSERVER")) {
             String[] params = excmd[1].split(" ", 2);
-            Vector<JIBIRCServer> sv = authed.getIrcServers();
+            ArrayList<JIBIRCServer> sv = authed.getIrcServers();
             Iterator<JIBIRCServer> svi = sv.iterator();
             while (svi.hasNext()) {
                 JIBIRCServer dss = svi.next();
