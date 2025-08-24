@@ -19,6 +19,7 @@ package net.spatialerror3.jib;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -45,7 +46,10 @@ public class JIBHTTPServer {
         connector.setHost("0.0.0.0");
         connector.setAcceptQueueSize(128);
         server.addConnector(connector);
+        ServletContextHandler handler = new ServletContextHandler();
+        handler.addServlet(JIBHTTPLoginServlet.class.getName(), "/");
         server.setDefaultHandler(new JIBHTTPHandler());
+        server.setDefaultHandler(handler);
         try {
             server.start();
         } catch (UnsupportedOperationException uoe1) {
