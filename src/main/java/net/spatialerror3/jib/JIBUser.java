@@ -20,7 +20,7 @@ package net.spatialerror3.jib;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.UUID;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
@@ -39,13 +39,13 @@ public class JIBUser implements Serializable {
     private boolean admin = false;
     //
     private JIBIRC jibIRC = null;
-    private Vector<JIBIRCServer> ircServers = null;
+    private ArrayList<JIBIRCServer> ircServers = null;
     private JIBUserInfo ircUserInfo = null;
     //
-    Vector<JIBHandleClient> clients = new Vector<JIBHandleClient>();
+    ArrayList<JIBHandleClient> clients = new ArrayList<JIBHandleClient>();
 
     public JIBUser() {
-        ircServers = new Vector<JIBIRCServer>();
+        ircServers = new ArrayList<JIBIRCServer>();
         ircUserInfo = new JIBUserInfo();
     }
 
@@ -128,7 +128,7 @@ public class JIBUser implements Serializable {
         JavaIrcBouncer.jibDbUtil.addServer(this, ircServer);
     }
 
-    public Vector<JIBIRCServer> getIrcServers() {
+    public ArrayList<JIBIRCServer> getIrcServers() {
         return this.ircServers;
     }
 
@@ -137,7 +137,7 @@ public class JIBUser implements Serializable {
         JIBIRCServer ret = null;
         try {
             pos = (int) (System.currentTimeMillis() % this.ircServers.size());
-            ret = this.ircServers.elementAt(pos);
+            ret = this.ircServers.get(pos);
         } catch (Exception e) {
             ret = null;
         }
