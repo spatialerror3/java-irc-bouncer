@@ -48,6 +48,7 @@ public class JIBCommand {
         }
         if (excmd[0].startsWith("JUMP")) {
             authed.getJibIRC().disconnect(null);
+            authed.getJibIRC().disconnect(authed.getJibIRC().getConnectedTo());
             authed.getJibIRC().connect2(null);
         }
         if (excmd[0].startsWith("LISTSERVERS")) {
