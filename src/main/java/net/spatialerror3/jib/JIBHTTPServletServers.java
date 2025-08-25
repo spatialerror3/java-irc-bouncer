@@ -46,6 +46,19 @@ public class JIBHTTPServletServers extends HttpServlet {
         try {
             String user = req.getParameter("user");
             String pass = req.getParameter("pass");
+            //
+            String server = req.getParameter("server");
+            String port = req.getParameter("port");
+            String ssl = req.getParameter("ssl");
+            String ipv6 = req.getParameter("ipv6");
+            String clientbind = req.getParameter("clientbind");
+            String serverpass = req.getParameter("serverpass");
+            String uinick = req.getParameter("uinick");
+            String uiuser = req.getParameter("uiuser");
+            String uirealname = req.getParameter("uirealname");
+            String nickservuser = req.getParameter("nickservuser");
+            String nickservpass = req.getParameter("nickservpass");
+            String channels = req.getParameter("channels");
 
             PrintWriter out = resp.getWriter();
             resp.getWriter().write("<html>");
@@ -56,23 +69,37 @@ public class JIBHTTPServletServers extends HttpServlet {
             resp.getWriter().write("<br>SESSION " + session.getId() + "<br>");
             resp.getWriter().write("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
             resp.getWriter().write("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
-            resp.getWriter().write("<form action='/servers' method=POST><br>");
-            resp.getWriter().write("<input type=text name='server' /><br>");
-            resp.getWriter().write("<input type=text name='port' /><br>");
-            resp.getWriter().write("<input type=checkbox name='ssl' /><br>");
-            resp.getWriter().write("<input type=checkbox name='ipv6' /><br>");
-            resp.getWriter().write("<input type=password name='pass' /><br>");
-            resp.getWriter().write("<input type=submit /></form>");
+            out.println("<form action='/servers' method=POST><br>");
+            out.println("server=<input type=text name='server' /><br>");
+            out.println("port=<input type=text name='port' /><br>");
+            out.println("ssl=<input type=checkbox name='ssl' /><br>");
+            out.println("ipv6=<input type=checkbox name='ipv6' /><br>");
+            out.println("clientbind=<input type=text name='clientbind' /><br>");
+            out.println("serverpass=<input type=password name='serverpass' /><br>");
+            out.println("nick=<input type=text name='uinick' /><br>");
+            out.println("user=<input type=text name='uiuser' /><br>");
+            out.println("realname=<input type=text name='uirealname' /><br>");
+            out.println("nickservuser=<input type=text name='nickservuser' /><br>");
+            out.println("nickservpass=<input type=password name='nickservpass' /><br>");
+            out.println("channels=<input type=text name='channels' /><br>");
+            out.println("<input type=submit /></form>");
             if (session.getAttribute("IDENTIFIEDAS") != null) {
                 UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
                 JIBUser u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
                 if (u != null) {
                     ArrayList<JIBIRCServer> servers = u.getIrcServers();
                     Iterator<JIBIRCServer> it1 = servers.iterator();
-                    while(it1.hasNext()) {
+                    while (it1.hasNext()) {
                         JIBIRCServer serv = it1.next();
-                        resp.getWriter().write("<br>serv("+serv.getUUID().toString()+")="+serv.toHTML()+"<br>");
+                        resp.getWriter().write("<br>serv(" + serv.getUUID().toString() + ")=" + serv.toHTML() + "<br>");
                     }
+                    
+                    JIBUserInfo ui = new JIBUserInfo();
+                    ui.setNick(uinick);
+                    ui.setUser(uiuser);
+                    ui.setRealname(uirealname);
+                    JIBIRCServer tmpServ = JIBIRCServer.createJIBIRCServer(server, Integer.valueOf(port), Boolean.valueOf(ssl), Boolean.valueOf(ipv6), clientbind, serverpass, ui, nickservuser, nickservpass, channels);
+                    u.addIrcServer(tmpServ);
                 }
             }
             resp.getWriter().write("</body>");
