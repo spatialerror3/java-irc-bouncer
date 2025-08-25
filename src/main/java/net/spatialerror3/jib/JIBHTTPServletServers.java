@@ -82,18 +82,21 @@ public class JIBHTTPServletServers extends HttpServlet {
             out.println("nickservuser=<input type=text name='nickservuser' /><br>");
             out.println("nickservpass=<input type=password name='nickservpass' /><br>");
             out.println("channels=<input type=text name='channels' /><br>");
+            out.println("<input type=hidden name='whattodo' value='addserver' /><br>");
             out.println("<input type=submit /></form>");
             if (session.getAttribute("IDENTIFIEDAS") != null) {
                 UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
                 JIBUser u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
                 if (u != null) {
-                    JIBUserInfo ui = new JIBUserInfo();
-                    ui.setNick(uinick);
-                    ui.setUser(uiuser);
-                    ui.setRealname(uirealname);
-                    JIBIRCServer tmpServ = JIBIRCServer.createJIBIRCServer(server, Integer.valueOf(port), Boolean.valueOf(ssl), Boolean.valueOf(ipv6), clientbind, serverpass, ui, nickservuser, nickservpass, channels);
-                    u.addIrcServer(tmpServ);
-                    
+                    if (req.getParameter("whattodo") != null && req.getParameter("whattodo").equals("addserver")) {
+                        JIBUserInfo ui = new JIBUserInfo();
+                        ui.setNick(uinick);
+                        ui.setUser(uiuser);
+                        ui.setRealname(uirealname);
+                        JIBIRCServer tmpServ = JIBIRCServer.createJIBIRCServer(server, Integer.valueOf(port), Boolean.valueOf(ssl), Boolean.valueOf(ipv6), clientbind, serverpass, ui, nickservuser, nickservpass, channels);
+                        u.addIrcServer(tmpServ);
+                    }
+
                     ArrayList<JIBIRCServer> servers = u.getIrcServers();
                     Iterator<JIBIRCServer> it1 = servers.iterator();
                     while (it1.hasNext()) {
