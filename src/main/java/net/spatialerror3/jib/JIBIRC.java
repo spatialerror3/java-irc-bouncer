@@ -287,6 +287,10 @@ public class JIBIRC implements Runnable {
         }
     }
 
+    public JIBIRCServer getConnectedTo() {
+        return this.serv;
+    }
+
     public void onConnect() {
         ping1 = new JIBPinger(sock);
         ping1.setPingStr();
