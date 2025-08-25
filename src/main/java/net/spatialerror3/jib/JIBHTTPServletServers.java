@@ -87,19 +87,19 @@ public class JIBHTTPServletServers extends HttpServlet {
                 UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
                 JIBUser u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
                 if (u != null) {
-                    ArrayList<JIBIRCServer> servers = u.getIrcServers();
-                    Iterator<JIBIRCServer> it1 = servers.iterator();
-                    while (it1.hasNext()) {
-                        JIBIRCServer serv = it1.next();
-                        resp.getWriter().write("<br>serv(" + serv.getUUID().toString() + ")=" + serv.toHTML() + "<br>");
-                    }
-                    
                     JIBUserInfo ui = new JIBUserInfo();
                     ui.setNick(uinick);
                     ui.setUser(uiuser);
                     ui.setRealname(uirealname);
                     JIBIRCServer tmpServ = JIBIRCServer.createJIBIRCServer(server, Integer.valueOf(port), Boolean.valueOf(ssl), Boolean.valueOf(ipv6), clientbind, serverpass, ui, nickservuser, nickservpass, channels);
                     u.addIrcServer(tmpServ);
+                    
+                    ArrayList<JIBIRCServer> servers = u.getIrcServers();
+                    Iterator<JIBIRCServer> it1 = servers.iterator();
+                    while (it1.hasNext()) {
+                        JIBIRCServer serv = it1.next();
+                        resp.getWriter().write("<br>serv(" + serv.getUUID().toString() + ")=" + serv.toHTML() + "<br>");
+                    }
                 }
             }
             resp.getWriter().write("</body>");
