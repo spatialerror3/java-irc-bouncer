@@ -23,6 +23,8 @@ import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.session.DefaultSessionIdManager;
+import org.eclipse.jetty.session.HouseKeeper;
 
 /**
  *
@@ -39,6 +41,27 @@ public class JIBHTTPServer {
         }
         //
         Server server = new Server();
+
+        DefaultSessionIdManager idMgr = new DefaultSessionIdManager(server);
+        idMgr.setWorkerName("server1");
+        server.addBean(idMgr, true);
+        try {
+            idMgr.start();
+        } catch (Exception e3) {
+            log.error((String) null, e3);
+        }
+
+        try {
+            HouseKeeper houseKeeper = new HouseKeeper();
+            houseKeeper.setSessionIdManager(idMgr);
+            //set the frequency of scavenge cycles
+            houseKeeper.setIntervalSec(600L);
+            idMgr.setSessionHouseKeeper(houseKeeper);
+            server.addBean(houseKeeper, true);
+        } catch (Exception e2) {
+            log.error((String) null, e2);
+        }
+
         int acceptors = 4;
         int selectors = 4;
         ServerConnector connector = new ServerConnector(server, acceptors, selectors, new HttpConnectionFactory());
@@ -46,7 +69,7 @@ public class JIBHTTPServer {
         connector.setHost("0.0.0.0");
         connector.setAcceptQueueSize(128);
         server.addConnector(connector);
-        ServletContextHandler handler = new ServletContextHandler();
+        ServletContextHandler handler = new ServletContextHandler("/", true, true);
         handler.addServlet(JIBHTTPLoginServlet.class.getName(), "/");
         server.setDefaultHandler(new JIBHTTPHandler());
         server.setDefaultHandler(handler);
