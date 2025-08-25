@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,6 +44,7 @@ public class JIBHTTPLoginServlet extends HttpServlet {
             String user = req.getParameter("user");
             String pass = req.getParameter("pass");
 
+            PrintWriter out = resp.getWriter();
             resp.getWriter().write("<html>");
             resp.getWriter().write("<head>");
             resp.getWriter().write("<title>JIB</title>");
@@ -61,6 +63,7 @@ public class JIBHTTPLoginServlet extends HttpServlet {
                     session.setAttribute("IDENTIFIEDAS", u.getUUID().toString());
                     resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
                     resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
+                    out.println("<br><a href='/servers'>servers</a><br>");
                 } else {
                     log.error("JIBHTTP Web Auth failed for user=" + user);
                     resp.getWriter().write("<br>AUTH FAILED");
