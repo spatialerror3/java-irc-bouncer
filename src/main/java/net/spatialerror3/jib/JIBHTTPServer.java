@@ -71,6 +71,7 @@ public class JIBHTTPServer {
         server.addConnector(connector);
         ServletContextHandler handler = new ServletContextHandler("/", true, true);
         handler.addServlet(JIBHTTPLoginServlet.class.getName(), "/");
+        handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers");
         server.setDefaultHandler(new JIBHTTPHandler());
         server.setDefaultHandler(handler);
         try {
