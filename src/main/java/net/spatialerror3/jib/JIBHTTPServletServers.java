@@ -62,7 +62,7 @@ public class JIBHTTPServletServers extends HttpServlet {
                     Iterator<JIBIRCServer> it1 = servers.iterator();
                     while(it1.hasNext()) {
                         JIBIRCServer serv = it1.next();
-                        resp.getWriter().write("<br>serv("+serv.getUUID().toString()+")="+serv.toString()+"<br>");
+                        resp.getWriter().write("<br>serv("+serv.getUUID().toString()+")="+serv.toHTML()+"<br>");
                     }
                 }
             }
