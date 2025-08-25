@@ -222,4 +222,20 @@ public class JIBIRCServer implements Serializable {
         
         return sb1.toString();
     }
+    
+    public static JIBIRCServer createJIBIRCServer(String server, int port, boolean ssl, boolean ipv6, String clientBind, String password, JIBUserInfo userInfo, String nickServUser, String nickServPass, String channels) {
+        JIBIRCServer tmpServ = null;
+        tmpServ = new JIBIRCServer();
+        tmpServ.setServer(server);
+        tmpServ.setPort(port);
+        tmpServ.setSsl(ssl);
+        tmpServ.setIpv6(ipv6);
+        tmpServ.setClientBind(clientBind);
+        tmpServ.setPassword(password);
+        tmpServ.setUserInfo(userInfo);
+        tmpServ.setNickServUser(nickServUser);
+        tmpServ.setNickServPass(nickServPass);
+        tmpServ.addChannels(channels);
+        return tmpServ;
+    }
 }
