@@ -93,7 +93,7 @@ public class JIBHTTPServletServers extends HttpServlet {
                         ui.setNick(uinick);
                         ui.setUser(uiuser);
                         ui.setRealname(uirealname);
-                        JIBIRCServer tmpServ = JIBIRCServer.createJIBIRCServer(server, Integer.valueOf(port), Boolean.valueOf(ssl), Boolean.valueOf(ipv6), clientbind, serverpass, ui, nickservuser, nickservpass, channels);
+                        JIBIRCServer tmpServ = JIBIRCServer.createJIBIRCServer(server, Integer.valueOf(port), (ssl != null), (ipv6 != null), clientbind, serverpass, ui, nickservuser, nickservpass, channels);
                         u.addIrcServer(tmpServ);
                     }
 
@@ -101,7 +101,7 @@ public class JIBHTTPServletServers extends HttpServlet {
                     Iterator<JIBIRCServer> it1 = servers.iterator();
                     while (it1.hasNext()) {
                         JIBIRCServer serv = it1.next();
-                        resp.getWriter().write("<br>serv(" + serv.getUUID().toString() + ")=" + serv.toHTML() + "<br>");
+                        out.println("<br>serv(" + serv.getUUID().toString() + ")=" + serv.toHTML() + "<br>");
                     }
                 }
             }
