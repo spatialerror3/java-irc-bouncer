@@ -147,7 +147,9 @@ public class JIBIRC implements Runnable {
         } else {
             this.serv = serv;
         }
-        this.serv.setUserInfo(u.getIRCUserInfo());
+        if (this.serv.getUserInfo() == null) {
+            this.serv.setUserInfo(u.getIRCUserInfo());
+        }
         init();
         connect(serv);
     }
