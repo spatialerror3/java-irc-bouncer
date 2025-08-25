@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
@@ -46,6 +47,7 @@ public class JIBHTTPServletServers extends HttpServlet {
             String user = req.getParameter("user");
             String pass = req.getParameter("pass");
 
+            PrintWriter out = resp.getWriter();
             resp.getWriter().write("<html>");
             resp.getWriter().write("<head>");
             resp.getWriter().write("<title>JIB</title>");
