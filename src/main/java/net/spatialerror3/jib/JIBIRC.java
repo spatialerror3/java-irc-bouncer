@@ -267,6 +267,7 @@ public class JIBIRC implements Runnable {
         if (this.serv.equals(serv)) {
             // FIXME: disconnect from server
             this.keepDisconnected = true;
+            writeLine("QUIT :\r\n");
         }
     }
 
