@@ -35,6 +35,7 @@ public class JIBHTTPLoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        var session = req.getSession(true);
         String path = req.getServletPath();
         log.debug(this + " " + path);
 
@@ -47,6 +48,8 @@ public class JIBHTTPLoginServlet extends HttpServlet {
             resp.getWriter().write("<title>JIB</title>");
             resp.getWriter().write("</head>");
             resp.getWriter().write("<body>");
+            resp.getWriter().write("<br>SESSION "+session.getId()+"<br>");
+            resp.getWriter().write("<br>SESSIONIDENTIFIEDAS="+session.getAttribute("IDENTIFIEDAS")+"<br>");
             resp.getWriter().write("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
             if (user != null) {
                 resp.getWriter().write("<br>user=" + user);
@@ -55,6 +58,7 @@ public class JIBHTTPLoginServlet extends HttpServlet {
                 JIBUser u = null;
                 if ((u = JavaIrcBouncer.jibCore.authUser(user, pass)) != null) {
                     resp.getWriter().write("<br>IDENTIFIED AS " + u.getUUID().toString());
+                    session.setAttribute("IDENTIFIEDAS", u.getUUID().toString());
                     resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
                     resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
                 } else {
