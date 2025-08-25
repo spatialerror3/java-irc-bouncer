@@ -54,6 +54,13 @@ public class JIBHTTPServletServers extends HttpServlet {
             resp.getWriter().write("<br>SESSION " + session.getId() + "<br>");
             resp.getWriter().write("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
             resp.getWriter().write("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
+            resp.getWriter().write("<form action='/servers' method=POST><br>");
+            resp.getWriter().write("<input type=text name='server' /><br>");
+            resp.getWriter().write("<input type=text name='port' /><br>");
+            resp.getWriter().write("<input type=checkbox name='ssl' /><br>");
+            resp.getWriter().write("<input type=checkbox name='ipv6' /><br>");
+            resp.getWriter().write("<input type=password name='pass' /><br>");
+            resp.getWriter().write("<input type=submit /></form>");
             if (session.getAttribute("IDENTIFIEDAS") != null) {
                 UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
                 JIBUser u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
