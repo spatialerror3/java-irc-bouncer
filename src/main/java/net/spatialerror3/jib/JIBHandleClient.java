@@ -73,6 +73,7 @@ public class JIBHandleClient implements Runnable {
             }
         }
         sendLine(":JIB.jib NOTICE " + trackNick + " :IDENTIFIED AS " + authed.getUUID().toString() + "\r\n");
+        // FIXME: ADD REPLAY
     }
 
     public Exception getError() {
