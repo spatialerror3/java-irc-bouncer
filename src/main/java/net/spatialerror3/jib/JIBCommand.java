@@ -41,6 +41,7 @@ public class JIBCommand {
         }
         if (excmd[0].startsWith("DISCONNECT")) {
             authed.getJibIRC().disconnect(null);
+            authed.getJibIRC().disconnect(authed.getJibIRC().getConnectedTo());
         }
         if (excmd[0].startsWith("RECONNECT")) {
             authed.getJibIRC().reconnect();
