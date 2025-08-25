@@ -210,19 +210,22 @@ public class JIBIRCServer implements Serializable {
     public InetAddress getResolved() {
         return this.resolved;
     }
-    
+
     public String toHTML() {
         StringBuilder sb1 = new StringBuilder();
-        
-        sb1.append("<br>server='"+getServer()+"'");
-        sb1.append("<br>port='"+getPort()+"'");
-        sb1.append("<br>ssl='"+getSsl()+"'");
-        sb1.append("<br>ipv6='"+getIpv6()+"'");
+
+        sb1.append("<br>server='" + getServer() + "'");
+        sb1.append("<br>port='" + getPort() + "'");
+        sb1.append("<br>ssl='" + getSsl() + "'");
+        sb1.append("<br>ipv6='" + getIpv6() + "'");
+        sb1.append("<br>clientbind='" + getClientBind() + "'");
+        sb1.append("<br>serverpass=" + (this.password == null ? "UNSET" : "SET"));
+        sb1.append("<br>nick=" + (getUserInfo() != null ? "'" + getUserInfo().getNick() + "'" : "UNSET"));
         sb1.append("<br><br>");
-        
+
         return sb1.toString();
     }
-    
+
     public static JIBIRCServer createJIBIRCServer(String server, int port, boolean ssl, boolean ipv6, String clientBind, String password, JIBUserInfo userInfo, String nickServUser, String nickServPass, String channels) {
         JIBIRCServer tmpServ = null;
         tmpServ = new JIBIRCServer();
