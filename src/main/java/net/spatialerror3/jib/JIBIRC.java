@@ -294,6 +294,15 @@ public class JIBIRC implements Runnable {
     public void onConnect() {
         ping1 = new JIBPinger(sock);
         ping1.setPingStr();
+        if (this.serv.getUserInfo() != null && this.serv.getUserInfo().getNick() != null && this.serv.getUserInfo().getNick().length() > 0) {
+            this.nick = this.serv.getUserInfo().getNick();
+        }
+        if (this.serv.getUserInfo() != null && this.serv.getUserInfo().getUser() != null && this.serv.getUserInfo().getUser().length() > 0) {
+            this.user = this.serv.getUserInfo().getUser();
+        }
+        if (this.serv.getUserInfo() != null && this.serv.getUserInfo().getRealname() != null && this.serv.getUserInfo().getRealname().length() > 0) {
+            this.realname = this.serv.getUserInfo().getRealname();
+        }
         writeLine("CAP LS 302\r\n");
         writeLine("NICK " + nick + "\r\n");
         writeLine("USER " + user + " 0 * :" + realname + "\r\n");
