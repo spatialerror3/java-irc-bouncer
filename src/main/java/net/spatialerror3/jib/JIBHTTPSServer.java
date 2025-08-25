@@ -20,12 +20,15 @@ package net.spatialerror3.jib;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.SessionHandler;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.session.DefaultSessionIdManager;
+import org.eclipse.jetty.session.HouseKeeper;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 /**
@@ -42,6 +45,25 @@ public class JIBHTTPSServer {
             this.Port = 7643;
         }        //
         Server server = new Server();
+        DefaultSessionIdManager idMgr = new DefaultSessionIdManager(server);
+        idMgr.setWorkerName("server2");
+        server.addBean(idMgr, true);
+        try {
+            idMgr.start();
+        } catch (Exception e3) {
+            log.error((String) null, e3);
+        }
+
+        try {
+            HouseKeeper houseKeeper = new HouseKeeper();
+            houseKeeper.setSessionIdManager(idMgr);
+            //set the frequency of scavenge cycles
+            houseKeeper.setIntervalSec(600L);
+            idMgr.setSessionHouseKeeper(houseKeeper);
+            server.addBean(houseKeeper, true);
+        } catch (Exception e2) {
+            log.error((String) null, e2);
+        }
 
         HttpConfiguration https = new HttpConfiguration();
         https.addCustomizer(new SecureRequestCustomizer());
@@ -55,7 +77,12 @@ public class JIBHTTPSServer {
         sslConnector.setPort(this.Port);
 
         server.addConnector(sslConnector);
-        ServletContextHandler handler = new ServletContextHandler();
+        //SessionHandler sessionHandler = new SessionHandler();
+        //sessionHandler.setSessionIdManager(idMgr);
+        //sessionHandler.setServer(server);
+        //server.addBean(sessionHandler, true);
+        ServletContextHandler handler = new ServletContextHandler("/", true, true);
+        //handler.setSessionHandler(sessionHandler);
         handler.addServlet(JIBHTTPLoginServlet.class.getName(), "/");
         server.setDefaultHandler(new JIBHTTPHandler());
         server.setDefaultHandler(handler);
