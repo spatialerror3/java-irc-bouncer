@@ -48,11 +48,12 @@ public class JIBHTTPServletBase extends HttpServlet {
         out.println("<body>");
         out.println("<table width='100%'>");
         out.println("<tr><td>");
+        out.println("<br>JIB<br>");
         out.println("<br>SESSION " + session.getId() + "<br>");
         out.println("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
         out.println("</td><td>");
         out.println("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
-        out.println("</td><td>");        
+        out.println("</td><td>");
         out.println("<form action='/logout' method=POST><br><input type=submit value='LOGOUT' /></form>");
         out.println("</td></tr>");
         out.println("</table>");
