@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author spatialerror3
  */
-public class JIBHTTPServletLogin extends HttpServlet {
+public class JIBHTTPServletLogin extends JIBHTTPServletBase {
 
     private static final Logger log = LogManager.getLogger(JIBHTTPServletLogin.class);
 
@@ -40,19 +40,12 @@ public class JIBHTTPServletLogin extends HttpServlet {
         String path = req.getServletPath();
         log.debug(this + " " + path);
 
+        header(req, resp);
         try {
             String user = req.getParameter("user");
             String pass = req.getParameter("pass");
 
             PrintWriter out = resp.getWriter();
-            resp.getWriter().write("<html>");
-            resp.getWriter().write("<head>");
-            resp.getWriter().write("<title>JIB</title>");
-            resp.getWriter().write("</head>");
-            resp.getWriter().write("<body>");
-            resp.getWriter().write("<br>SESSION "+session.getId()+"<br>");
-            resp.getWriter().write("<br>SESSIONIDENTIFIEDAS="+session.getAttribute("IDENTIFIEDAS")+"<br>");
-            resp.getWriter().write("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
             if (user != null) {
                 resp.getWriter().write("<br>user=" + user);
             }
@@ -69,13 +62,11 @@ public class JIBHTTPServletLogin extends HttpServlet {
                     resp.getWriter().write("<br>AUTH FAILED");
                 }
             }
-            resp.getWriter().write("</body>");
-            resp.getWriter().write("</html>");
-            resp.getWriter().close();
         } catch (Exception e) {
             log.error((String) null, e);
         }
-
+        footer(req, resp);
+        resp.getWriter().close();
     }
 
     @Override
