@@ -72,6 +72,7 @@ public class JIBHTTPServer {
         ServletContextHandler handler = new ServletContextHandler("/", true, true);
         handler.addServlet(JIBHTTPLoginServlet.class.getName(), "/");
         handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers");
+        handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout");
         server.setDefaultHandler(new JIBHTTPHandler());
         server.setDefaultHandler(handler);
         try {
