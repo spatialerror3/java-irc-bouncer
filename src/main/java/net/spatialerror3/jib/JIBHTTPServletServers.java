@@ -96,12 +96,30 @@ public class JIBHTTPServletServers extends HttpServlet {
                         JIBIRCServer tmpServ = JIBIRCServer.createJIBIRCServer(server, Integer.valueOf(port), (ssl != null), (ipv6 != null), clientbind, serverpass, ui, nickservuser, nickservpass, channels);
                         u.addIrcServer(tmpServ);
                     }
+                    if (req.getParameter("whattodo") != null && req.getParameter("whattodo").equals("delserver")) {
+                        ArrayList<JIBIRCServer> sv = u.getIrcServers();
+                        Iterator<JIBIRCServer> svi = sv.iterator();
+                        while (svi.hasNext()) {
+                            JIBIRCServer dss = svi.next();
+                            if (dss.getUUID().toString().equals(req.getParameter("serveruuid"))) {
+                                svi.remove();
+                                JavaIrcBouncer.jibDbUtil.removeServer(u, dss);
+                                out.println("DELETED SERVER " + req.getParameter("serveruuid") + "\r\n");
+                            }
+                        }
+                    }
 
                     ArrayList<JIBIRCServer> servers = u.getIrcServers();
                     Iterator<JIBIRCServer> it1 = servers.iterator();
                     while (it1.hasNext()) {
                         JIBIRCServer serv = it1.next();
-                        out.println("<br>serv(" + serv.getUUID().toString() + ")=" + serv.toHTML() + "<br>");
+                        out.println("<br>serv(" + serv.getUUID().toString() + ")=" + serv.toHTML());
+                        out.println("<form action='/servers' method=POST>");
+                        out.println("<input type=hidden name='serveruuid' value='" + serv.getUUID().toString() + "'>");
+                        out.println("<input type=hidden name='whattodo' value='delserver'>");
+                        out.println("<input type=submit />");
+                        out.println("[DELETE SERVER]<br>");
+                        out.println("</form>");
                     }
                 }
             }
