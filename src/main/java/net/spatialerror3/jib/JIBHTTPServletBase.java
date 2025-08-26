@@ -40,15 +40,16 @@ public class JIBHTTPServletBase extends HttpServlet {
         log.debug(this + " " + path);
 
         PrintWriter out = resp.getWriter();
-        resp.getWriter().write("<html>");
-        resp.getWriter().write("<head>");
-        resp.getWriter().write("<title>JIB</title>");
-        resp.getWriter().write("</head>");
-        resp.getWriter().write("<body>");
-        resp.getWriter().write("<br>SESSION " + session.getId() + "<br>");
-        resp.getWriter().write("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
-        resp.getWriter().write("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
-        resp.getWriter().write("<form action='/logout' method=POST><br><input type=submit value='LOGOUT' /></form>");
+        out.println("<!DOCTYPE html>");
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>JIB</title>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<br>SESSION " + session.getId() + "<br>");
+        out.println("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
+        out.println("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
+        out.println("<form action='/logout' method=POST><br><input type=submit value='LOGOUT' /></form>");
     }
 
     public void footer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,7 +58,7 @@ public class JIBHTTPServletBase extends HttpServlet {
         log.debug(this + " " + path);
 
         PrintWriter out = resp.getWriter();
-        resp.getWriter().write("</body>");
-        resp.getWriter().write("</html>");
+        out.println("</body>");
+        out.println("</html>");
     }
 }
