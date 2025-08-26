@@ -221,6 +221,11 @@ public class JIBIRCServer implements Serializable {
         sb1.append("<br>clientbind='" + getClientBind() + "'");
         sb1.append("<br>serverpass=" + (this.password == null ? "UNSET" : "SET"));
         sb1.append("<br>nick=" + (getUserInfo() != null ? "'" + getUserInfo().getNick() + "'" : "UNSET"));
+        sb1.append("<br>user=" + (getUserInfo() != null ? "'" + getUserInfo().getUser() + "'" : "UNSET"));
+        sb1.append("<br>realname=" + (getUserInfo() != null ? "'" + getUserInfo().getRealname() + "'" : "UNSET"));
+        sb1.append("<br>nickservuser=" + (getNickServUser() == null ? "UNSET" : "SET"));
+        sb1.append("<br>nickservpass=" + (getNickServPass() == null ? "UNSET" : "SET"));
+        sb1.append("<br>channels=" + (getChannels() != null ? "'" + getChannels() + "'" : "UNSET"));
         sb1.append("<br><br>");
 
         return sb1.toString();
