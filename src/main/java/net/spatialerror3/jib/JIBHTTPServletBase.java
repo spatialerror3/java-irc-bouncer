@@ -48,6 +48,7 @@ public class JIBHTTPServletBase extends HttpServlet {
         resp.getWriter().write("<br>SESSION " + session.getId() + "<br>");
         resp.getWriter().write("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
         resp.getWriter().write("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
+        resp.getWriter().write("<form action='/logout' method=POST><br><input type=submit value='LOGOUT' /></form>");
     }
 
     public void footer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
