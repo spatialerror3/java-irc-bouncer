@@ -33,7 +33,7 @@ import java.util.UUID;
  *
  * @author spatialerror3
  */
-public class JIBHTTPServletServers extends HttpServlet {
+public class JIBHTTPServletServers extends JIBHTTPServletBase {
 
     private static final Logger log = LogManager.getLogger(JIBHTTPServletLogin.class);
 
@@ -43,6 +43,7 @@ public class JIBHTTPServletServers extends HttpServlet {
         String path = req.getServletPath();
         log.debug(this + " " + path);
 
+        header(req, resp);
         try {
             String user = req.getParameter("user");
             String pass = req.getParameter("pass");
@@ -61,14 +62,6 @@ public class JIBHTTPServletServers extends HttpServlet {
             String channels = req.getParameter("channels");
 
             PrintWriter out = resp.getWriter();
-            resp.getWriter().write("<html>");
-            resp.getWriter().write("<head>");
-            resp.getWriter().write("<title>JIB</title>");
-            resp.getWriter().write("</head>");
-            resp.getWriter().write("<body>");
-            resp.getWriter().write("<br>SESSION " + session.getId() + "<br>");
-            resp.getWriter().write("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
-            resp.getWriter().write("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
             out.println("<form action='/servers' method=POST><br>");
             out.println("server=<input type=text name='server' /><br>");
             out.println("port=<input type=text name='port' /><br>");
@@ -123,13 +116,11 @@ public class JIBHTTPServletServers extends HttpServlet {
                     }
                 }
             }
-            resp.getWriter().write("</body>");
-            resp.getWriter().write("</html>");
-            resp.getWriter().close();
         } catch (Exception e) {
             log.error((String) null, e);
         }
-
+        footer(req, resp);
+        resp.getWriter().close();
     }
 
     @Override
