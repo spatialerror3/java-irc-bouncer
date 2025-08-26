@@ -32,7 +32,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class JIBHTTPServletLogout extends HttpServlet {
 
-    private static final Logger log = LogManager.getLogger(JIBHTTPLoginServlet.class);
+    private static final Logger log = LogManager.getLogger(JIBHTTPServletLogin.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
