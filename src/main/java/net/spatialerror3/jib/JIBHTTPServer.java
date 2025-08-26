@@ -70,7 +70,7 @@ public class JIBHTTPServer {
         connector.setAcceptQueueSize(128);
         server.addConnector(connector);
         ServletContextHandler handler = new ServletContextHandler("/", true, true);
-        handler.addServlet(JIBHTTPLoginServlet.class.getName(), "/");
+        handler.addServlet(JIBHTTPServletLogin.class.getName(), "/");
         handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers");
         handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout");
         server.setDefaultHandler(new JIBHTTPHandler());
