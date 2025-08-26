@@ -30,9 +30,9 @@ import org.apache.logging.log4j.Logger;
  *
  * @author spatialerror3
  */
-public class JIBHTTPServletLogout extends HttpServlet {
+public class JIBHTTPServletLogout extends JIBHTTPServletBase {
 
-    private static final Logger log = LogManager.getLogger(JIBHTTPServletLogin.class);
+    private static final Logger log = LogManager.getLogger(JIBHTTPServletLogout.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,26 +40,18 @@ public class JIBHTTPServletLogout extends HttpServlet {
         String path = req.getServletPath();
         log.debug(this + " " + path);
 
+        header(req,resp);
         try {
             PrintWriter out = resp.getWriter();
-            resp.getWriter().write("<html>");
-            resp.getWriter().write("<head>");
-            resp.getWriter().write("<title>JIB</title>");
-            resp.getWriter().write("</head>");
-            resp.getWriter().write("<body>");
-            resp.getWriter().write("<br>SESSION "+session.getId()+"<br>");
-            resp.getWriter().write("<br>SESSIONIDENTIFIEDAS="+session.getAttribute("IDENTIFIEDAS")+"<br>");
-            resp.getWriter().write("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
             if (session.getAttribute("IDENTIFIEDAS") != null) {
                 session.invalidate();
             }
-            resp.getWriter().write("</body>");
-            resp.getWriter().write("</html>");
-            resp.getWriter().close();
+            out.println("INVALIDATED SESSION");
         } catch (Exception e) {
             log.error((String) null, e);
         }
-
+        footer(req,resp);
+        resp.getWriter().close();
     }
 
     @Override
