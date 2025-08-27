@@ -54,6 +54,9 @@ public class JIBIRCNickServ {
             if (serv.getNetType() == JIBIRCNetType.NetType.OFTC) {
                 u.getJibIRC().writeLine("PRIVMSG NickServ :IDENTIFY " + serv.getNickServPass() + "\r\n");
             }
+            if (serv.getNetType() == JIBIRCNetType.NetType.DALNET) {
+                u.getJibIRC().writeLine("PRIVMSG NickServ@services.dal.net :IDENTIFY " + serv.getNickServUser() + " " + serv.getNickServPass() + "\r\n");
+            }
         }
     }
 }
