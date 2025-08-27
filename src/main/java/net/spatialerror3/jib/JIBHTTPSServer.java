@@ -85,6 +85,7 @@ public class JIBHTTPSServer {
         //handler.setSessionHandler(sessionHandler);
         handler.addServlet(JIBHTTPServletLogin.class.getName(), "/");
         handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers");
+        handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status");
         handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout");
         server.setDefaultHandler(new JIBHTTPHandler());
         server.setDefaultHandler(handler);
