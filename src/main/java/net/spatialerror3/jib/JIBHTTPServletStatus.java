@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JIBHTTPServletStatus extends JIBHTTPServletBase {
-    
+
     private static final Logger log = LogManager.getLogger(JIBHTTPServletLogin.class);
 
     @Override
@@ -44,7 +44,8 @@ public class JIBHTTPServletStatus extends JIBHTTPServletBase {
 
         header(req, resp);
         try {
-
+            resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
+            resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
         } catch (Exception e) {
             log.error((String) null, e);
         }
