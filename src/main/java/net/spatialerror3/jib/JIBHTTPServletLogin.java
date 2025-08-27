@@ -57,6 +57,7 @@ public class JIBHTTPServletLogin extends JIBHTTPServletBase {
                     resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
                     resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
                     out.println("<br><a href='/servers'>servers</a><br>");
+                    out.println("<br><a href='/status'>status</a><br>");
                 } else {
                     log.error("JIBHTTP Web Auth failed for user=" + user);
                     resp.getWriter().write("<br>AUTH FAILED");
