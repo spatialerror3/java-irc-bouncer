@@ -54,8 +54,7 @@ public class JIBHTTPServletLogin extends JIBHTTPServletBase {
                 if ((u = JavaIrcBouncer.jibCore.authUser(user, pass)) != null) {
                     resp.getWriter().write("<br>IDENTIFIED AS " + u.getUUID().toString());
                     session.setAttribute("IDENTIFIEDAS", u.getUUID().toString());
-                    resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
-                    resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
+
                     out.println("<br><a href='/servers'>servers</a><br>");
                     out.println("<br><a href='/status'>status</a><br>");
                 } else {
