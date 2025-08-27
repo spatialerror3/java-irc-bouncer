@@ -227,7 +227,7 @@ public class JIBHandleClient implements Runnable {
         }
         if (l.startsWith("PASS")) {
             passthrough = false;
-            this.authPass = l.substring(5);
+            this.authPass = JIBStringUtil.remEOL2(l.substring(5));
             checkUserPass();
             //sendLine(l);
         }
