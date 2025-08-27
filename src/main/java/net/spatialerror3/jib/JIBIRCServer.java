@@ -131,6 +131,9 @@ public class JIBIRCServer implements Serializable {
         if (this.server.equals("irc.libera.chat")) {
             setNetType(JIBIRCNetType.NetType.LIBERA);
         }
+        if(this.server.endsWith("dal.net")) {
+            setNetType(JIBIRCNetType.NetType.DALNET);
+        }
     }
 
     public void setPort(int port) {
