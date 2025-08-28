@@ -143,6 +143,9 @@ public class JIBCommand {
                 //log.debug("LOGREPLAY " + logReplayStr);
             }
         }
+        if (excmd[0].startsWith("CLEAR")) {
+            JavaIrcBouncer.jibDbUtil.clearLog(authed);
+        }
         if (excmd[0].equals("HELP")) {
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "AVAILABLE COMMANDS:" + "\r\n");
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - LISTSERVERS" + "\r\n");
@@ -158,7 +161,8 @@ public class JIBCommand {
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - GET NICK" + "\r\n");
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - GET USER" + "\r\n");
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - GET REALNAME" + "\r\n");
-            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - REPLAY" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - REPLAY[LOG]" + "\r\n");
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - CLEAR[LOG]" + "\r\n");
         }
     }
 }
