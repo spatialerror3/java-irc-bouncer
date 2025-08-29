@@ -35,7 +35,7 @@ import java.util.UUID;
  */
 public class JIBHTTPServletServers extends JIBHTTPServletBase {
 
-    private static final Logger log = LogManager.getLogger(JIBHTTPServletLogin.class);
+    private static final Logger log = LogManager.getLogger(JIBHTTPServletServers.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
