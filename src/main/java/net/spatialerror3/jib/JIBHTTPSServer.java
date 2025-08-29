@@ -60,7 +60,7 @@ public class JIBHTTPSServer {
             //set the frequency of scavenge cycles
             houseKeeper.setIntervalSec(600L);
             idMgr.setSessionHouseKeeper(houseKeeper);
-            server.addBean(houseKeeper, true);
+            //server.addBean(houseKeeper, true);
         } catch (IllegalStateException ise1) {
             log.debug("HouseKeeper IllegalStateException ise1", ise1);
         } catch (Exception e2) {
