@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class JIBHTTPServletStatus extends JIBHTTPServletBase {
 
-    private static final Logger log = LogManager.getLogger(JIBHTTPServletLogin.class);
+    private static final Logger log = LogManager.getLogger(JIBHTTPServletStatus.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -44,8 +44,10 @@ public class JIBHTTPServletStatus extends JIBHTTPServletBase {
 
         header(req, resp);
         try {
+            PrintWriter out = resp.getWriter();
             resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
             resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
+            out.println("");
         } catch (Exception e) {
             log.error((String) null, e);
         }
