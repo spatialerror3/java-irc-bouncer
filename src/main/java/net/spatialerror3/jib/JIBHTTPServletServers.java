@@ -102,18 +102,22 @@ public class JIBHTTPServletServers extends JIBHTTPServletBase {
                         }
                     }
 
+                    out.println("<table>");
                     ArrayList<JIBIRCServer> servers = u.getIrcServers();
                     Iterator<JIBIRCServer> it1 = servers.iterator();
                     while (it1.hasNext()) {
                         JIBIRCServer serv = it1.next();
+                        out.println("<tr><td>");
                         out.println("<br>serv(" + serv.getUUID().toString() + ")=" + serv.toHTML());
                         out.println("<form action='/servers' method=POST>");
                         out.println("<input type=hidden name='serveruuid' value='" + serv.getUUID().toString() + "'>");
                         out.println("<input type=hidden name='whattodo' value='delserver'>");
-                        out.println("<input type=submit />");
-                        out.println("[DELETE SERVER]<br>");
+                        out.println("<input type=submit value='[DELETE SERVER]' />");
+                        out.println("<br>");
                         out.println("</form>");
+                        out.println("</td></tr>");
                     }
+                    out.println("</table>");
                 }
             }
         } catch (Exception e) {
