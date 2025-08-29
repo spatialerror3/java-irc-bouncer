@@ -58,6 +58,8 @@ public class JIBHTTPServer {
             houseKeeper.setIntervalSec(600L);
             idMgr.setSessionHouseKeeper(houseKeeper);
             server.addBean(houseKeeper, true);
+        } catch (IllegalStateException ise2) {
+            log.debug("HouseKeeper IllegalStateException ise2", ise2);
         } catch (Exception e2) {
             log.error((String) null, e2);
         }
