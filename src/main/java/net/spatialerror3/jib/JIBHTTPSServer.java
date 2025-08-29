@@ -36,10 +36,10 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  * @author spatialerror3
  */
 public class JIBHTTPSServer {
-
+    
     private static final Logger log = LogManager.getLogger(JIBHTTPSServer.class);
     private int Port = -1;
-
+    
     public JIBHTTPSServer(int Port) {
         if (Port == -1) {
             this.Port = 7643;
@@ -53,7 +53,7 @@ public class JIBHTTPSServer {
         } catch (Exception e3) {
             log.error((String) null, e3);
         }
-
+        
         try {
             HouseKeeper houseKeeper = new HouseKeeper();
             houseKeeper.setSessionIdManager(idMgr);
@@ -61,21 +61,23 @@ public class JIBHTTPSServer {
             houseKeeper.setIntervalSec(600L);
             idMgr.setSessionHouseKeeper(houseKeeper);
             server.addBean(houseKeeper, true);
+        } catch (IllegalStateException ise1) {
+            log.debug("HouseKeeper IllegalStateException ise1", ise1);
         } catch (Exception e2) {
             log.error((String) null, e2);
         }
-
+        
         HttpConfiguration https = new HttpConfiguration();
         https.addCustomizer(new SecureRequestCustomizer());
-
+        
         SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
         sslContextFactory.setKeyStorePath(JavaIrcBouncer.jibConfig.getValue("keyStoreName".toUpperCase()));
         sslContextFactory.setKeyStorePassword(JavaIrcBouncer.jibConfig.getValue("keyStorePassword".toUpperCase()));
         sslContextFactory.setKeyManagerPassword(JavaIrcBouncer.jibConfig.getValue("keyStorePassword".toUpperCase()));
-
+        
         ServerConnector sslConnector = new ServerConnector(server, new SslConnectionFactory(sslContextFactory, "http/1.1"), new HttpConnectionFactory(https));
         sslConnector.setPort(this.Port);
-
+        
         server.addConnector(sslConnector);
         //SessionHandler sessionHandler = new SessionHandler();
         //sessionHandler.setSessionIdManager(idMgr);
