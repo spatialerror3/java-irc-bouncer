@@ -146,6 +146,9 @@ public class JIBCommand {
         if (excmd[0].startsWith("CLEAR")) {
             JavaIrcBouncer.jibDbUtil.clearLog(authed);
         }
+        if (authed.admin() && excmd[0].startsWith("CLEARALL")) {
+            JavaIrcBouncer.jibDbUtil.clearLog(null);
+        }
         if (excmd[0].equals("HELP")) {
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "AVAILABLE COMMANDS:" + "\r\n");
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - LISTSERVERS" + "\r\n");
@@ -163,6 +166,10 @@ public class JIBCommand {
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - GET REALNAME" + "\r\n");
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - REPLAY[LOG]" + "\r\n");
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - CLEAR[LOG]" + "\r\n");
+            if (authed.admin()) {
+                hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "ADMIN COMMANDS:" + "\r\n");
+                hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - CLEARALL[LOG]" + "\r\n");
+            }
         }
     }
 }
