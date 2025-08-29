@@ -9,8 +9,14 @@
     </Console>
   </Appenders>
   <Loggers>
-    <Root level="DEBUG">
+    <Root level="INFO">
       <AppenderRef ref="CONSOLE"/>
     </Root>
+    <Logger name="org.eclipse.jetty" level="ERROR"> 
+      <AppenderRef ref="CONSOLE"/>
+    </Logger>
+    <Logger name="org.quartz" level="ERROR"> 
+      <AppenderRef ref="CONSOLE"/>
+    </Logger>
   </Loggers>
 </Configuration>
