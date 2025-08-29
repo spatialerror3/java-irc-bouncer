@@ -54,9 +54,9 @@ public class JIBDBUtil {
         }
         log.debug("JIBDBUtil() this=" + this + " conn=" + this.conn);
     }
-    
+
     public void shutdown() {
-        
+
     }
 
     public Connection getDatabase() {
@@ -450,15 +450,27 @@ public class JIBDBUtil {
     }
 
     public void clearLog(JIBUser u) {
-        String sql = "DELETE FROM log1 WHERE u = ?;";
-        PreparedStatement ps2 = null;
-        try {
-            ps2 = getDatabase().prepareStatement(sql);
-            ps2.setString(1, u.getUUID().toString());
-            ps2.execute();
-            getDatabase().commit();
-        } catch (SQLException ex) {
-            log.error((String) null, ex);
+        if (u != null) {
+            String sql = "DELETE FROM log1 WHERE u = ?;";
+            PreparedStatement ps2 = null;
+            try {
+                ps2 = getDatabase().prepareStatement(sql);
+                ps2.setString(1, u.getUUID().toString());
+                ps2.execute();
+                getDatabase().commit();
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
+        } else {
+            String sql = "DELETE FROM log1;";
+            PreparedStatement ps2 = null;
+            try {
+                ps2 = getDatabase().prepareStatement(sql);
+                ps2.execute();
+                getDatabase().commit();
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
         }
     }
 
