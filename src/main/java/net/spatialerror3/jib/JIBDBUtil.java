@@ -148,7 +148,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-        log.error("userIdMax=" + userIdMax);
+        log.trace("userIdMax=" + userIdMax);
         return userIdMax;
     }
 
