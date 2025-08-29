@@ -37,7 +37,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  */
 public class JIBHTTPSServer {
 
-    private static final Logger log = LogManager.getLogger(JIBHTTPServer.class);
+    private static final Logger log = LogManager.getLogger(JIBHTTPSServer.class);
     private int Port = -1;
 
     public JIBHTTPSServer(int Port) {
