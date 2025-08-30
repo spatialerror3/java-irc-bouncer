@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,8 +50,11 @@ public class JIBHTTPServletBase extends HttpServlet {
         out.println("<table width='100%'>");
         out.println("<tr><td>");
         out.println("<br>JIB<br>");
-        out.println("<br>SESSION " + session.getId() + "<br>");
-        out.println("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
+        //out.println("<br>SESSION " + session.getId() + "<br>");
+        //out.println("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
+        UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
+        JIBUser u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
+        out.println("<br>USER=" + (u != null ? u.getUserName() : "null"));
         out.println("</td><td>");
         out.println("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit /></form>");
         out.println("</td><td>");
