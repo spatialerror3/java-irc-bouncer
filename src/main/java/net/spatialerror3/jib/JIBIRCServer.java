@@ -58,6 +58,7 @@ public class JIBIRCServer implements Serializable {
     private InetAddress resolved = null;
 
     public JIBIRCServer() {
+        userinfo = new JIBUserInfo();
         channels = new ArrayList<String>();
     }
 
@@ -87,6 +88,18 @@ public class JIBIRCServer implements Serializable {
 
     public JIBUserInfo getUserInfo() {
         return this.userinfo;
+    }
+    
+    public String getNick() {
+        return this.userinfo.getNick();
+    }
+    
+    public String getUser() {
+        return this.userinfo.getUser();
+    }
+    
+    public String getRealname() {
+        return this.userinfo.getRealname();
     }
 
     public String getNickServUser() {
@@ -162,6 +175,18 @@ public class JIBIRCServer implements Serializable {
 
     public void setUserInfo(JIBUserInfo userinfo) {
         this.userinfo = userinfo;
+    }
+    
+    public void setNick(String nick) {
+        this.userinfo.setNick(nick);
+    }
+    
+    public void setUser(String user) {
+        this.userinfo.setUser(user);
+    }
+    
+    public void setRealname(String realname) {
+        this.userinfo.setRealname(realname);
     }
 
     public void setNickServUser(String nickServUser) {
