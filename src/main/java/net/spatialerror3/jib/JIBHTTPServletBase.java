@@ -34,12 +34,13 @@ import org.apache.logging.log4j.Logger;
 public class JIBHTTPServletBase extends HttpServlet {
 
     private static final Logger log = LogManager.getLogger(JIBHTTPServletBase.class);
-    
+    private static final String backlink = "https://java-irc-bouncer.sourceforge.io";
+
     public void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var session = req.getSession(true);
         String path = req.getServletPath();
         log.debug(this + " " + path);
-        
+
         try {
             String user = req.getParameter("user");
             String pass = req.getParameter("pass");
@@ -61,7 +62,7 @@ public class JIBHTTPServletBase extends HttpServlet {
             log.error((String) null, e);
         }
     }
-    
+
     public void header(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var session = req.getSession(true);
         String path = req.getServletPath();
@@ -91,6 +92,19 @@ public class JIBHTTPServletBase extends HttpServlet {
         out.println("<form action='/logout' method=POST><br><input type=submit value='LOGOUT' /></form>");
         out.println("</td></tr>");
         out.println("</table>");
+        if (u != null) {
+            // NAVIGATION
+            out.println("<table>");
+            out.println("<tr>");
+            out.println("<td><a href='/'>home</a>&nbsp;");
+            out.println("<a href='/login'>login</a>&nbsp;");
+            out.println("<a href='/servers'>servers</a>&nbsp;");
+            out.println("<a href='/status'>status</a>&nbsp;");
+            out.println("<a href='/logout'>logout</a>&nbsp;");
+            out.println("</td>");
+            out.println("</tr>");
+            out.println("</table>");
+        }
     }
 
     public void footer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -99,6 +113,8 @@ public class JIBHTTPServletBase extends HttpServlet {
         log.debug(this + " " + path);
 
         PrintWriter out = resp.getWriter();
+        out.println("<hr width=90%>");
+        out.println("<table width=100%><tr><td align=center><a href='" + backlink + "'>(c) 2025 JIB</a></td></tr></table>");
         out.println("</body>");
         out.println("</html>");
     }
