@@ -475,7 +475,7 @@ public class JIBDBUtil {
     }
 
     public void clearLogOlderThan2Days() {
-        String sql = "DELETE FROM log1 WHERE NOW() - ts1 > 2 days;";
+        String sql = "DELETE FROM log1 WHERE NOW() - ts1 > INTERVAL '2' DAY;";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
