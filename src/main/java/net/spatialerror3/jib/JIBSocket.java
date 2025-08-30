@@ -110,7 +110,9 @@ public class JIBSocket {
             if (e == null) {
                 e = ex;
             }
-            log.error((String) null, ex);
+            if (JIBSocket.SOCKETDEBUGGING) {
+                log.error((String) null, ex);
+            }
             return null;
         } catch (IOException ex) {
             if (e == null) {
