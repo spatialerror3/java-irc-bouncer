@@ -139,6 +139,18 @@ public class JIBIRCServer implements Serializable {
     public void setPort(int port) {
         this.port = port;
     }
+    
+    public void setPort(String port) {
+        String port2 = null;
+        if(port.charAt(0)=='+') {
+            setSsl(true);
+            port2 = port.substring(1);
+        } else {
+            setSsl(false);
+            port2 = port;
+        }
+        setPort(Integer.parseInt(port2));
+    }
 
     public void setSsl(boolean ssl) {
         this.ssl = ssl;
