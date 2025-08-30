@@ -40,6 +40,7 @@ public class JIBHTTPServletLogin extends JIBHTTPServletBase {
         String path = req.getServletPath();
         log.debug(this + " " + path);
 
+        login(req, resp);
         header(req, resp);
         try {
             String user = req.getParameter("user");
