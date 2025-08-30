@@ -42,6 +42,7 @@ public class JavaIrcBouncer {
     public static JIBShutdown jibShutdown = null;
     public static JIBPeriodic jibPeriodic = null;
     public static JIBQuartz jibQuartz = null;
+    public static JIBStatus jibStatus = null;
 
     public static void main(String[] args) {
         System.setProperty("python.import.site", "false");
@@ -112,6 +113,7 @@ public class JavaIrcBouncer {
         jibPeriodic = new JIBPeriodic();
         jibQuartz = new JIBQuartz();
         jibQuartz.init();
+        jibStatus = new JIBStatus();
         log.info("Up...");
         while (true) {
             try {
