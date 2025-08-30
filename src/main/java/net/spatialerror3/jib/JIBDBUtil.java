@@ -92,7 +92,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-        sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513), u varchar(256));";
+        sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513), u varchar(256), ts1 timestamp DEFAULT NOW());";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
@@ -471,6 +471,18 @@ public class JIBDBUtil {
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
+        }
+    }
+
+    public void clearLogOlderThan2Days() {
+        String sql = "DELETE FROM log1 WHERE NOW() - ts1 > 2 days;";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.execute();
+            getDatabase().commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
         }
     }
 
