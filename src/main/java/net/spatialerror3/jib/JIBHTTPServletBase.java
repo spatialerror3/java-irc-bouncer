@@ -34,7 +34,34 @@ import org.apache.logging.log4j.Logger;
 public class JIBHTTPServletBase extends HttpServlet {
 
     private static final Logger log = LogManager.getLogger(JIBHTTPServletBase.class);
+    
+    public void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        var session = req.getSession(true);
+        String path = req.getServletPath();
+        log.debug(this + " " + path);
+        
+        try {
+            String user = req.getParameter("user");
+            String pass = req.getParameter("pass");
 
+            PrintWriter out = resp.getWriter();
+            if (user != null) {
+                resp.getWriter().write("<br>user=" + user);
+            }
+            if (pass != null && user != null && pass.length() > 0 && user.length() > 0) {
+                JIBUser u = null;
+                if ((u = JavaIrcBouncer.jibCore.authUser(user, pass)) != null) {
+                    session.setAttribute("IDENTIFIEDAS", u.getUUID().toString());
+                } else {
+                    log.error("JIBHTTP Web Auth failed for user=" + user);
+                    resp.getWriter().write("<br>AUTH FAILED");
+                }
+            }
+        } catch (Exception e) {
+            log.error((String) null, e);
+        }
+    }
+    
     public void header(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var session = req.getSession(true);
         String path = req.getServletPath();
