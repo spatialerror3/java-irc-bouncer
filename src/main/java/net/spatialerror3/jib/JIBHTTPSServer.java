@@ -48,11 +48,11 @@ public class JIBHTTPSServer {
         DefaultSessionIdManager idMgr = new DefaultSessionIdManager(server);
         idMgr.setWorkerName("server2");
         server.addBean(idMgr, true);
-        try {
-            idMgr.start();
-        } catch (Exception e3) {
-            log.error((String) null, e3);
-        }
+        //try {
+        //    idMgr.start();
+        //} catch (Exception e3) {
+        //    log.error((String) null, e3);
+        //}
         
         try {
             HouseKeeper houseKeeper = new HouseKeeper();
