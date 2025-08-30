@@ -69,6 +69,16 @@ public class JIBQuartz {
             log.error((String) null, ex);
         }
         
+        JobDetail job2 = newJob(JIBQuartzHourly.class).withIdentity("job2", "group2").build();
+        
+        Trigger trigger2 = newTrigger().withIdentity("trigger2", "group2").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(3600).repeatForever()).build();
+        
+        try {
+            scheduler.scheduleJob(job2, trigger2);
+        } catch (SchedulerException ex) {
+            log.error((String) null, ex);
+        }
+        
         try {
             scheduler.start();
         } catch (SchedulerException ex) {
