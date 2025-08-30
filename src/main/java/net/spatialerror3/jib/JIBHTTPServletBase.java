@@ -35,6 +35,7 @@ public class JIBHTTPServletBase extends HttpServlet {
 
     private static final Logger log = LogManager.getLogger(JIBHTTPServletBase.class);
     private static final String backlink = "https://java-irc-bouncer.sourceforge.io";
+    private static final String ghlink = "https://github.com/spatialerror3/java-irc-bouncer";
 
     public void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var session = req.getSession(true);
@@ -46,16 +47,13 @@ public class JIBHTTPServletBase extends HttpServlet {
             String pass = req.getParameter("pass");
 
             PrintWriter out = resp.getWriter();
-            if (user != null) {
-                resp.getWriter().write("<br>user=" + user);
-            }
             if (pass != null && user != null && pass.length() > 0 && user.length() > 0) {
                 JIBUser u = null;
                 if ((u = JavaIrcBouncer.jibCore.authUser(user, pass)) != null) {
                     session.setAttribute("IDENTIFIEDAS", u.getUUID().toString());
                 } else {
                     log.error("JIBHTTP Web Auth failed for user=" + user);
-                    resp.getWriter().write("<br>AUTH FAILED");
+                    out.println("<br>AUTH FAILED");
                 }
             }
         } catch (Exception e) {
@@ -114,7 +112,7 @@ public class JIBHTTPServletBase extends HttpServlet {
 
         PrintWriter out = resp.getWriter();
         out.println("<hr width=90%>");
-        out.println("<table width=100%><tr><td align=center><a href='" + backlink + "'>(c) 2025 JIB</a></td></tr></table>");
+        out.println("<table width=100%><tr><td align=center><a href='" + backlink + "'>(c) 2025 JIB</a> (<a href='"+ghlink+"'>github</a>)</td></tr></table>");
         out.println("</body>");
         out.println("</html>");
     }
