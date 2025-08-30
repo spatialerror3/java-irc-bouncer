@@ -89,15 +89,15 @@ public class JIBIRCServer implements Serializable {
     public JIBUserInfo getUserInfo() {
         return this.userinfo;
     }
-    
+
     public String getNick() {
         return this.userinfo.getNick();
     }
-    
+
     public String getUser() {
         return this.userinfo.getUser();
     }
-    
+
     public String getRealname() {
         return this.userinfo.getRealname();
     }
@@ -144,7 +144,7 @@ public class JIBIRCServer implements Serializable {
         if (this.server.equals("irc.libera.chat")) {
             setNetType(JIBIRCNetType.NetType.LIBERA);
         }
-        if(this.server.endsWith("dal.net")) {
+        if (this.server.endsWith("dal.net")) {
             setNetType(JIBIRCNetType.NetType.DALNET);
         }
     }
@@ -152,10 +152,10 @@ public class JIBIRCServer implements Serializable {
     public void setPort(int port) {
         this.port = port;
     }
-    
+
     public void setPort(String port) {
         String port2 = null;
-        if(port.charAt(0)=='+') {
+        if (port.charAt(0) == '+') {
             setSsl(true);
             port2 = port.substring(1);
         } else {
@@ -176,15 +176,15 @@ public class JIBIRCServer implements Serializable {
     public void setUserInfo(JIBUserInfo userinfo) {
         this.userinfo = userinfo;
     }
-    
+
     public void setNick(String nick) {
         this.userinfo.setNick(nick);
     }
-    
+
     public void setUser(String user) {
         this.userinfo.setUser(user);
     }
-    
+
     public void setRealname(String realname) {
         this.userinfo.setRealname(realname);
     }
@@ -280,7 +280,16 @@ public class JIBIRCServer implements Serializable {
         tmpServ.setIpv6(ipv6);
         tmpServ.setClientBind(clientBind);
         tmpServ.setPassword(password);
-        tmpServ.setUserInfo(userInfo);
+        //tmpServ.setUserInfo(userInfo);
+        if (userInfo != null && userInfo.getNick() != null) {
+            tmpServ.setNick(userInfo.getNick());
+        }
+        if (userInfo != null && userInfo.getUser() != null) {
+            tmpServ.setUser(userInfo.getUser());
+        }
+        if (userInfo != null && userInfo.getRealname() != null) {
+            tmpServ.setRealname(userInfo.getRealname());
+        }
         tmpServ.setNickServUser(nickServUser);
         tmpServ.setNickServPass(nickServPass);
         tmpServ.addChannels(channels);
