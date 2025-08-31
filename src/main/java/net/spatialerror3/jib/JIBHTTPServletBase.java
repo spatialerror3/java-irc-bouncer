@@ -86,11 +86,11 @@ public class JIBHTTPServletBase extends HttpServlet {
         out.println("<br>USER=" + (u != null ? u.getUserName() : "null"));
         out.println("</td><td>");
         if ((String) session.getAttribute("IDENTIFIEDAS") == null) {
-            out.println("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit value='LOGIN' /></form>");
+            out.println("<form action='/login/' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit value='LOGIN' /></form>");
         }
         out.println("</td><td>");
         if ((String) session.getAttribute("IDENTIFIEDAS") != null) {
-            out.println("<form action='/logout' method=POST><br><input type=submit value='LOGOUT' /></form>");
+            out.println("<form action='/logout/' method=POST><br><input type=submit value='LOGOUT' /></form>");
         }
         out.println("</td></tr>");
         out.println("</table>");
@@ -99,13 +99,13 @@ public class JIBHTTPServletBase extends HttpServlet {
             out.println("<table>");
             out.println("<tr>");
             out.println("<td><a href='/'>home</a>&nbsp;");
-            out.println("<a href='/login'>login</a>&nbsp;");
-            out.println("<a href='/servers'>servers</a>&nbsp;");
-            out.println("<a href='/status'>status</a>&nbsp;");
+            out.println("<a href='/login/'>login</a>&nbsp;");
+            out.println("<a href='/servers/'>servers</a>&nbsp;");
+            out.println("<a href='/status/'>status</a>&nbsp;");
             if (u.admin()) {
-                out.println("<a href='/users'>users</a>&nbsp;");
+                out.println("<a href='/users/'>users</a>&nbsp;");
             }
-            out.println("<a href='/logout'>logout</a>&nbsp;");
+            out.println("<a href='/logout/'>logout</a>&nbsp;");
             out.println("</td>");
             out.println("</tr>");
             out.println("</table>");
