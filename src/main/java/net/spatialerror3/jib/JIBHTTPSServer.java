@@ -17,10 +17,13 @@
  */
 package net.spatialerror3.jib;
 
+import java.net.URL;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.ee10.servlet.DefaultServlet;
+import org.eclipse.jetty.ee10.servlet.ResourceServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.ee10.servlet.SessionHandler;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -28,8 +31,13 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.session.DefaultSessionIdManager;
 import org.eclipse.jetty.session.HouseKeeper;
+import org.eclipse.jetty.util.Callback;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 /**
@@ -84,19 +92,52 @@ public class JIBHTTPSServer {
         //sessionHandler.setSessionIdManager(idMgr);
         //sessionHandler.setServer(server);
         //server.addBean(sessionHandler, true);
+        
         ServletContextHandler handler = new ServletContextHandler("/", true, true);
+        URL staticResources = getClass().getClassLoader().getResource("static");
+        handler.setBaseResourceAsString(staticResources.toExternalForm());
         //handler.setSessionHandler(sessionHandler);
-        handler.addServlet(JIBHTTPServletLogin.class.getName(), "/");
+        //handler.addServlet(JIBHTTPServletLogin.class.getName(), "/");
+        handler.addServlet(JIBHTTPServletLogin.class.getName(), "/login");
+        handler.addServlet(JIBHTTPServletLogin.class.getName(), "/login/");
         handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers");
+        handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers/");
         handler.addServlet(JIBHTTPServletUsers.class.getName(), "/users");
+        handler.addServlet(JIBHTTPServletUsers.class.getName(), "/users/");
         handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status");
+        handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status/");
         handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout");
-        var defaultServlet = handler.addServlet(DefaultServlet.class, "/static/*");
-        defaultServlet.setInitParameter("baseResource", "static");
-        var defaultServlet2 = handler.addServlet(DefaultServlet.class, "/static/JIB.png");
-        defaultServlet2.setInitParameter("baseResource", "static");
-        server.setDefaultHandler(new JIBHTTPHandler());
-        server.setDefaultHandler(handler);
+        handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout/");
+        
+        final ServletHolder defaultHolder = new ServletHolder("default", ResourceServlet.class);
+        defaultHolder.setInitParameter("baseResource", staticResources.toExternalForm());
+        handler.addServlet(defaultHolder, "/static/*");
+        handler.addServlet(defaultHolder, "/static/JIB.png");
+        
+        ResourceHandler handler3 = new ResourceHandler();
+        handler3.setBaseResource(ResourceFactory.of(handler3).newResource("./static/"));
+        handler3.setAcceptRanges(true);
+        //server.setDefaultHandler(handler3);
+        
+        ContextHandlerCollection contextCollection = new ContextHandlerCollection();
+        contextCollection.addHandler(new ContextHandler(handler3, "/static"));
+        //contextCollection.addHandler(new ContextHandler(handler, "/"));
+        contextCollection.addHandler(new ContextHandler(handler, "/login"));
+        contextCollection.addHandler(new ContextHandler(handler, "/login/"));
+        contextCollection.addHandler(new ContextHandler(handler, "/servers"));
+        contextCollection.addHandler(new ContextHandler(handler, "/servers/"));
+        contextCollection.addHandler(new ContextHandler(handler, "/users"));
+        contextCollection.addHandler(new ContextHandler(handler, "/users/"));
+        contextCollection.addHandler(new ContextHandler(handler, "/status"));
+        contextCollection.addHandler(new ContextHandler(handler, "/status/"));
+        contextCollection.addHandler(new ContextHandler(handler, "/logout"));
+        contextCollection.addHandler(new ContextHandler(handler, "/logout/"));
+        server.setHandler(contextCollection);
+        server.setDefaultHandler(contextCollection);
+        contextCollection.deployHandler(handler, Callback.NOOP);
+        
+        //server.setDefaultHandler(new JIBHTTPHandler());
+        //server.setDefaultHandler(handler);
         try {
             server.start();
         } catch (UnsupportedOperationException uoe1) {
