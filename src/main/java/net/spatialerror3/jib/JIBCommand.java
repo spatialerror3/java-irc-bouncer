@@ -135,18 +135,30 @@ public class JIBCommand {
                 authed.setRealname(params[1]);
             }
         }
-        if (excmd[0].startsWith("REPLAY")) {
+        if (excmd[0].equals("REPLAY")) {
             Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog(authed).iterator();
             while (logReplay.hasNext()) {
                 String logReplayStr = logReplay.next();
                 hc.sendLine(logReplayStr + "\r\n");
-                //log.debug("LOGREPLAY " + logReplayStr);
             }
         }
-        if (excmd[0].startsWith("CLEAR")) {
+        if (excmd[0].equals("REPLAYLOG")) {
+            Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLog(authed).iterator();
+            while (logReplay.hasNext()) {
+                String logReplayStr = logReplay.next();
+                hc.sendLine(logReplayStr + "\r\n");
+            }
+        }
+        if (excmd[0].equals("CLEAR")) {
             JavaIrcBouncer.jibDbUtil.clearLog(authed);
         }
-        if (authed.admin() && excmd[0].startsWith("CLEARALL")) {
+        if (excmd[0].equals("CLEARLOG")) {
+            JavaIrcBouncer.jibDbUtil.clearLog(authed);
+        }
+        if (authed.admin() && excmd[0].equals("CLEARALL")) {
+            JavaIrcBouncer.jibDbUtil.clearLog(null);
+        }
+        if (authed.admin() && excmd[0].equals("CLEARALLLOG")) {
             JavaIrcBouncer.jibDbUtil.clearLog(null);
         }
         if (excmd[0].equals("HELP")) {
