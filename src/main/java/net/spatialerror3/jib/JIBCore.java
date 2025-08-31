@@ -55,6 +55,7 @@ public class JIBCore {
         ++newUserId;
         u.setUserId(newUserId);
         u.setUserName(userName);
+        u.setAdmin(admin);
         userMap.put(userName, u);
         userMap2.put(u.getUUID(), u);
         users.add(u);
