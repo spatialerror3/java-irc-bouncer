@@ -112,7 +112,16 @@ public class JIBIRC implements Runnable {
         myInfo.realname = this.realname;
         //
         if (u.getIRCUserInfo() != null) {
-            myInfo = u.getIRCUserInfo();
+            //myInfo = u.getIRCUserInfo();
+            if (myInfo.nick == null) {
+                myInfo.nick = u.getIRCUserInfo().getNick();
+            }
+            if (myInfo.user == null) {
+                myInfo.user = u.getIRCUserInfo().getUser();
+            }
+            if (myInfo.realname == null) {
+                myInfo.realname = u.getIRCUserInfo().getRealname();
+            }
         }
         //
         ircLog = new JIBIRCLog(this.u);
