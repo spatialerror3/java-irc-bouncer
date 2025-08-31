@@ -76,7 +76,7 @@ public class JIBHTTPServletBase extends HttpServlet {
         out.println("<body>");
         out.println("<table width='100%'>");
         out.println("<tr><td>");
-        out.println("<br>JIB<br>");
+        out.println("<br><img src='/static/JIB.png' alt='JIB'><br>");
         //out.println("<br>SESSION " + session.getId() + "<br>");
         //out.println("<br>SESSIONIDENTIFIEDAS=" + session.getAttribute("IDENTIFIEDAS") + "<br>");
         if ((String) session.getAttribute("IDENTIFIEDAS") != null) {
