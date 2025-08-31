@@ -180,7 +180,7 @@ public class JIBDBUtil {
     }
 
     public void addUser(JIBUser u) {
-        String sql = "INSERT INTO users (userId,_uuid,username,authtoken,admin,opt) VALUES(?,?,?,?,?);";
+        String sql = "INSERT INTO users (userId,_uuid,username,authtoken,admin,opt) VALUES(?,?,?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
