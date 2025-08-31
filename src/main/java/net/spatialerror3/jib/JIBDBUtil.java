@@ -267,7 +267,7 @@ public class JIBDBUtil {
     }
 
     public void addServer(JIBUser u, JIBIRCServer serv) {
-        String sql = "INSERT INTO servers (server,port,u,ssl,ipv6,nick,username,realname,nsacct,nspass,channels,opt) VALUES(?,?,?,?,?,?);";
+        String sql = "INSERT INTO servers (server,port,u,ssl,ipv6,nick,username,realname,nsacct,nspass,channels,opt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
