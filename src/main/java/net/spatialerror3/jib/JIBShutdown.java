@@ -25,15 +25,20 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JIBShutdown extends Thread {
+
     private static final Logger log = LogManager.getLogger(JIBShutdown.class);
 
     public JIBShutdown() {
-        
+
     }
-    
+
     public void run() {
         log.debug("Shutting down...");
-        JavaIrcBouncer.jibQuartz.shutdown();
-        JavaIrcBouncer.jibDbUtil.shutdown();
+        if (JavaIrcBouncer.jibQuartz != null) {
+            JavaIrcBouncer.jibQuartz.shutdown();
+        }
+        if (JavaIrcBouncer.jibDbUtil != null) {
+            JavaIrcBouncer.jibDbUtil.shutdown();
+        }
     }
 }
