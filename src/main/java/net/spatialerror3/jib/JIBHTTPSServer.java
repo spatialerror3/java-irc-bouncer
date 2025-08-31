@@ -99,15 +99,15 @@ public class JIBHTTPSServer {
         //handler.setSessionHandler(sessionHandler);
         //handler.addServlet(JIBHTTPServletLogin.class.getName(), "/");
         handler.addServlet(JIBHTTPServletLogin.class.getName(), "/login");
-        handler.addServlet(JIBHTTPServletLogin.class.getName(), "/login/");
+        //handler.addServlet(JIBHTTPServletLogin.class.getName(), "/login/");
         handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers");
-        handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers/");
+        //handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers/");
         handler.addServlet(JIBHTTPServletUsers.class.getName(), "/users");
-        handler.addServlet(JIBHTTPServletUsers.class.getName(), "/users/");
+        //handler.addServlet(JIBHTTPServletUsers.class.getName(), "/users/");
         handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status");
-        handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status/");
+        //handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status/");
         handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout");
-        handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout/");
+        //handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout/");
         
         final ServletHolder defaultHolder = new ServletHolder("default", ResourceServlet.class);
         defaultHolder.setInitParameter("baseResource", staticResources.toExternalForm());
@@ -122,20 +122,21 @@ public class JIBHTTPSServer {
         ContextHandlerCollection contextCollection = new ContextHandlerCollection();
         contextCollection.addHandler(new ContextHandler(handler3, "/static"));
         //contextCollection.addHandler(new ContextHandler(handler, "/"));
-        contextCollection.addHandler(new ContextHandler(handler, "/login"));
+        //contextCollection.addHandler(new ContextHandler(handler, "/login"));
         contextCollection.addHandler(new ContextHandler(handler, "/login/"));
-        contextCollection.addHandler(new ContextHandler(handler, "/servers"));
+        //contextCollection.addHandler(new ContextHandler(handler, "/servers"));
         contextCollection.addHandler(new ContextHandler(handler, "/servers/"));
-        contextCollection.addHandler(new ContextHandler(handler, "/users"));
+        //contextCollection.addHandler(new ContextHandler(handler, "/users"));
         contextCollection.addHandler(new ContextHandler(handler, "/users/"));
-        contextCollection.addHandler(new ContextHandler(handler, "/status"));
+        //contextCollection.addHandler(new ContextHandler(handler, "/status"));
         contextCollection.addHandler(new ContextHandler(handler, "/status/"));
-        contextCollection.addHandler(new ContextHandler(handler, "/logout"));
+        //contextCollection.addHandler(new ContextHandler(handler, "/logout"));
         contextCollection.addHandler(new ContextHandler(handler, "/logout/"));
         server.setHandler(contextCollection);
         server.setDefaultHandler(contextCollection);
         contextCollection.deployHandler(handler, Callback.NOOP);
         
+        //server.setErrorHandler(new JIBHTTPHandlerError());
         //server.setDefaultHandler(new JIBHTTPHandler());
         //server.setDefaultHandler(handler);
         try {
