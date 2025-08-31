@@ -65,6 +65,9 @@ public class JIBConfig implements Serializable {
         tmpServ.setServer(server);
         tmpServ.setPort(port);
         tmpServ.setSsl(true);
+        tmpServ.setNick(n);
+        tmpServ.setUser(id);
+        tmpServ.setRealname(r);
         u.addIrcServer(tmpServ);
     }
 
@@ -78,6 +81,9 @@ public class JIBConfig implements Serializable {
         tmpServ.setServer(server);
         tmpServ.setPort(port);
         //tmpServ.setSsl(true);
+        tmpServ.setNick(n);
+        tmpServ.setUser(id);
+        tmpServ.setRealname(r);
         u.addIrcServer(tmpServ);
     }
 
@@ -91,6 +97,9 @@ public class JIBConfig implements Serializable {
         tmpServ.setServer(server);
         tmpServ.setPort(port);
         tmpServ.setSsl(true);
+        tmpServ.setNick(n);
+        tmpServ.setUser(id);
+        tmpServ.setRealname(r);
         tmpServ.setNickServUser(nsacct);
         tmpServ.setNickServPass(nspass);
         tmpServ.addChannels(chans);
@@ -107,6 +116,9 @@ public class JIBConfig implements Serializable {
         tmpServ.setServer(server);
         tmpServ.setPort(port);
         //tmpServ.setSsl(true);
+        tmpServ.setNick(n);
+        tmpServ.setUser(id);
+        tmpServ.setRealname(r);
         tmpServ.setNickServUser(nsacct);
         tmpServ.setNickServPass(nspass);
         tmpServ.addChannels(chans);
