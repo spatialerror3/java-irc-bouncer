@@ -152,7 +152,8 @@ public class JIBDBUtil {
         return userIdMax;
     }
 
-    public void loadUsers() {
+    public long loadUsers() {
+        long loadedUsers = 0L;
         String sql = "SELECT userId,_uuid,username,_authtoken,admin,opt FROM users;";
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
@@ -170,10 +171,12 @@ public class JIBDBUtil {
                 tmpu.setUUID((UUID) rs5.getObject("_uuid"));
 
                 log.debug("Contains User=" + rs5.getString(3));
+                loadedUsers++;
             }
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
+        return loadedUsers;
     }
 
     public void addUser(JIBUser u) {
