@@ -174,4 +174,13 @@ public class JIBUser implements Serializable {
     public JIBUserInfo getIRCUserInfo() {
         return this.ircUserInfo;
     }
+    
+    public String toHTML() {
+        StringBuilder sb1 = null;
+        sb1 = new StringBuilder();
+        
+        sb1.append("<br>userName='"+getUserName()+"'");
+        
+        return sb1.toString();
+    }
 }
