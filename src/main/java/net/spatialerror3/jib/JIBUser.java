@@ -90,6 +90,10 @@ public class JIBUser implements Serializable {
         this.uuid = _uuid;
     }
     
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+    
     public boolean admin() {
         return this.admin;
     }
