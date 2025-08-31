@@ -166,9 +166,10 @@ public class JIBDBUtil {
         try {
             while (rs5 != null && rs5.next()) {
                 JIBUser opt = rs5.getObject("opt", JIBUser.class);
-                JIBUser tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5));
+                JIBUser tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5), true);
                 tmpu.setUserId(rs5.getLong(1));
                 tmpu.setUUID((UUID) rs5.getObject("_uuid"));
+                tmpu.setAuthToken(rs5.getString(4));
 
                 log.debug("Contains User=" + rs5.getString(3));
                 loadedUsers++;
