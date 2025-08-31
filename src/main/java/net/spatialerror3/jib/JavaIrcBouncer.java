@@ -82,14 +82,29 @@ public class JavaIrcBouncer {
         jibDbUtil.loadUsers();
         jibJython = new JIBJython();
         jibJython.loadConfig();
+        JIBUser adminUser = null;
         if (jibConfig.getValue("AUTHPASS") == null) {
             jibConfig.setValue("AUTHPASS", JIBStringUtil.randHexString());
             log.info("Setting AUTHPASS for admin user to: " + jibConfig.getValue("AUTHPASS"));
         }
         if (jibConfig.getValue("AUTHUSER") != null) {
-            jibCore.createUser(jibConfig.getValue("AUTHUSER"), true).setAuthToken(jibConfig.getValue("AUTHPASS"));
+            (adminUser = jibCore.createUser(jibConfig.getValue("AUTHUSER"), true)).setAuthToken(jibConfig.getValue("AUTHPASS"));
         } else {
-            jibCore.createUser("admin", true).setAuthToken(jibConfig.getValue("AUTHPASS"));
+            (adminUser = jibCore.createUser("admin", true)).setAuthToken(jibConfig.getValue("AUTHPASS"));
+        }
+        if (adminUser != null) {
+            if (jibConfig.getValue("Server") != null && jibConfig.getValue("Port") != null) {
+                JIBIRCServer tmpServ = new JIBIRCServer();
+                tmpServ.setServer(jibConfig.getValue("Server"));
+                tmpServ.setPort(jibConfig.getValue("Port"));
+                tmpServ.setNick(jibConfig.getValue("Nick"));
+                tmpServ.setUser(jibConfig.getValue("User"));
+                tmpServ.setRealname(jibConfig.getValue("Realname"));
+                tmpServ.setNickServUser(jibConfig.getValue("NICKSERVUSER"));
+                tmpServ.setNickServPass(jibConfig.getValue("NICKSERVPASS"));
+
+                adminUser.addIrcServer(tmpServ);
+            }
         }
         JIBServer jib1 = null;
         jib1 = new JIBServer();
@@ -115,6 +130,12 @@ public class JavaIrcBouncer {
         jibQuartz.init();
         jibStatus = new JIBStatus();
         log.info("Up...");
+        if (jibHttpServ != null) {
+            log.info(jibHttpServ.toString());
+        }
+        if (jibHttpsServ != null) {
+            log.info(jibHttpsServ.toString());
+        }
         while (true) {
             try {
                 Thread.sleep(60000);
