@@ -92,7 +92,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-        sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513), u varchar(256), ts1 timestamp DEFAULT NOW());";
+        sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513), u varchar(256), s varchar(256), ts1 timestamp DEFAULT NOW());";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
@@ -400,8 +400,8 @@ public class JIBDBUtil {
         return count;
     }
 
-    public void logUserTargetMessage(JIBUser u, String logUser, String logTarget, String logMessage) {
-        String sql = "INSERT INTO log1 (loguser,logtarget,logmessage,u) VALUES(?,?,?,?);";
+    public void logUserTargetMessage(JIBUser u, JIBIRCServer s, String logUser, String logTarget, String logMessage) {
+        String sql = "INSERT INTO log1 (loguser,logtarget,logmessage,u,s) VALUES(?,?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
@@ -409,6 +409,7 @@ public class JIBDBUtil {
             ps2.setString(2, logTarget);
             ps2.setString(3, logMessage.substring(1));
             ps2.setString(4, u.getUUID().toString());
+            ps2.setString(5, s.getUUID().toString());
             ps2.execute();
             getDatabase().commit();
         } catch (SQLException ex) {
