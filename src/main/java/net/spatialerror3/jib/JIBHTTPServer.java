@@ -79,7 +79,9 @@ public class JIBHTTPServer {
         handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status");
         handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout");
         var defaultServlet = handler.addServlet(DefaultServlet.class, "/static/*");
-        defaultServlet.setInitParameter("resourceBase", "./static");
+        defaultServlet.setInitParameter("baseResource", "static");
+        var defaultServlet2 = handler.addServlet(DefaultServlet.class, "/static/JIB.png");
+        defaultServlet2.setInitParameter("baseResource", "static");
         server.setDefaultHandler(new JIBHTTPHandler());
         server.setDefaultHandler(handler);
         try {
