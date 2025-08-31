@@ -59,6 +59,10 @@ public class JIBUser implements Serializable {
         JavaIrcBouncer.jibDbUtil.refreshUser(this);
     }
     
+    public String getAuthToken() {
+        return this.authToken;
+    }
+    
     public JIBUser auth(String authToken) {
         if (this.authToken.equals(authToken)) {
             return this;
