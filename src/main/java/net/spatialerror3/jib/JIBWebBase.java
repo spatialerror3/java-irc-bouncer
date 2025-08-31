@@ -40,6 +40,7 @@ public class JIBWebBase {
 
     private static final Logger log = LogManager.getLogger(JIBWebBase.class);
     private int Port = -1;
+    private String protocol = null;
     //
     private Server server = null;
     private String serverName = null;
@@ -48,8 +49,9 @@ public class JIBWebBase {
 
     }
 
-    public void setPort(int Port) {
+    public void setPort(int Port, String protocol) {
         this.Port = Port;
+        this.protocol = protocol;
     }
 
     public int getPort() {
@@ -139,7 +141,7 @@ public class JIBWebBase {
     }
 
     public String getURL() {
-        return "https://127.0.0.1:" + this.Port + "/login";
+        return this.protocol+"://127.0.0.1:" + this.Port + "/login";
     }
 
     public String toString() {
