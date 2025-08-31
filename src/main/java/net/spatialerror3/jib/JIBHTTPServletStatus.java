@@ -48,7 +48,7 @@ public class JIBHTTPServletStatus extends JIBHTTPServletBase {
             resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
             resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
             out.println("<br>connz=" + JavaIrcBouncer.jibStatus.getConnections());
-            out.println("");
+            out.println("<br>upTime=" + JavaIrcBouncer.jibStatus.getUptime());
         } catch (Exception e) {
             log.error((String) null, e);
         }
