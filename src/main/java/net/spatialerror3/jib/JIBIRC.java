@@ -368,16 +368,24 @@ public class JIBIRC implements Runnable {
                     onLogon();
                 }
                 if (sp5.length > 1 && sp5[1].equals("431")) {
-                    writeLine("NICK C" + JIBStringUtil.randHexString().substring(0, 8) + "\r\n");
+                    String randNick = "C" + JIBStringUtil.randHexString().substring(0, 8);
+                    writeLine("NICK " + randNick + "\r\n");
+                    this.nick = randNick;
                 }
                 if (sp5.length > 1 && sp5[1].equals("432")) {
-                    writeLine("NICK C" + JIBStringUtil.randHexString().substring(0, 8) + "\r\n");
+                    String randNick = "C" + JIBStringUtil.randHexString().substring(0, 8);
+                    writeLine("NICK " + randNick + "\r\n");
+                    this.nick = randNick;
                 }
                 if (sp5.length > 1 && sp5[1].equals("433")) {
-                    writeLine("NICK C" + JIBStringUtil.randHexString().substring(0, 8) + "\r\n");
+                    String randNick = "C" + JIBStringUtil.randHexString().substring(0, 8);
+                    writeLine("NICK " + randNick + "\r\n");
+                    this.nick = randNick;
                 }
                 if (sp5.length > 1 && sp5[1].equals("436")) {
-                    writeLine("NICK C" + JIBStringUtil.randHexString().substring(0, 8) + "\r\n");
+                    String randNick = "C" + JIBStringUtil.randHexString().substring(0, 8);
+                    writeLine("NICK " + randNick + "\r\n");
+                    this.nick = randNick;
                 }
             }
         }
