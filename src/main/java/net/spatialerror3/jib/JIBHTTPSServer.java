@@ -44,37 +44,17 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
  *
  * @author spatialerror3
  */
-public class JIBHTTPSServer {
+public class JIBHTTPSServer extends JIBWebBase {
     
     private static final Logger log = LogManager.getLogger(JIBHTTPSServer.class);
-    private int Port = -1;
     
     public JIBHTTPSServer(int Port) {
         if (Port == -1) {
-            this.Port = 7643;
+            setPort(7643, "https");
         }        //
         Server server = new Server();
-        DefaultSessionIdManager idMgr = new DefaultSessionIdManager(server);
-        idMgr.setWorkerName("server2");
-        server.addBean(idMgr, true);
-        //try {
-        //    idMgr.start();
-        //} catch (Exception e3) {
-        //    log.error((String) null, e3);
-        //}
-        
-        try {
-            HouseKeeper houseKeeper = new HouseKeeper();
-            houseKeeper.setSessionIdManager(idMgr);
-            //set the frequency of scavenge cycles
-            houseKeeper.setIntervalSec(600L);
-            idMgr.setSessionHouseKeeper(houseKeeper);
-            //server.addBean(houseKeeper, true);
-        } catch (IllegalStateException ise1) {
-            log.debug("HouseKeeper IllegalStateException ise1", ise1);
-        } catch (Exception e2) {
-            log.error((String) null, e2);
-        }
+        setServer(server,"server2");
+        addSessionIdManager();
         
         HttpConfiguration https = new HttpConfiguration();
         https.addCustomizer(new SecureRequestCustomizer());
@@ -85,7 +65,8 @@ public class JIBHTTPSServer {
         sslContextFactory.setKeyManagerPassword(JavaIrcBouncer.jibConfig.getValue("keyStorePassword".toUpperCase()));
         
         ServerConnector sslConnector = new ServerConnector(server, new SslConnectionFactory(sslContextFactory, "http/1.1"), new HttpConnectionFactory(https));
-        sslConnector.setPort(this.Port);
+        sslConnector.setPort(getPort());
+        sslConnector.setHost("0.0.0.0");
         
         server.addConnector(sslConnector);
         //SessionHandler sessionHandler = new SessionHandler();
@@ -93,52 +74,7 @@ public class JIBHTTPSServer {
         //sessionHandler.setServer(server);
         //server.addBean(sessionHandler, true);
         
-        ServletContextHandler handler = new ServletContextHandler("/", true, true);
-        URL staticResources = getClass().getClassLoader().getResource("static");
-        handler.setBaseResourceAsString(staticResources.toExternalForm());
-        //handler.setSessionHandler(sessionHandler);
-        //handler.addServlet(JIBHTTPServletLogin.class.getName(), "/");
-        handler.addServlet(JIBHTTPServletLogin.class.getName(), "/login");
-        //handler.addServlet(JIBHTTPServletLogin.class.getName(), "/login/");
-        handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers");
-        //handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers/");
-        handler.addServlet(JIBHTTPServletUsers.class.getName(), "/users");
-        //handler.addServlet(JIBHTTPServletUsers.class.getName(), "/users/");
-        handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status");
-        //handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status/");
-        handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout");
-        //handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout/");
-        
-        final ServletHolder defaultHolder = new ServletHolder("default", ResourceServlet.class);
-        defaultHolder.setInitParameter("baseResource", staticResources.toExternalForm());
-        handler.addServlet(defaultHolder, "/static/*");
-        handler.addServlet(defaultHolder, "/static/JIB.png");
-        
-        ResourceHandler handler3 = new ResourceHandler();
-        handler3.setBaseResource(ResourceFactory.of(handler3).newResource("./static/"));
-        handler3.setAcceptRanges(true);
-        //server.setDefaultHandler(handler3);
-        
-        ContextHandlerCollection contextCollection = new ContextHandlerCollection();
-        contextCollection.addHandler(new ContextHandler(handler3, "/static"));
-        //contextCollection.addHandler(new ContextHandler(handler, "/"));
-        //contextCollection.addHandler(new ContextHandler(handler, "/login"));
-        contextCollection.addHandler(new ContextHandler(handler, "/login/"));
-        //contextCollection.addHandler(new ContextHandler(handler, "/servers"));
-        contextCollection.addHandler(new ContextHandler(handler, "/servers/"));
-        //contextCollection.addHandler(new ContextHandler(handler, "/users"));
-        contextCollection.addHandler(new ContextHandler(handler, "/users/"));
-        //contextCollection.addHandler(new ContextHandler(handler, "/status"));
-        contextCollection.addHandler(new ContextHandler(handler, "/status/"));
-        //contextCollection.addHandler(new ContextHandler(handler, "/logout"));
-        contextCollection.addHandler(new ContextHandler(handler, "/logout/"));
-        server.setHandler(contextCollection);
-        server.setDefaultHandler(contextCollection);
-        contextCollection.deployHandler(handler, Callback.NOOP);
-        
-        //server.setErrorHandler(new JIBHTTPHandlerError());
-        //server.setDefaultHandler(new JIBHTTPHandler());
-        //server.setDefaultHandler(handler);
+        addHandlers();
         try {
             server.start();
         } catch (UnsupportedOperationException uoe1) {
@@ -146,5 +82,9 @@ public class JIBHTTPSServer {
         } catch (Exception ex) {
             log.error("Error Starting HTTPS Server", ex);
         }
+    }
+        
+    public String toString() {
+        return super.toString();
     }
 }
