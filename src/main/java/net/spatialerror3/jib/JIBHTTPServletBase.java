@@ -85,9 +85,13 @@ public class JIBHTTPServletBase extends HttpServlet {
         }
         out.println("<br>USER=" + (u != null ? u.getUserName() : "null"));
         out.println("</td><td>");
-        out.println("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit value='LOGIN' /></form>");
+        if ((String) session.getAttribute("IDENTIFIEDAS") == null) {
+            out.println("<form action='/login' method=POST><br><input type=text name='user' /><br><input type=password name='pass' /><br><input type=submit value='LOGIN' /></form>");
+        }
         out.println("</td><td>");
-        out.println("<form action='/logout' method=POST><br><input type=submit value='LOGOUT' /></form>");
+        if ((String) session.getAttribute("IDENTIFIEDAS") != null) {
+            out.println("<form action='/logout' method=POST><br><input type=submit value='LOGOUT' /></form>");
+        }
         out.println("</td></tr>");
         out.println("</table>");
         if (u != null) {
