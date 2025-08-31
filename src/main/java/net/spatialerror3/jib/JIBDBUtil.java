@@ -99,7 +99,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-        sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), _authtoken varchar(256), admin boolean, opt object(10000000));";
+        sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt object(10000000));";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
@@ -154,7 +154,7 @@ public class JIBDBUtil {
 
     public long loadUsers() {
         long loadedUsers = 0L;
-        String sql = "SELECT userId,_uuid,username,_authtoken,admin,opt FROM users;";
+        String sql = "SELECT userId,_uuid,username,authtoken,admin,opt FROM users;";
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
         try {
@@ -180,14 +180,14 @@ public class JIBDBUtil {
     }
 
     public void addUser(JIBUser u) {
-        String sql = "INSERT INTO users (userId,_uuid,username,_authtoken,admin,opt) VALUES(?,?,?,?,?);";
+        String sql = "INSERT INTO users (userId,_uuid,username,authtoken,admin,opt) VALUES(?,?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
             ps2.setLong(1, u.getUserId());
             ps2.setString(2, u.getUUID().toString());
             ps2.setString(3, u.getUserName());
-            ps2.setString(4, null);
+            ps2.setString(4, u.getAuthToken());
             ps2.setBoolean(5, u.admin());
             ps2.setObject(6, u);
             ps2.execute();
