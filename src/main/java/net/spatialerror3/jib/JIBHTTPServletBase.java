@@ -98,6 +98,9 @@ public class JIBHTTPServletBase extends HttpServlet {
             out.println("<a href='/login'>login</a>&nbsp;");
             out.println("<a href='/servers'>servers</a>&nbsp;");
             out.println("<a href='/status'>status</a>&nbsp;");
+            if (u.admin()) {
+                out.println("a href='/users'>users</a>&nbsp;");
+            }
             out.println("<a href='/logout'>logout</a>&nbsp;");
             out.println("</td>");
             out.println("</tr>");
@@ -112,7 +115,7 @@ public class JIBHTTPServletBase extends HttpServlet {
 
         PrintWriter out = resp.getWriter();
         out.println("<hr width=90%>");
-        out.println("<table width=100%><tr><td align=center><a href='" + backlink + "'>(c) 2025 JIB</a> (<a href='"+ghlink+"'>github</a>)</td></tr></table>");
+        out.println("<table width=100%><tr><td align=center><a href='" + backlink + "'>(c) 2025 JIB</a> (<a href='" + ghlink + "'>github</a>)</td></tr></table>");
         out.println("</body>");
         out.println("</html>");
     }
