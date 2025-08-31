@@ -46,7 +46,7 @@ public class JIBDBUtil {
         getDatabase();
         if (JavaIrcBouncer.jibConfig.getValue("H2SERVER") != null) {
             try {
-                server = Server.createTcpServer("").start();
+                server = Server.createTcpServer("-tcp").start();
             } catch (SQLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
