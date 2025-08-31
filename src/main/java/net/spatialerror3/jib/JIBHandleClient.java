@@ -190,6 +190,10 @@ public class JIBHandleClient implements Runnable {
         return trackNick;
     }
 
+    public void sendJibMsg(String message) {
+        sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick1() + " :" + message + "\r\n");
+    }
+
     public void processLine(String l) {
         boolean passthrough = true;
         if (l == null) {
