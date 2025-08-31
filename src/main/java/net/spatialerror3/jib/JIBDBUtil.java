@@ -71,7 +71,7 @@ public class JIBDBUtil {
     }
 
     public void initSchema() {
-        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, ssl boolean, ipv6 boolean, u varchar(256), opt object(10000000));";
+        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, ssl boolean, ipv6 boolean, nick varchar(256), username varchar(256), realname varchar(256), nsacct varchar(256), nspass varchar(256), channels varchar(512), u varchar(256), opt object(10000000));";
         try {
             PreparedStatement ps1 = getDatabase().prepareStatement(sql);
             ps1.execute();
@@ -267,7 +267,7 @@ public class JIBDBUtil {
     }
 
     public void addServer(JIBUser u, JIBIRCServer serv) {
-        String sql = "INSERT INTO servers (server,port,u,ssl,ipv6,opt) VALUES(?,?,?,?,?,?);";
+        String sql = "INSERT INTO servers (server,port,u,ssl,ipv6,nick,username,realname,nsacct,nspass,channels,opt) VALUES(?,?,?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
@@ -276,7 +276,13 @@ public class JIBDBUtil {
             ps2.setString(3, u.getUUID().toString());
             ps2.setBoolean(4, serv.getSsl());
             ps2.setBoolean(5, serv.getIpv6());
-            ps2.setObject(6, serv);
+            ps2.setString(6, serv.getNick());
+            ps2.setString(7, serv.getUser());
+            ps2.setString(8, serv.getRealname());
+            ps2.setString(9, serv.getNickServUser());
+            ps2.setString(10, serv.getNickServPass());
+            ps2.setString(11, serv.getChannels());
+            ps2.setObject(12, serv);
             ps2.execute();
         } catch (SQLException ex) {
             log.error((String) null, ex);
@@ -298,7 +304,7 @@ public class JIBDBUtil {
     }
 
     public ArrayList<JIBIRCServer> getServers(JIBUser u) {
-        String sql = "SELECT u, server, port, opt FROM servers WHERE u = ?;";
+        String sql = "SELECT u, server, port, ssl, ipv6, opt FROM servers WHERE u = ?;";
         ArrayList<JIBIRCServer> ret = null;
         ret = new ArrayList<JIBIRCServer>();
         PreparedStatement ps5 = null;
@@ -321,8 +327,8 @@ public class JIBDBUtil {
                 JIBIRCServer tmp1 = new JIBIRCServer();
                 tmp1.setServer(rs5.getString(2));
                 tmp1.setPort(rs5.getInt(3));
-                tmp1.setSsl(true);
-                tmp1.setIpv6(false);
+                tmp1.setSsl(rs5.getBoolean(4));
+                tmp1.setIpv6(rs5.getBoolean(5));
 
                 log.debug("Contains Server=" + tmp1 + " tmp1.getServer()=" + tmp1.getServer() + " tmp1.getPort()=" + tmp1.getPort());
                 ret.add(tmp1);
