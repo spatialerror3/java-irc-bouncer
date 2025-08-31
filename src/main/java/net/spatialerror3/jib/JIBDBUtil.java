@@ -197,6 +197,20 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
+    
+    public void addUserAuthToken(JIBUser u) {
+        String sql = "UPDATE users SET authtoken = ? WHERE _uuid = ?";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, u.getAuthToken());
+            ps2.setString(2, u.getUUID().toString());
+            ps2.execute();
+            getDatabase().commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+    }
 
     public void removeUser(JIBUser u) {
         String sql = "DELETE FROM users WHERE _uuid = ?;";
