@@ -147,6 +147,12 @@ public class JIBIRCServer implements Serializable {
         if (this.server.endsWith("dal.net")) {
             setNetType(JIBIRCNetType.NetType.DALNET);
         }
+        if (this.server.endsWith("undernet.org")) {
+            setNetType(JIBIRCNetType.NetType.UNDERNET);
+        }
+        if (this.server.endsWith("quakenet.org")) {
+            setNetType(JIBIRCNetType.NetType.QUAKENET);
+        }
     }
 
     public void setPort(int port) {
