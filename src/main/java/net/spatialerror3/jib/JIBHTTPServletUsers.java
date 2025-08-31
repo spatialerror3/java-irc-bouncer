@@ -55,7 +55,7 @@ public class JIBHTTPServletUsers extends JIBHTTPServletBase {
             out.println("username=<input type=text name='username' /><br>");
             out.println("password=<input type=password name='userpass' /><br>");
             out.println("<input type=hidden name='whattodo' value='adduser' /><br>");
-            out.println("<input type=submit /></form>");
+            out.println("<input type=submit value='CREATE USER' /></form>");
             if (session.getAttribute("IDENTIFIEDAS") != null) {
                 UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
                 JIBUser u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
