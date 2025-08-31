@@ -19,6 +19,7 @@ package net.spatialerror3.jib;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.ee10.servlet.DefaultServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
@@ -76,6 +77,8 @@ public class JIBHTTPServer {
         handler.addServlet(JIBHTTPServletServers.class.getName(), "/servers");
         handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status");
         handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout");
+        var defaultServlet = handler.addServlet(DefaultServlet.class, "/static/*");
+        defaultServlet.setInitParameter("resourceBase", "./static");
         server.setDefaultHandler(new JIBHTTPHandler());
         server.setDefaultHandler(handler);
         try {
