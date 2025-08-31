@@ -48,6 +48,12 @@ public class JIBIRCNickServ {
 
     public void identify() {
         if (serv.getNickServUser() != null && serv.getNickServPass() != null) {
+            if (serv.getNickServUser().equals("null")) {
+                return;
+            }
+            if (serv.getNickServPass().equals("null")) {
+                return;
+            }
             if (serv.getNetType() == JIBIRCNetType.NetType.LIBERA) {
                 u.getJibIRC().writeLine("PRIVMSG NickServ :IDENTIFY " + serv.getNickServUser() + " " + serv.getNickServPass() + "\r\n");
             }
