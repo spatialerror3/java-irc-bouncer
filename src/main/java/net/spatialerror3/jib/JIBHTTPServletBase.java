@@ -99,7 +99,7 @@ public class JIBHTTPServletBase extends HttpServlet {
             out.println("<a href='/servers'>servers</a>&nbsp;");
             out.println("<a href='/status'>status</a>&nbsp;");
             if (u.admin()) {
-                out.println("a href='/users'>users</a>&nbsp;");
+                out.println("<a href='/users'>users</a>&nbsp;");
             }
             out.println("<a href='/logout'>logout</a>&nbsp;");
             out.println("</td>");
