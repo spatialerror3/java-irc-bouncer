@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * @author spatialerror3
  */
 public class JIBUser implements Serializable {
-
+    
     private static final long serialVersionUID = 1L;
     private static long userIdCnt = 0;
     private long userId = userIdCnt++;
@@ -43,65 +43,65 @@ public class JIBUser implements Serializable {
     private JIBUserInfo ircUserInfo = null;
     //
     ArrayList<JIBHandleClient> clients = new ArrayList<JIBHandleClient>();
-
+    
     public JIBUser() {
         ircServers = new ArrayList<JIBIRCServer>();
         ircUserInfo = new JIBUserInfo();
     }
-
+    
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
+    
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
         JavaIrcBouncer.jibDbUtil.addClientAuth(this, authToken);
         JavaIrcBouncer.jibDbUtil.refreshUser(this);
     }
-
+    
     public JIBUser auth(String authToken) {
         if (this.authToken.equals(authToken)) {
             return this;
         }
         return null;
     }
-
+    
     public long getUserId() {
         return this.userId;
     }
-
+    
     public void setUserId(long userId) {
         this.userId = userId;
     }
-
+    
     public String getUserName() {
         return this.userName;
     }
-
+    
     public UUID getUUID() {
         return this.uuid;
     }
-
+    
     public void setUUID(UUID _uuid) {
         this.uuid = _uuid;
     }
-
+    
     public boolean admin() {
         return this.admin;
     }
-
+    
     public void setJibIRC(JIBIRC jibIRC) {
         this.jibIRC = jibIRC;
     }
-
+    
     public JIBIRC getJibIRC() {
         return this.jibIRC;
     }
-
+    
     public void addClient(JIBHandleClient jibhc) {
         clients.add(jibhc);
     }
-
+    
     public void writeAllClients(String l) {
         Iterator<JIBHandleClient> it1 = clients.iterator();
         while (it1.hasNext()) {
@@ -111,7 +111,7 @@ public class JIBUser implements Serializable {
             }
         }
     }
-
+    
     public void writeAllClients(JIBHandleClient skip, String l) {
         Iterator<JIBHandleClient> it1 = clients.iterator();
         while (it1.hasNext()) {
@@ -123,16 +123,21 @@ public class JIBUser implements Serializable {
             }
         }
     }
-
+    
     public void addIrcServer(JIBIRCServer ircServer) {
         ircServers.add(ircServer);
         JavaIrcBouncer.jibDbUtil.addServer(this, ircServer);
     }
-
+    
+    public void removeIrcServer(JIBIRCServer ircServer) {
+        ircServers.remove(ircServer);
+        JavaIrcBouncer.jibDbUtil.removeServer(this, ircServer);
+    }
+    
     public ArrayList<JIBIRCServer> getIrcServers() {
         return this.ircServers;
     }
-
+    
     public JIBIRCServer getIrcServer() {
         int pos = -1;
         JIBIRCServer ret = null;
@@ -144,19 +149,19 @@ public class JIBUser implements Serializable {
         }
         return ret;
     }
-
+    
     public void setNick(String nick) {
         ircUserInfo.nick = nick;
     }
-
+    
     public void setUser(String user) {
         ircUserInfo.user = user;
     }
-
+    
     public void setRealname(String realname) {
         ircUserInfo.realname = realname;
     }
-
+    
     public JIBUserInfo getIRCUserInfo() {
         return this.ircUserInfo;
     }
