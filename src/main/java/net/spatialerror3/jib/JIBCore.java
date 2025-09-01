@@ -35,16 +35,32 @@ public class JIBCore {
     HashMap<String, JIBUser> userMap = null;
     HashMap<UUID, JIBUser> userMap2 = null;
 
+    /**
+     *
+     */
     public JIBCore() {
         users = new ArrayList<JIBUser>();
         userMap = new HashMap<String, JIBUser>();
         userMap2 = new HashMap<UUID, JIBUser>();
     }
 
+    /**
+     *
+     * @param userName
+     * @param admin
+     * @return
+     */
     public JIBUser createUser(String userName, boolean admin) {
         return createUser(userName, admin, false);
     }
 
+    /**
+     *
+     * @param userName
+     * @param admin
+     * @param nodb
+     * @return
+     */
     public JIBUser createUser(String userName, boolean admin, boolean nodb) {
         if (getUser(userName) != null) {
             return getUser(userName);
@@ -65,6 +81,10 @@ public class JIBCore {
         return u;
     }
 
+    /**
+     *
+     * @param u
+     */
     public void removeUser(JIBUser u) {
         userMap.remove(u.getUserName(), u);
         userMap2.remove(u.getUUID(), u);
@@ -72,22 +92,46 @@ public class JIBCore {
         JavaIrcBouncer.jibDbUtil.removeUser(u);
     }
 
+    /**
+     *
+     * @return
+     */
     public long getUserCount() {
         return JIBCore.userCnt;
     }
 
+    /**
+     *
+     * @param userName
+     * @return
+     */
     public JIBUser getUser(String userName) {
         return userMap.get(userName);
     }
 
+    /**
+     *
+     * @param uuid
+     * @return
+     */
     public JIBUser getUser(UUID uuid) {
         return userMap2.get(uuid);
     }
     
+    /**
+     *
+     * @return
+     */
     public Iterator<JIBUser> getUsers() {
         return this.users.iterator();
     }
 
+    /**
+     *
+     * @param userName
+     * @param authToken
+     * @return
+     */
     public JIBUser authUser(String userName, String authToken) {
         JIBUser u = getUser(userName);
         if (u == null) {
