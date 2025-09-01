@@ -119,7 +119,6 @@ public class JIBUser implements Serializable {
         synchronized (al1) {
             it1 = al1.iterator();
             while (it1.hasNext()) {
-                // FIXME: ConcurrentModificationException
                 JIBHandleClient tc = it1.next();
                 if (tc.getError() == null && tc.getConnected() == true) {
                     tc.sendLine(l);
@@ -129,7 +128,7 @@ public class JIBUser implements Serializable {
     }
 
     public void writeAllClients(JIBHandleClient skip, String l) {
-        ArrayList<JIBHandleClient> al1 = (ArrayList<JIBHandleClient>) clients.clone();
+        List<JIBHandleClient> al1 = Collections.synchronizedList((ArrayList<JIBHandleClient>) clients.clone());
         Iterator<JIBHandleClient> it1 = null;
         synchronized (al1) {
             it1 = al1.iterator();
