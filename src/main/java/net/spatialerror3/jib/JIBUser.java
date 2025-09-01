@@ -21,6 +21,8 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -112,7 +114,7 @@ public class JIBUser implements Serializable {
     }
 
     public void writeAllClients(String l) {
-        ArrayList<JIBHandleClient> al1 = (ArrayList<JIBHandleClient>) clients.clone();
+        List<JIBHandleClient> al1 = Collections.synchronizedList((ArrayList<JIBHandleClient>) clients.clone());
         Iterator<JIBHandleClient> it1 = null;
         synchronized (al1) {
             it1 = al1.iterator();
