@@ -50,6 +50,8 @@ public class JavaIrcBouncer {
         jibCore = new JIBCore();
         jibConfig = new JIBConfig();
         jibConfig.parseArgs(args);
+        jibJython = new JIBJython();
+        jibJython.loadInit();
         jibSysEnv = new JIBSysEnv();
         jibSysEnv.envToConfig("AUTHUSER");
         jibSysEnv.envToConfig("AUTHPASS");
@@ -80,7 +82,6 @@ public class JavaIrcBouncer {
         jibDbUtil = new JIBDBUtil(h2dbfile);
         jibDbUtil.initSchema();
         jibDbUtil.loadUsers();
-        jibJython = new JIBJython();
         jibJython.loadConfig();
         JIBUser adminUser = null;
         if (jibConfig.getValue("AUTHPASS") == null) {
@@ -130,6 +131,7 @@ public class JavaIrcBouncer {
         jibQuartz.init();
         jibStatus = new JIBStatus();
         log.info("Up...");
+        jibJython.loadConfig2();
         if (jibHttpServ != null) {
             log.info(jibHttpServ.toString());
         }
