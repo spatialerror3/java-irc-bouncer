@@ -23,6 +23,12 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.ee10.servlet.ResourceServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintMapping;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.Constraint;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -31,42 +37,46 @@ import org.eclipse.jetty.session.DefaultSessionIdManager;
 import org.eclipse.jetty.session.HouseKeeper;
 import org.eclipse.jetty.util.Callback;
 import org.eclipse.jetty.util.resource.ResourceFactory;
+import org.eclipse.jetty.util.security.Credential;
 
 /**
  *
  * @author spatialerror3
  */
 public class JIBWebBase {
-
+    
     private static final Logger log = LogManager.getLogger(JIBWebBase.class);
     private int Port = -1;
     private String protocol = null;
     //
     private Server server = null;
     private String serverName = null;
-
+    //
+    private String realm = "JIB";
+    private SecurityHandler sh = null;
+    
     public JIBWebBase() {
-
+        
     }
-
+    
     public void setPort(int Port, String protocol) {
         this.Port = Port;
         this.protocol = protocol;
     }
-
+    
     public int getPort() {
         return this.Port;
     }
-
+    
     public void setServer(Server server, String serverName) {
         this.server = server;
         this.serverName = serverName;
     }
-
+    
     public Server getServer() {
         return this.server;
     }
-
+    
     public void addSessionIdManager() {
         DefaultSessionIdManager idMgr = new DefaultSessionIdManager(server);
         idMgr.setWorkerName(this.serverName);
@@ -90,7 +100,17 @@ public class JIBWebBase {
             log.error((String) null, e2);
         }
     }
-
+    
+    public void addSecurityHandler() {
+        HashLoginService loginService = new HashLoginService();
+        loginService.setName(realm);
+        sh = new ConstraintSecurityHandler();
+        sh.setServer(server);
+        sh.setAuthenticator(new BasicAuthenticator());
+        sh.setRealmName(realm);
+        sh.setLoginService(loginService);
+    }
+    
     public void addHandlers() {
         ServletContextHandler handler = new ServletContextHandler("/", true, true);
         URL staticResources = getClass().getClassLoader().getResource("static");
@@ -112,7 +132,7 @@ public class JIBWebBase {
         defaultHolder.setInitParameter("baseResource", staticResources.toExternalForm());
         handler.addServlet(defaultHolder, "/static/*");
         handler.addServlet(defaultHolder, "/static/JIB.png");
-
+        
         ResourceHandler handler3 = new ResourceHandler();
         handler3.setBaseResource(ResourceFactory.of(handler3).newResource("./static/"));
         handler3.setAcceptRanges(true);
@@ -133,17 +153,21 @@ public class JIBWebBase {
         //contextCollection.addHandler(new ContextHandler(handler, "/logout/"));
         server.setHandler(contextCollection);
         server.setDefaultHandler(contextCollection);
+        if (sh != null) {
+            sh.setHandler(contextCollection);
+            server.setHandler(sh);
+        }
         contextCollection.deployHandler(handler, Callback.NOOP);
 
         //server.setErrorHandler(new JIBHTTPHandlerError());
         //server.setDefaultHandler(new JIBHTTPHandler());
         server.setDefaultHandler(handler);
     }
-
+    
     public String getURL() {
-        return this.protocol+"://127.0.0.1:" + this.Port + "/login";
+        return this.protocol + "://127.0.0.1:" + this.Port + "/login";
     }
-
+    
     public String toString() {
         return "Enter " + getURL() + " into your web browser to login...";
     }
