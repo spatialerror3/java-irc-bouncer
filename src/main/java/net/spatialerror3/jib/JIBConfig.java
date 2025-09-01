@@ -30,31 +30,63 @@ public class JIBConfig implements Serializable {
     private static final long serialVersionUID = 1L;
     private HashMap<String, String> kvStore = null;
 
+    /**
+     *
+     */
     public JIBConfig() {
         kvStore = new HashMap<String, String>();
     }
 
+    /**
+     *
+     * @param args
+     */
     public void parseArgs(String[] args) {
         if (args.length > 0) {
             setValue("Server", args[0]);
         }
     }
 
+    /**
+     *
+     * @param Key
+     * @param Value
+     */
     public void setValue(String Key, String Value) {
         if (Value != null) {
             kvStore.put(Key, Value);
         }
     }
 
+    /**
+     *
+     * @param Key
+     * @return
+     */
     public String getValue(String Key) {
         return kvStore.get(Key);
     }
 
+    /**
+     *
+     * @param userName
+     * @param pass
+     */
     public void createUser(String userName, String pass) {
         JIBUser u = JavaIrcBouncer.jibCore.createUser(userName, false);
         u.setAuthToken(pass);
     }
 
+    /**
+     *
+     * @param userName
+     * @param pass
+     * @param n
+     * @param id
+     * @param r
+     * @param server
+     * @param port
+     */
     public void createUser(String userName, String pass, String n, String id, String r, String server, int port) {
         JIBUser u = JavaIrcBouncer.jibCore.createUser(userName, false);
         u.setAuthToken(pass);
@@ -71,6 +103,16 @@ public class JIBConfig implements Serializable {
         u.addIrcServer(tmpServ);
     }
 
+    /**
+     *
+     * @param userName
+     * @param pass
+     * @param n
+     * @param id
+     * @param r
+     * @param server
+     * @param port
+     */
     public void createUser(String userName, String pass, String n, String id, String r, String server, String port) {
         JIBUser u = JavaIrcBouncer.jibCore.createUser(userName, false);
         u.setAuthToken(pass);
@@ -87,6 +129,19 @@ public class JIBConfig implements Serializable {
         u.addIrcServer(tmpServ);
     }
 
+    /**
+     *
+     * @param userName
+     * @param pass
+     * @param n
+     * @param id
+     * @param r
+     * @param server
+     * @param port
+     * @param nsacct
+     * @param nspass
+     * @param chans
+     */
     public void createUser(String userName, String pass, String n, String id, String r, String server, int port, String nsacct, String nspass, String chans) {
         JIBUser u = JavaIrcBouncer.jibCore.createUser(userName, false);
         u.setAuthToken(pass);
@@ -106,6 +161,19 @@ public class JIBConfig implements Serializable {
         u.addIrcServer(tmpServ);
     }
 
+    /**
+     *
+     * @param userName
+     * @param pass
+     * @param n
+     * @param id
+     * @param r
+     * @param server
+     * @param port
+     * @param nsacct
+     * @param nspass
+     * @param chans
+     */
     public void createUser(String userName, String pass, String n, String id, String r, String server, String port, String nsacct, String nspass, String chans) {
         JIBUser u = JavaIrcBouncer.jibCore.createUser(userName, false);
         u.setAuthToken(pass);
