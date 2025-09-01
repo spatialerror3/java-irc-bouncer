@@ -294,6 +294,7 @@ public class JIBHandleClient implements Runnable {
             String pong = l.substring(5);
             //sendLine("PONG JIB.jib " + pong + "\r\n");
             sendLine(":JIB.jib PONG JIB.jib :" + JIBStringUtil.remDD(pong) + "\r\n");
+            refreshNick();
         }
         if (passthrough) {
             if (getSingleJIBIRC() != null) {
