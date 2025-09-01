@@ -34,14 +34,28 @@ public class JIBJython {
         interp.set("config", rJIBConfig());
         interp.set("configurator", rJIBConfig());
     }
-
+    
+    public void loadInit() {
+        File cf = new File("./init.jy");
+        if (cf.exists() && !cf.isDirectory()) {
+            interp.execfile("./init.jy");
+        }
+    }
+    
     public void loadConfig() {
         File cf = new File("./config.jy");
         if (cf.exists() && !cf.isDirectory()) {
             interp.execfile("./config.jy");
         }
     }
-
+    
+    public void loadConfig2() {
+        File cf = new File("./config2.jy");
+        if (cf.exists() && !cf.isDirectory()) {
+            interp.execfile("./config2.jy");
+        }
+    }
+    
     public JIBServer rJIBServ() {
         return JavaIrcBouncer.jibServ;
     }
