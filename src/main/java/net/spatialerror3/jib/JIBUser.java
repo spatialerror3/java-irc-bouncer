@@ -46,15 +46,26 @@ public class JIBUser implements Serializable {
     //
     ArrayList<JIBHandleClient> clients = new ArrayList<JIBHandleClient>();
 
+    /**
+     *
+     */
     public JIBUser() {
         ircServers = new ArrayList<JIBIRCServer>();
         ircUserInfo = new JIBUserInfo();
     }
 
+    /**
+     *
+     * @param userName
+     */
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    /**
+     *
+     * @param authToken
+     */
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
         JavaIrcBouncer.jibDbUtil.addClientAuth(this, authToken);
@@ -62,10 +73,19 @@ public class JIBUser implements Serializable {
         JavaIrcBouncer.jibDbUtil.addUserAuthToken(this);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getAuthToken() {
         return this.authToken;
     }
 
+    /**
+     *
+     * @param authToken
+     * @return
+     */
     public JIBUser auth(String authToken) {
         if (this.authToken.equals(authToken)) {
             return this;
@@ -73,48 +93,92 @@ public class JIBUser implements Serializable {
         return null;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getUserId() {
         return this.userId;
     }
 
+    /**
+     *
+     * @param userId
+     */
     public void setUserId(long userId) {
         this.userId = userId;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUserName() {
         return this.userName;
     }
 
+    /**
+     *
+     * @return
+     */
     public UUID getUUID() {
         return this.uuid;
     }
 
+    /**
+     *
+     * @param _uuid
+     */
     public void setUUID(UUID _uuid) {
         this.uuid = _uuid;
     }
 
+    /**
+     *
+     * @param admin
+     */
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean admin() {
         return this.admin;
     }
 
+    /**
+     *
+     * @param jibIRC
+     */
     public void setJibIRC(JIBIRC jibIRC) {
         this.jibIRC = jibIRC;
     }
 
+    /**
+     *
+     * @return
+     */
     public JIBIRC getJibIRC() {
         return this.jibIRC;
     }
 
+    /**
+     *
+     * @param jibhc
+     */
     public void addClient(JIBHandleClient jibhc) {
         clients.add(jibhc);
     }
 
+    /**
+     *
+     * @param l
+     */
     public void writeAllClients(String l) {
-        List<JIBHandleClient> al1 = Collections.synchronizedList((ArrayList<JIBHandleClient>) clients.clone());
+        List<JIBHandleClient> al1 = Collections.synchronizedList(clients);
         Iterator<JIBHandleClient> it1 = null;
         synchronized (al1) {
             it1 = al1.iterator();
@@ -127,8 +191,13 @@ public class JIBUser implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param skip
+     * @param l
+     */
     public void writeAllClients(JIBHandleClient skip, String l) {
-        List<JIBHandleClient> al1 = Collections.synchronizedList((ArrayList<JIBHandleClient>) clients.clone());
+        List<JIBHandleClient> al1 = Collections.synchronizedList(clients);
         Iterator<JIBHandleClient> it1 = null;
         synchronized (al1) {
             it1 = al1.iterator();
@@ -143,20 +212,36 @@ public class JIBUser implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param ircServer
+     */
     public void addIrcServer(JIBIRCServer ircServer) {
         ircServers.add(ircServer);
         JavaIrcBouncer.jibDbUtil.addServer(this, ircServer);
     }
 
+    /**
+     *
+     * @param ircServer
+     */
     public void removeIrcServer(JIBIRCServer ircServer) {
         ircServers.remove(ircServer);
         JavaIrcBouncer.jibDbUtil.removeServer(this, ircServer);
     }
 
+    /**
+     *
+     * @return
+     */
     public ArrayList<JIBIRCServer> getIrcServers() {
         return this.ircServers;
     }
 
+    /**
+     *
+     * @return
+     */
     public JIBIRCServer getIrcServer() {
         int pos = -1;
         JIBIRCServer ret = null;
@@ -169,22 +254,42 @@ public class JIBUser implements Serializable {
         return ret;
     }
 
+    /**
+     *
+     * @param nick
+     */
     public void setNick(String nick) {
         ircUserInfo.nick = nick;
     }
 
+    /**
+     *
+     * @param user
+     */
     public void setUser(String user) {
         ircUserInfo.user = user;
     }
 
+    /**
+     *
+     * @param realname
+     */
     public void setRealname(String realname) {
         ircUserInfo.realname = realname;
     }
 
+    /**
+     *
+     * @return
+     */
     public JIBUserInfo getIRCUserInfo() {
         return this.ircUserInfo;
     }
 
+    /**
+     *
+     * @return
+     */
     public String toHTML() {
         StringBuilder sb1 = null;
         sb1 = new StringBuilder();
