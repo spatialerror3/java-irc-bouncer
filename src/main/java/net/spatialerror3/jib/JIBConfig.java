@@ -26,6 +26,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,7 +46,7 @@ public class JIBConfig implements Serializable {
     public JIBConfig() {
         kvStore = new HashMap<String, String>();
     }
-    
+
     /**
      *
      * @return available options
@@ -55,10 +56,12 @@ public class JIBConfig implements Serializable {
         options = new Options();
 
         Option help = new Option("help", "print help");
-        Option server = Option.builder().argName("server").hasArg().desc("specify irc server for admin user").build();
 
         options.addOption(help);
-        options.addOption(server);
+        options.addOption("server", "server", true, "specify irc server for admin user");
+        options.addOption("port", "port", true, "specify irc server port for admin user");
+        options.addOption("adminuser", "adminuser", true, "username for admin user");
+        options.addOption("adminpass", "adminpass", true, "password for admin user");
 
         return options;
     }
@@ -80,8 +83,17 @@ public class JIBConfig implements Serializable {
             log.error("Parsing failed.  Reason: " + exp.getMessage());
         }
         if (line != null) {
+            if (line.hasOption("help")) {
+                log.info("-help             display help");
+                log.info("-server [server]              ");
+                log.info("-port   [port]                ");
+                System.exit(0);
+            }
             if (line.hasOption("server")) {
                 setValue("Server", line.getOptionValue("server"));
+            }
+            if (line.hasOption("port")) {
+                setValue("Port", line.getOptionValue("port"));
             }
         }
         /*
