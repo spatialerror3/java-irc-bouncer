@@ -57,59 +57,122 @@ public class JIBIRCServer implements Serializable {
     //
     private InetAddress resolved = null;
 
+    /**
+     *
+     */
     public JIBIRCServer() {
         userinfo = new JIBUserInfo();
         channels = new ArrayList<String>();
     }
 
+    /**
+     *
+     * @return
+     */
     public UUID getUUID() {
         return this.uuid;
     }
 
+    /**
+     *
+     * @param _uuid
+     */
     public void setUUID(UUID _uuid) {
         this.uuid = _uuid;
     }
 
+    /**
+     *
+     * @return
+     */
     public JIBIRCNetType.NetType getNetType() {
         return this.netType;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getServer() {
         return this.server;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPort() {
         return this.port;
     }
 
+    /**
+     *
+     * @return
+     */
+    public String getPortAsString() {
+        return (this.ssl ? "+" : "") + this.port + "";
+    }
+
+    /**
+     *
+     * @return
+     */
     public boolean getSsl() {
         return this.ssl;
     }
 
+    /**
+     *
+     * @return
+     */
     public JIBUserInfo getUserInfo() {
         return this.userinfo;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNick() {
         return this.userinfo.getNick();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUser() {
         return this.userinfo.getUser();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getRealname() {
         return this.userinfo.getRealname();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNickServUser() {
         return this.nickServUser;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNickServPass() {
         return this.nickServPass;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getChannels() {
         StringBuilder sb1 = new StringBuilder();
         Iterator<String> it1 = this.channels.iterator();
@@ -124,18 +187,34 @@ public class JIBIRCServer implements Serializable {
         return sb1.toString();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getClientBind() {
         return this.clientBind;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean getIpv6() {
         return this.ipv6;
     }
 
+    /**
+     *
+     * @param netType
+     */
     public void setNetType(JIBIRCNetType.NetType netType) {
         this.netType = netType;
     }
 
+    /**
+     *
+     * @param server
+     */
     public void setServer(String server) {
         this.server = server;
         if (this.server.equals("irc.oftc.net")) {
@@ -155,10 +234,18 @@ public class JIBIRCServer implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param port
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
+    /**
+     *
+     * @param port
+     */
     public void setPort(String port) {
         String port2 = null;
         if (port.charAt(0) == '+') {
@@ -171,42 +258,82 @@ public class JIBIRCServer implements Serializable {
         setPort(Integer.parseInt(port2));
     }
 
+    /**
+     *
+     * @param ssl
+     */
     public void setSsl(boolean ssl) {
         this.ssl = ssl;
     }
 
+    /**
+     *
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     *
+     * @param userinfo
+     */
     public void setUserInfo(JIBUserInfo userinfo) {
         this.userinfo = userinfo;
     }
 
+    /**
+     *
+     * @param nick
+     */
     public void setNick(String nick) {
         this.userinfo.setNick(nick);
     }
 
+    /**
+     *
+     * @param user
+     */
     public void setUser(String user) {
         this.userinfo.setUser(user);
     }
 
+    /**
+     *
+     * @param realname
+     */
     public void setRealname(String realname) {
         this.userinfo.setRealname(realname);
     }
 
+    /**
+     *
+     * @param nickServUser
+     */
     public void setNickServUser(String nickServUser) {
         this.nickServUser = nickServUser;
     }
 
+    /**
+     *
+     * @param nickServPass
+     */
     public void setNickServPass(String nickServPass) {
         this.nickServPass = nickServPass;
     }
 
+    /**
+     *
+     * @param chan
+     */
     public void addChannel(String chan) {
         this.channels.add(chan);
     }
 
+    /**
+     *
+     * @param chans
+     */
     public void addChannels(String chans) {
         String[] chta = chans.split(",");
         for (int j = 0; j < chta.length; j++) {
@@ -214,14 +341,25 @@ public class JIBIRCServer implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param clientBind
+     */
     public void setClientBind(String clientBind) {
         this.clientBind = clientBind;
     }
 
+    /**
+     *
+     * @param ipv6
+     */
     public void setIpv6(boolean ipv6) {
         this.ipv6 = ipv6;
     }
 
+    /**
+     *
+     */
     public void resolve() {
         try {
             this.resolved = InetAddress.getByName(this.server);
@@ -230,6 +368,9 @@ public class JIBIRCServer implements Serializable {
         }
     }
 
+    /**
+     *
+     */
     public void resolve2() {
         InetAddress[] addrs = null;
         try {
@@ -253,10 +394,18 @@ public class JIBIRCServer implements Serializable {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public InetAddress getResolved() {
         return this.resolved;
     }
 
+    /**
+     *
+     * @return
+     */
     public String toHTML() {
         StringBuilder sb1 = new StringBuilder();
 
@@ -277,6 +426,20 @@ public class JIBIRCServer implements Serializable {
         return sb1.toString();
     }
 
+    /**
+     *
+     * @param server
+     * @param port
+     * @param ssl
+     * @param ipv6
+     * @param clientBind
+     * @param password
+     * @param userInfo
+     * @param nickServUser
+     * @param nickServPass
+     * @param channels
+     * @return
+     */
     public static JIBIRCServer createJIBIRCServer(String server, int port, boolean ssl, boolean ipv6, String clientBind, String password, JIBUserInfo userInfo, String nickServUser, String nickServPass, String channels) {
         JIBIRCServer tmpServ = null;
         tmpServ = new JIBIRCServer();
