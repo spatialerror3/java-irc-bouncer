@@ -94,6 +94,7 @@ public class JIBStringUtilTest {
         String expResult = "";
         String result = JIBStringUtil.randHexString();
         //assertEquals(expResult, result);
+        assertNotNull(result);
     }
     
 }
