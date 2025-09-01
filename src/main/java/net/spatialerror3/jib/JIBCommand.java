@@ -27,13 +27,13 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JIBCommand {
-    
+
     private static final Logger log = LogManager.getLogger(JIBCommand.class);
-    
+
     public JIBCommand() {
-        
+
     }
-    
+
     public void processCommand(JIBHandleClient hc, JIBUser authed, String message) {
         String[] excmd = message.split(" ", 2);
         if (excmd[0].startsWith("CONNECT")) {
@@ -109,7 +109,7 @@ public class JIBCommand {
             }
         }
         if (excmd[0].equals("ADDSERVER")) {
-            
+
         }
         if (excmd[0].equals("GET")) {
             String[] params = excmd[1].split(" ", 2);
@@ -164,6 +164,11 @@ public class JIBCommand {
         if (authed.admin() && excmd[0].equals("UPTIME")) {
             hc.sendJibMsg("Uptime: " + JavaIrcBouncer.jibStatus.getUptime());
         }
+        if (authed.admin() && excmd[0].equals("ADDUSER")) {
+            String[] up = excmd[1].split(" ", 2);
+            JavaIrcBouncer.jibConfig.createUser(up[0], up[1]);
+            hc.sendJibMsg("ADDED USER: " + up[0]);
+        }
         if (excmd[0].equals("HELP")) {
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "AVAILABLE COMMANDS:" + "\r\n");
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - LISTSERVERS" + "\r\n");
@@ -184,6 +189,7 @@ public class JIBCommand {
             if (authed.admin()) {
                 hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "ADMIN COMMANDS:" + "\r\n");
                 hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + " - CLEARALL[LOG]" + "\r\n");
+                hc.sendJibMsg(" - ADDUSER [user] [pass]");
                 hc.sendJibMsg(" - UPTIME");
             }
         }
