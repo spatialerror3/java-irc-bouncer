@@ -21,6 +21,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.UUID;
@@ -36,7 +37,19 @@ public class JIBHTTPServletBase extends HttpServlet {
     private static final Logger log = LogManager.getLogger(JIBHTTPServletBase.class);
     private static final String backlink = "https://java-irc-bouncer.sourceforge.io";
     private static final String ghlink = "https://github.com/spatialerror3/java-irc-bouncer";
+    
+    public JIBUser getJIBUser(HttpServletRequest req, HttpServletResponse resp) {
+        JIBUser u = null;
+        HttpSession session = req.getSession(true);
 
+        if ((String) session.getAttribute("IDENTIFIEDAS") != null) {
+            UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
+            u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
+        }
+
+        return u;
+    }
+    
     public void login(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var session = req.getSession(true);
         String path = req.getServletPath();
