@@ -40,6 +40,7 @@ public class JIBHTTPServletUsers extends JIBHTTPServletBase {
         var session = req.getSession(true);
         String path = req.getServletPath();
         log.debug(this + " " + path);
+        JIBUser u = getJIBUser(req, resp);
 
         login(req, resp);
         header(req, resp);
@@ -51,14 +52,16 @@ public class JIBHTTPServletUsers extends JIBHTTPServletBase {
             String userpass = req.getParameter("userpass");
 
             PrintWriter out = resp.getWriter();
-            out.println("<form action='/users' method=POST><br>");
-            out.println("username=<input type=text name='username' /><br>");
-            out.println("password=<input type=password name='userpass' /><br>");
-            out.println("<input type=hidden name='whattodo' value='adduser' /><br>");
-            out.println("<input type=submit value='CREATE USER' /></form>");
+            if (u != null) {
+                out.println("<form action='/users' method=POST><br>");
+                out.println("username=<input type=text name='username' /><br>");
+                out.println("password=<input type=password name='userpass' /><br>");
+                out.println("<input type=hidden name='whattodo' value='adduser' /><br>");
+                out.println("<input type=submit value='CREATE USER' /></form>");
+            }
             if (session.getAttribute("IDENTIFIEDAS") != null) {
                 UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
-                JIBUser u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
+                u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
                 if (u != null && u.admin()) {
                     if (req.getParameter("whattodo") != null && req.getParameter("whattodo").equals("adduser")) {
                         JIBUser tmpUser = JavaIrcBouncer.jibCore.createUser(username, false);
