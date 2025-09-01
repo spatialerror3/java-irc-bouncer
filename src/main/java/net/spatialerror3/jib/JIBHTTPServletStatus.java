@@ -41,14 +41,17 @@ public class JIBHTTPServletStatus extends JIBHTTPServletBase {
         var session = req.getSession(true);
         String path = req.getServletPath();
         log.debug(this + " " + path);
+        JIBUser u = getJIBUser(req, resp);
 
         header(req, resp);
         try {
             PrintWriter out = resp.getWriter();
-            resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
-            resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
-            out.println("<br>connz=" + JavaIrcBouncer.jibStatus.getConnections());
-            out.println("<br>upTime=" + JavaIrcBouncer.jibStatus.getUptime());
+            if (u != null) {
+                resp.getWriter().write("<br>userMaxId=" + JavaIrcBouncer.jibDbUtil.getUsersMaxUserId());
+                resp.getWriter().write("<br>userCount=" + JavaIrcBouncer.jibCore.getUserCount());
+                out.println("<br>connz=" + JavaIrcBouncer.jibStatus.getConnections());
+                out.println("<br>upTime=" + JavaIrcBouncer.jibStatus.getUptime());
+            }
         } catch (Exception e) {
             log.error((String) null, e);
         }
