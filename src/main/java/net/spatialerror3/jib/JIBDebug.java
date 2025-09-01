@@ -24,14 +24,25 @@ package net.spatialerror3.jib;
 public class JIBDebug {
     private boolean DEBUGGING = false;
     
+    /**
+     *
+     */
     public JIBDebug() {
         
     }
     
+    /**
+     *
+     * @param debugging
+     */
     public void setDebugging(boolean debugging) {
         this.DEBUGGING=debugging;
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean debug() {
         return this.DEBUGGING;
     }
