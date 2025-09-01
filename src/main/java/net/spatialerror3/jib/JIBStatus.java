@@ -33,7 +33,7 @@ public class JIBStatus {
     public JIBStatus() {
         JIBStatus.bootTime = System.currentTimeMillis();
     }
-
+    
     public int getConnections() {
         int connz = 0;
         Iterator<JIBUser> jui = JavaIrcBouncer.jibCore.getUsers();
@@ -49,7 +49,31 @@ public class JIBStatus {
         }
         return connz;
     }
-
+    
+    public int getUsers() {
+        int userz = 0;
+        Iterator<JIBUser> jui = JavaIrcBouncer.jibCore.getUsers();
+        while (jui.hasNext()) {
+            JIBUser tmpU = jui.next();
+            if (tmpU != null) {
+                userz++;
+            }
+        }
+        return userz;
+    }
+    
+    public int getUsersConnectedClients() {
+        int usersccz = 0;
+        Iterator<JIBUser> jui = JavaIrcBouncer.jibCore.getUsers();
+        while (jui.hasNext()) {
+            JIBUser tmpU = jui.next();
+            if (tmpU != null) {
+                usersccz += tmpU.clients.size();
+            }
+        }
+        return usersccz;
+    }
+    
     public long getUptime() {
         return System.currentTimeMillis() - JIBStatus.bootTime;
     }
