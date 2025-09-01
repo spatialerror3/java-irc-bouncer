@@ -48,6 +48,10 @@ public class JIBSocket {
     //
     Exception e = null;
 
+    /**
+     *
+     * @param s
+     */
     public JIBSocket(Socket s) {
         JIBSocket.SOCKETDEBUGGING = (JavaIrcBouncer.jibConfig.getValue("SOCKETDEBUGGING") != null ? true : false);
         this.s = s;
@@ -97,10 +101,20 @@ public class JIBSocket {
         }
     }
 
+    /**
+     *
+     * @param l
+     * @return
+     */
     public JIBSocket writeLineNoEOL(String l) {
         return writeLine(JIBStringUtil.remEOL2(l) + "\r\n");
     }
 
+    /**
+     *
+     * @param l
+     * @return
+     */
     public JIBSocket writeLine(String l) {
         if (getError() != null) {
             return null;
@@ -131,6 +145,10 @@ public class JIBSocket {
         return this;
     }
 
+    /**
+     *
+     * @return
+     */
     public String readLine() {
         String l = null;
         try {
@@ -161,10 +179,18 @@ public class JIBSocket {
         return l;
     }
 
+    /**
+     *
+     * @return
+     */
     public Exception getError() {
         return e;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean connected() {
         if (e != null) {
             return false;
