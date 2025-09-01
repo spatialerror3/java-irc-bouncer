@@ -74,6 +74,7 @@ public class JIBHTTPSServer extends JIBWebBase {
         //sessionHandler.setServer(server);
         //server.addBean(sessionHandler, true);
         
+        //addSecurityHandler();
         addHandlers();
         try {
             server.start();
