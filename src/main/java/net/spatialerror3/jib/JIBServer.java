@@ -76,7 +76,11 @@ public class JIBServer implements Runnable {
             tc.sendLine(l);
         }
     }
-
+    
+    public void tidy() {
+        cleanErrorClients();
+    }
+    
     public void run() {
         Socket cs = null;
         JIBHandleClient nc = null;
