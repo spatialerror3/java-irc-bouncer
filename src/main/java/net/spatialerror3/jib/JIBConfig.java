@@ -20,6 +20,14 @@ package net.spatialerror3.jib;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -28,13 +36,31 @@ import java.util.Hashtable;
 public class JIBConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger log = LogManager.getLogger(JIBConfig.class);
     private HashMap<String, String> kvStore = null;
 
     /**
-     *
+     * constructor
      */
     public JIBConfig() {
         kvStore = new HashMap<String, String>();
+    }
+    
+    /**
+     *
+     * @return available options
+     */
+    private Options getOptions() {
+        Options options = null;
+        options = new Options();
+
+        Option help = new Option("help", "print help");
+        Option server = Option.builder().argName("server").hasArg().desc("specify irc server for admin user").build();
+
+        options.addOption(help);
+        options.addOption(server);
+
+        return options;
     }
 
     /**
@@ -42,9 +68,27 @@ public class JIBConfig implements Serializable {
      * @param args
      */
     public void parseArgs(String[] args) {
+        CommandLineParser parser = new DefaultParser();
+        Options options = null;
+        CommandLine line = null;
+
+        options = getOptions();
+
+        try {
+            line = parser.parse(options, args);
+        } catch (ParseException exp) {
+            log.error("Parsing failed.  Reason: " + exp.getMessage());
+        }
+        if (line != null) {
+            if (line.hasOption("server")) {
+                setValue("Server", line.getOptionValue("server"));
+            }
+        }
+        /*
         if (args.length > 0) {
             setValue("Server", args[0]);
         }
+         */
     }
 
     /**
