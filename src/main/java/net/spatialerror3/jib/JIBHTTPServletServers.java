@@ -42,6 +42,7 @@ public class JIBHTTPServletServers extends JIBHTTPServletBase {
         var session = req.getSession(true);
         String path = req.getServletPath();
         log.debug(this + " " + path);
+        JIBUser u = getJIBUser(req, resp);
 
         login(req, resp);
         header(req, resp);
@@ -63,24 +64,26 @@ public class JIBHTTPServletServers extends JIBHTTPServletBase {
             String channels = req.getParameter("channels");
 
             PrintWriter out = resp.getWriter();
-            out.println("<form action='/servers' method=POST><br>");
-            out.println("server=<input type=text name='server' /><br>");
-            out.println("port=<input type=text name='port' /><br>");
-            out.println("ssl=<input type=checkbox name='ssl' /><br>");
-            out.println("ipv6=<input type=checkbox name='ipv6' /><br>");
-            out.println("clientbind=<input type=text name='clientbind' /><br>");
-            out.println("serverpass=<input type=password name='serverpass' /><br>");
-            out.println("nick=<input type=text name='uinick' /><br>");
-            out.println("user=<input type=text name='uiuser' /><br>");
-            out.println("realname=<input type=text name='uirealname' /><br>");
-            out.println("nickservuser=<input type=text name='nickservuser' /><br>");
-            out.println("nickservpass=<input type=password name='nickservpass' /><br>");
-            out.println("channels=<input type=text name='channels' /><br>");
-            out.println("<input type=hidden name='whattodo' value='addserver' /><br>");
-            out.println("<input type=submit /></form>");
+            if (u != null) {
+                out.println("<form action='/servers' method=POST><br>");
+                out.println("server=<input type=text name='server' /><br>");
+                out.println("port=<input type=text name='port' /><br>");
+                out.println("ssl=<input type=checkbox name='ssl' /><br>");
+                out.println("ipv6=<input type=checkbox name='ipv6' /><br>");
+                out.println("clientbind=<input type=text name='clientbind' /><br>");
+                out.println("serverpass=<input type=password name='serverpass' /><br>");
+                out.println("nick=<input type=text name='uinick' /><br>");
+                out.println("user=<input type=text name='uiuser' /><br>");
+                out.println("realname=<input type=text name='uirealname' /><br>");
+                out.println("nickservuser=<input type=text name='nickservuser' /><br>");
+                out.println("nickservpass=<input type=password name='nickservpass' /><br>");
+                out.println("channels=<input type=text name='channels' /><br>");
+                out.println("<input type=hidden name='whattodo' value='addserver' /><br>");
+                out.println("<input type=submit /></form>");
+            }
             if (session.getAttribute("IDENTIFIEDAS") != null) {
                 UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
-                JIBUser u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
+                u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
                 if (u != null) {
                     if (req.getParameter("whattodo") != null && req.getParameter("whattodo").equals("addserver")) {
                         JIBUserInfo ui = new JIBUserInfo();
