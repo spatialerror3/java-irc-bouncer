@@ -430,15 +430,20 @@ public class JIBDBUtil {
     }
 
     public void addChannel(JIBUser u, String Channel) {
+        addChannel(u, null, Channel);
+    }
+
+    public void addChannel(JIBUser u, JIBIRCServer s, String Channel) {
         if (containsChannel(u, Channel) != 0) {
             return;
         }
-        String sql = "INSERT INTO channels (channel,u) VALUES(?,?);";
+        String sql = "INSERT INTO channels (channel,u,s) VALUES(?,?,?);";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
             ps2.setString(1, Channel);
             ps2.setString(2, u.getUUID().toString());
+            ps2.setString(3, s.getUUID().toString());
             ps2.execute();
             getDatabase().commit();
         } catch (SQLException ex) {
@@ -447,6 +452,10 @@ public class JIBDBUtil {
     }
 
     public void addChannels(JIBUser u, String Channels) {
+        addChannels(u, null, Channels);
+    }
+
+    public void addChannels(JIBUser u, JIBIRCServer s, String Channels) {
         String[] Channel = Channels.split(",");
         for (int j = 0; j < Channel.length; j++) {
             addChannel(u, Channel[j]);
