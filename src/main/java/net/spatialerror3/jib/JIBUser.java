@@ -217,6 +217,9 @@ public class JIBUser implements Serializable {
      * @param ircServer
      */
     public void addIrcServer(JIBIRCServer ircServer) {
+        if (getIrcServer(ircServer) != null) {
+            return;
+        }
         ircServers.add(ircServer);
         JavaIrcBouncer.jibDbUtil.addServer(this, ircServer);
     }
@@ -228,6 +231,26 @@ public class JIBUser implements Serializable {
     public void removeIrcServer(JIBIRCServer ircServer) {
         ircServers.remove(ircServer);
         JavaIrcBouncer.jibDbUtil.removeServer(this, ircServer);
+    }
+
+    public JIBIRCServer getIrcServer(JIBIRCServer ircServer) {
+        JIBIRCServer ret = null;
+
+        List<JIBIRCServer> isl1 = java.util.Collections.synchronizedList(getIrcServers());
+        synchronized (isl1) {
+            Iterator<JIBIRCServer> isl1it1 = isl1.iterator();
+            while (isl1it1.hasNext()) {
+                JIBIRCServer tmpServ = isl1it1.next();
+                if (tmpServ.getUUID().equals(ircServer.getUUID())) {
+                    ret = tmpServ;
+                }
+                if (tmpServ.getServer().equals(ircServer.getServer()) && tmpServ.getPortAsString().equals(ircServer.getPortAsString())) {
+                    ret = tmpServ;
+                }
+            }
+        }
+
+        return ret;
     }
 
     /**
