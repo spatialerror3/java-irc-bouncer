@@ -41,6 +41,7 @@ public class JIBDBUtil {
     private String dbFile = null;
     private Connection conn = null;
     private Server server = null;
+    private long dbLoadedUsers = 0L;
     
     public JIBDBUtil(String dbFile) {
         log.debug("JIBDBUtil() this=" + this);
@@ -182,7 +183,12 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
+        this.dbLoadedUsers = loadedUsers;
         return loadedUsers;
+    }
+    
+    public long getDbLoadedUsers() {
+        return this.dbLoadedUsers;
     }
     
     public void addUser(JIBUser u) {
