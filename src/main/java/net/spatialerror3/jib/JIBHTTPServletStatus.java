@@ -53,6 +53,7 @@ public class JIBHTTPServletStatus extends JIBHTTPServletBase {
                 out.println("<br>upTime=" + (JavaIrcBouncer.jibStatus.getUptime() / 1000L));
                 out.println("<br>userCount2=" + JavaIrcBouncer.jibStatus.getUsers());
                 out.println("<br>usersConnectedClientsCount=" + JavaIrcBouncer.jibStatus.getUsersConnectedClients());
+                out.println("<br>dbLoadedUsers=" + JavaIrcBouncer.jibStatus.getDbLoadedUsers());
             }
         } catch (Exception e) {
             log.error((String) null, e);
