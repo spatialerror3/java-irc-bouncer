@@ -81,6 +81,26 @@ public class JIBCore {
         return u;
     }
 
+    public JIBUser loadUser(JIBUser u, String userName, boolean admin) {
+        if (getUser(userName) != null) {
+            return getUser(userName);
+        }
+        if (getUser(u.getUserName()) != null) {
+            return getUser(u.getUserName());
+        }
+        userCnt++;
+        long newUserId = JavaIrcBouncer.jibDbUtil.getUsersMaxUserId();
+        ++newUserId;
+        u.setUserId(newUserId);
+        u.setUserName(userName);
+        u.setAdmin(admin);
+        userMap.put(userName, u);
+        userMap2.put(u.getUUID(), u);
+        users.add(u);
+        
+        return u;
+    }
+
     /**
      *
      * @param u
@@ -117,7 +137,7 @@ public class JIBCore {
     public JIBUser getUser(UUID uuid) {
         return userMap2.get(uuid);
     }
-    
+
     /**
      *
      * @return
