@@ -82,6 +82,7 @@ public class JavaIrcBouncer {
         jibDbUtil = new JIBDBUtil(h2dbfile);
         jibDbUtil.initSchema();
         long loadedUsers = jibDbUtil.loadUsers();
+        jibDbUtil.loadServers(null);
         jibJython.loadConfig();
         JIBUser adminUser = null;
         if (loadedUsers < 1) {
