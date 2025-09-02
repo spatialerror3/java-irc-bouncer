@@ -176,8 +176,8 @@ public class JIBDBUtil {
                 
                 log.debug("Contains User=" + rs5.getString(3));
                 loadedUsers++;
-                log.info("tmpu=" + tmpu.toString());
-                log.info("opt=" + opt.toString());
+                //log.info("tmpu=" + tmpu.toString());
+                //log.info("opt=" + opt.toString());
             }
         } catch (SQLException ex) {
             log.error((String) null, ex);
