@@ -27,9 +27,11 @@ replay_pid*
 nbactions.xml
 .jython_cache
 config.jy
+init.jy
 /bridge/
 
 bridge
 
 server-deployment.yaml
 server-service.yaml
+/nbproject/
