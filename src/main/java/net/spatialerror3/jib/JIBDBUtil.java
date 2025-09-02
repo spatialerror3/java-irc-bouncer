@@ -81,7 +81,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-        sql = "CREATE TABLE IF NOT EXISTS channels (id int auto_increment primary key, channel varchar(256), u varchar(256));";
+        sql = "CREATE TABLE IF NOT EXISTS channels (id int auto_increment primary key, channel varchar(256), u varchar(256), s varchar(256));";
         try {
             PreparedStatement ps4 = getDatabase().prepareStatement(sql);
             ps4.execute();
@@ -280,6 +280,9 @@ public class JIBDBUtil {
     public void addServer(JIBUser u, JIBIRCServer serv) {
         String sql = "INSERT INTO servers (s,server,port,u,ssl,ipv6,clientbind,serverpass,nick,username,realname,nsacct,nspass,channels,opt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement ps2 = null;
+        if (hasServer(u, serv)) {
+            return;
+        }
         try {
             ps2 = getDatabase().prepareStatement(sql);
             ps2.setString(1, serv.getUUID().toString());
@@ -316,6 +319,35 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
+    }
+
+    public boolean hasServer(JIBUser u, JIBIRCServer serv) {
+        String sql = "SELECT u,s FROM servers WHERE u = ? AND s = ?";
+        PreparedStatement ps5 = null;
+        ResultSet rs5 = null;
+
+        try {
+            ps5 = getDatabase().prepareStatement(sql);
+            ps5.setString(1, u.getUUID().toString());
+            ps5.setString(2, serv.getUUID().toString());
+            rs5 = ps5.executeQuery();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+
+        try {
+            while (rs5 != null && rs5.next()) {
+                String useruuid = rs5.getString(1);
+                String servuuid = rs5.getString(2);
+                if (u.getUUID().toString().equals(useruuid) && serv.getUUID().toString().equals(servuuid)) {
+                    return true;
+                }
+            }
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+
+        return false;
     }
 
     public ArrayList<JIBIRCServer> getServers(JIBUser u) {
