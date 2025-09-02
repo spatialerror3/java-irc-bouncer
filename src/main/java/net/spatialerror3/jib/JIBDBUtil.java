@@ -36,13 +36,13 @@ import org.h2.tools.Server;
  * @author spatialerror3
  */
 public class JIBDBUtil {
-    
+
     private static final Logger log = LogManager.getLogger(JIBDBUtil.class);
     private String dbFile = null;
     private Connection conn = null;
     private Server server = null;
     private long dbLoadedUsers = 0L;
-    
+
     public JIBDBUtil(String dbFile) {
         log.debug("JIBDBUtil() this=" + this);
         this.dbFile = dbFile;
@@ -57,11 +57,11 @@ public class JIBDBUtil {
         }
         log.debug("JIBDBUtil() this=" + this + " conn=" + this.conn);
     }
-    
+
     public void shutdown() {
-        
+
     }
-    
+
     public Connection getDatabase() {
         if (conn == null) {
             try {
@@ -72,7 +72,7 @@ public class JIBDBUtil {
         }
         return conn;
     }
-    
+
     public void initSchema() {
         String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, ssl boolean, ipv6 boolean, clientbind varchar(256), serverpass varchar(256), nick varchar(256), username varchar(256), realname varchar(256), nsacct varchar(256), nspass varchar(256), channels varchar(512), u varchar(256), s varchar(256), opt object(10000000));";
         try {
@@ -115,10 +115,10 @@ public class JIBDBUtil {
             log.error((String) null, e);
         }
     }
-    
+
     public int cntResultSet(ResultSet rs) {
         int r = -1;
-        
+
         try {
             rs.last();
             r = rs.getRow();
@@ -127,10 +127,10 @@ public class JIBDBUtil {
             log.error((String) null, e);
             r = 0;
         }
-        
+
         return r;
     }
-    
+
     public long getUsersMaxUserId() {
         long userIdMax = -1;
         String sql = "SELECT userId FROM users;";
@@ -154,7 +154,7 @@ public class JIBDBUtil {
         log.trace("userIdMax=" + userIdMax);
         return userIdMax;
     }
-    
+
     public long loadUsers() {
         long loadedUsers = 0L;
         String sql = "SELECT userId,_uuid,username,authtoken,admin,opt FROM users;";
@@ -174,7 +174,7 @@ public class JIBDBUtil {
                 tmpu.setUserId(rs5.getLong(1));
                 tmpu.setUUID((UUID) rs5.getObject("_uuid"));
                 tmpu.setAuthToken(rs5.getString(4));
-                
+
                 log.debug("Contains User=" + rs5.getString(3));
                 loadedUsers++;
                 //log.info("tmpu=" + tmpu.toString());
@@ -186,11 +186,11 @@ public class JIBDBUtil {
         this.dbLoadedUsers = loadedUsers;
         return loadedUsers;
     }
-    
+
     public long getDbLoadedUsers() {
         return this.dbLoadedUsers;
     }
-    
+
     public void addUser(JIBUser u) {
         String sql = "INSERT INTO users (userId,_uuid,username,authtoken,admin,opt) VALUES(?,?,?,?,?,?);";
         PreparedStatement ps2 = null;
@@ -208,7 +208,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public void addUserAuthToken(JIBUser u) {
         String sql = "UPDATE users SET authtoken = ? WHERE _uuid = ?";
         PreparedStatement ps2 = null;
@@ -222,7 +222,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public void removeUser(JIBUser u) {
         String sql = "DELETE FROM users WHERE _uuid = ?;";
         PreparedStatement ps2 = null;
@@ -235,7 +235,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public void refreshUser(JIBUser u) {
         String sql = "UPDATE users SET opt = ? WHERE _uuid = ?;";
         PreparedStatement ps2 = null;
@@ -249,7 +249,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public void addClientAuth(JIBUser u, String authToken) {
         String sql = "INSERT INTO clientauth (username,password) VALUES(?,?);";
         PreparedStatement ps2 = null;
@@ -262,7 +262,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public void addServer(JIBUser u, String Server, int Port) {
         String sql = "INSERT INTO servers (server,port,u,ssl,ipv6) VALUES(?,?,?,?,?);";
         PreparedStatement ps2 = null;
@@ -276,7 +276,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public void addServer(JIBUser u, JIBIRCServer serv) {
         String sql = "INSERT INTO servers (s,server,port,u,ssl,ipv6,clientbind,serverpass,nick,username,realname,nsacct,nspass,channels,opt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement ps2 = null;
@@ -302,7 +302,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public void removeServer(JIBUser u, JIBIRCServer serv) {
         String sql = "DELETE FROM servers WHERE server = ? AND port = ? AND u = ? AND s = ?;";
         PreparedStatement ps2 = null;
@@ -317,14 +317,14 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public ArrayList<JIBIRCServer> getServers(JIBUser u) {
         String sql = "SELECT u, s, server, port, ssl, ipv6,clientbind,serverpass,nick,username,realname,nsacct,nspass,channels, opt FROM servers WHERE u = ?;";
         ArrayList<JIBIRCServer> ret = null;
         ret = new ArrayList<JIBIRCServer>();
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
-        
+
         try {
             ps5 = getDatabase().prepareStatement(sql);
             ps5.setString(1, u.getUUID().toString());
@@ -332,7 +332,7 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-        
+
         try {
             //if (rs5 != null) {
             //    rs5.first();
@@ -353,17 +353,17 @@ public class JIBDBUtil {
                 tmp1.setNickServUser(rs5.getString(12));
                 tmp1.setNickServPass(rs5.getString(13));
                 tmp1.addChannels(rs5.getString(14));
-                
+
                 log.debug("Contains Server=" + tmp1 + " tmp1.getServer()=" + tmp1.getServer() + " tmp1.getPort()=" + tmp1.getPort());
                 ret.add(tmp1);
             }
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
-        
+
         return ret;
     }
-    
+
     public void loadServers(JIBUser u) {
         JIBUser u2 = null;
         ArrayList<JIBIRCServer> sl2 = null;
@@ -396,7 +396,7 @@ public class JIBDBUtil {
             }
         }
     }
-    
+
     public void addChannel(JIBUser u, String Channel) {
         if (containsChannel(u, Channel) != 0) {
             return;
@@ -413,7 +413,14 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
+    public void addChannels(JIBUser u, String Channels) {
+        String[] Channel = Channels.split(",");
+        for (int j = 0; j < Channel.length; j++) {
+            addChannel(u, Channel[j]);
+        }
+    }
+
     public void removeChannel(JIBUser u, String Channel) {
         if (containsChannel(u, Channel) < 1) {
             return;
@@ -429,7 +436,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public String[] getChannels(JIBUser u) {
         Vector<String> cv = new Vector<String>();
         String[] channels = new String[100];
@@ -457,7 +464,7 @@ public class JIBDBUtil {
         channels = (String[]) cv.toArray(channels);
         return channels;
     }
-    
+
     public long containsChannel(JIBUser u, String chan) {
         long count = -1;
         PreparedStatement ps5 = null;
@@ -476,7 +483,7 @@ public class JIBDBUtil {
         }
         return count;
     }
-    
+
     public void logUserTargetMessage(JIBUser u, JIBIRCServer s, String logUser, String logTarget, String logMessage) {
         String sql = "INSERT INTO log1 (loguser,logtarget,logmessage,u,s) VALUES(?,?,?,?,?);";
         PreparedStatement ps2 = null;
@@ -493,7 +500,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public ArrayList<String> replayLog(JIBUser u) {
         String sql = "SELECT loguser,logtarget,logmessage FROM log1 WHERE u = ?;";
         ArrayList<String> replay = new ArrayList<String>();
@@ -531,7 +538,7 @@ public class JIBDBUtil {
         }
         return replay;
     }
-    
+
     public void clearLog(JIBUser u) {
         if (u != null) {
             String sql = "DELETE FROM log1 WHERE u = ?;";
@@ -556,7 +563,7 @@ public class JIBDBUtil {
             }
         }
     }
-    
+
     public void clearLogOlderThan2Days() {
         String sql = "DELETE FROM log1 WHERE NOW() - ts1 > INTERVAL '2' DAY;";
         PreparedStatement ps2 = null;
@@ -568,7 +575,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
     }
-    
+
     public boolean checkUserPass(String User, String Pass) {
         String sql = "SELECT COUNT(*) FROM clientauth WHERE username = ? AND password = ?;";
         PreparedStatement ps9 = null;
