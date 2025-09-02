@@ -120,6 +120,10 @@ public class JIBIRCServer implements Serializable {
     public boolean getSsl() {
         return this.ssl;
     }
+    
+    public String getPassword() {
+        return this.password;
+    }
 
     /**
      *
