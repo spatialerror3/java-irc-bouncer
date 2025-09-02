@@ -81,30 +81,32 @@ public class JavaIrcBouncer {
         }
         jibDbUtil = new JIBDBUtil(h2dbfile);
         jibDbUtil.initSchema();
-        jibDbUtil.loadUsers();
+        long loadedUsers = jibDbUtil.loadUsers();
         jibJython.loadConfig();
         JIBUser adminUser = null;
-        if (jibConfig.getValue("AUTHPASS") == null) {
-            jibConfig.setValue("AUTHPASS", JIBStringUtil.randHexString());
-            log.info("Setting AUTHPASS for admin user to: " + jibConfig.getValue("AUTHPASS"));
-        }
-        if (jibConfig.getValue("AUTHUSER") != null) {
-            (adminUser = jibCore.createUser(jibConfig.getValue("AUTHUSER"), true)).setAuthToken(jibConfig.getValue("AUTHPASS"));
-        } else {
-            (adminUser = jibCore.createUser("admin", true)).setAuthToken(jibConfig.getValue("AUTHPASS"));
-        }
-        if (adminUser != null) {
-            if (jibConfig.getValue("Server") != null && jibConfig.getValue("Port") != null) {
-                JIBIRCServer tmpServ = new JIBIRCServer();
-                tmpServ.setServer(jibConfig.getValue("Server"));
-                tmpServ.setPort(jibConfig.getValue("Port"));
-                tmpServ.setNick(jibConfig.getValue("Nick"));
-                tmpServ.setUser(jibConfig.getValue("User"));
-                tmpServ.setRealname(jibConfig.getValue("Realname"));
-                tmpServ.setNickServUser(jibConfig.getValue("NICKSERVUSER"));
-                tmpServ.setNickServPass(jibConfig.getValue("NICKSERVPASS"));
+        if (loadedUsers < 1) {
+            if (jibConfig.getValue("AUTHPASS") == null) {
+                jibConfig.setValue("AUTHPASS", JIBStringUtil.randHexString());
+                log.info("Setting AUTHPASS for admin user to: " + jibConfig.getValue("AUTHPASS"));
+            }
+            if (jibConfig.getValue("AUTHUSER") != null) {
+                (adminUser = jibCore.createUser(jibConfig.getValue("AUTHUSER"), true)).setAuthToken(jibConfig.getValue("AUTHPASS"));
+            } else {
+                (adminUser = jibCore.createUser("admin", true)).setAuthToken(jibConfig.getValue("AUTHPASS"));
+            }
+            if (adminUser != null) {
+                if (jibConfig.getValue("Server") != null && jibConfig.getValue("Port") != null) {
+                    JIBIRCServer tmpServ = new JIBIRCServer();
+                    tmpServ.setServer(jibConfig.getValue("Server"));
+                    tmpServ.setPort(jibConfig.getValue("Port"));
+                    tmpServ.setNick(jibConfig.getValue("Nick"));
+                    tmpServ.setUser(jibConfig.getValue("User"));
+                    tmpServ.setRealname(jibConfig.getValue("Realname"));
+                    tmpServ.setNickServUser(jibConfig.getValue("NICKSERVUSER"));
+                    tmpServ.setNickServPass(jibConfig.getValue("NICKSERVPASS"));
 
-                adminUser.addIrcServer(tmpServ);
+                    adminUser.addIrcServer(tmpServ);
+                }
             }
         }
         JIBServer jib1 = null;
