@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author spatialerror3
  */
-public class JIBIRCLog {
+public class JIBIRCLog implements JIBIRCLineProcessing {
     private static final Logger log = LogManager.getLogger(JIBIRCLog.class);
     private JIBUser u = null;
     
