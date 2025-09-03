@@ -140,6 +140,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         ircLog = new JIBIRCLog(this.u);
         //FIXME: 
         //connect(null);
+        addAdditionalLineProcessor(new JIBIRCCTCP());
     }
 
     public String getNick() {
