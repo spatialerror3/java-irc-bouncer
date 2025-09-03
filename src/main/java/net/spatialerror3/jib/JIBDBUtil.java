@@ -270,7 +270,7 @@ public class JIBDBUtil {
     }
 
     public void updateClientAuth(JIBUser u, String authToken) {
-        String sql = "UPDATE clientauth SET password = ? WHERE username = ?";
+        String sql = "UPDATE clientauth SET password = ? WHERE username = ?;";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
