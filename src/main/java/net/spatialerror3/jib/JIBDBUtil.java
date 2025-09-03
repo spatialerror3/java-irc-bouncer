@@ -434,7 +434,7 @@ public class JIBDBUtil {
     }
 
     public void addChannel(JIBUser u, JIBIRCServer s, String Channel) {
-        if (containsChannel(u, Channel) != 0) {
+        if (containsChannel(u, s, Channel) != 0) {
             return;
         }
         String sql = "INSERT INTO channels (channel,u,s) VALUES(?,?,?);";
@@ -462,16 +462,17 @@ public class JIBDBUtil {
         }
     }
 
-    public void removeChannel(JIBUser u, String Channel) {
-        if (containsChannel(u, Channel) < 1) {
+    public void removeChannel(JIBUser u, JIBIRCServer s, String Channel) {
+        if (containsChannel(u, s, Channel) < 1) {
             return;
         }
-        String sql = "DELETE FROM channels WHERE channel = ? AND u = ?;";
+        String sql = "DELETE FROM channels WHERE channel = ? AND u = ? AND s = ?;";
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
             ps2.setString(1, Channel);
             ps2.setString(2, u.getUUID().toString());
+            ps2.setString(3, s.getUUID().toString());
             ps2.execute();
         } catch (SQLException ex) {
             log.error((String) null, ex);
@@ -506,15 +507,16 @@ public class JIBDBUtil {
         return channels;
     }
 
-    public long containsChannel(JIBUser u, String chan) {
+    public long containsChannel(JIBUser u, JIBIRCServer s, String chan) {
         long count = -1;
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
-        String sql = "SELECT channel FROM channels WHERE u = ? AND channel = ?;";
+        String sql = "SELECT channel FROM channels WHERE u = ? AND channel = ? AND s = ?;";
         try {
             ps5 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps5.setString(1, u.getUUID().toString());
             ps5.setString(2, chan);
+            ps5.setString(3, s.getUUID().toString());
             rs5 = ps5.executeQuery();
         } catch (SQLException ex) {
             log.error((String) null, ex);
