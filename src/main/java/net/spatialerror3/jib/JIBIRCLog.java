@@ -32,7 +32,7 @@ public class JIBIRCLog implements JIBIRCLineProcessing {
         this.u=u;
     }
     
-    public void processLine(String l) {
+    public void processLine(JIBUser _u, JIBIRC _i, JIBIRCServer _s, String l) {
         String[] sp7 = l.split(" ",3);
         if(sp7.length > 2 && sp7[1].equals("PRIVMSG")) {
             String[] sp8 = l.split(" ",4);
