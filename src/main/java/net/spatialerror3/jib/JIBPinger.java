@@ -21,7 +21,7 @@ package net.spatialerror3.jib;
  *
  * @author spatialerror3
  */
-public class JIBPinger implements Runnable {
+public class JIBPinger implements Runnable, JIBIRCLineProcessing {
 
     JIBSocket s = null;
     private String pingStr = null;
