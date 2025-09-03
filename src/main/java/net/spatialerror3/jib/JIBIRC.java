@@ -372,7 +372,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         sock.writeLine(l);
     }
 
-    public void processLine(String l) {
+    public void processLine(JIBUser _u, JIBIRC _i, JIBIRCServer _s, String l) {
         if (DEBUGGING) {
             log.debug(this + " l=" + l);
         }
@@ -423,7 +423,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             }
         }
         if (ircLog != null) {
-            ircLog.processLine(l);
+            ircLog.processLine(_u, _i, _s, l);
         }
         u.writeAllClients(l);
     }
@@ -509,12 +509,12 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
                 l = sock.readLine();
                 if (l != null) {
                     try {
-                        ping1.processLine(l);
+                        ping1.processLine(this.u, this, getConnectedTo(), l);
                     } catch (Exception ex1) {
                         log.error("ping1.processLine(...)", ex1);
                     }
                     try {
-                        processLine(l);
+                        processLine(this.u, this, getConnectedTo(), l);
                     } catch (Exception ex2) {
                         log.error("processLine(...)", ex2);
                     }
@@ -524,7 +524,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
                         while (lpl1it1.hasNext()) {
                             JIBIRCLineProcessing lp1 = lpl1it1.next();
                             try {
-                                lp1.processLine(l);
+                                lp1.processLine(this.u, this, getConnectedTo(), l);
                             } catch (Exception ex1) {
                                 log.error("lp1(lp1=" + lp1 + ").processLine(...)", ex1);
                             }
