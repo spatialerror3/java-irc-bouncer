@@ -34,7 +34,7 @@ public class JIBPinger implements Runnable, JIBIRCLineProcessing {
         pingStr = "LAG" + System.currentTimeMillis();
     }
 
-    public void processLine(String l) {
+    public void processLine(JIBUser u, JIBIRC i, JIBIRCServer serv, String l) {
         if (l == null) {
             return;
         }
