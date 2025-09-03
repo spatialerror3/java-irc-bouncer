@@ -474,6 +474,9 @@ public class JIBDBUtil {
         if (containsChannel(u, s, Channel) != 0) {
             return;
         }
+        if (Channel.length() < 1) {
+            return;
+        }
         String sql = "INSERT INTO channels (channel,u,s) VALUES(?,?,?);";
         PreparedStatement ps2 = null;
         try {
