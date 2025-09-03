@@ -19,6 +19,7 @@ package net.spatialerror3.jib;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,6 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import javax.net.ssl.SSLHandshakeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -63,6 +65,20 @@ public class JIBSocket {
         }
         try {
             IS = s.getInputStream();
+        } catch (SSLHandshakeException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            if (JIBSocket.SOCKETDEBUGGING) {
+                log.error((String) null, ex);
+            }
+        } catch (EOFException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            if (JIBSocket.SOCKETDEBUGGING) {
+                log.error((String) null, ex);
+            }
         } catch (SocketException ex) {
             if (e == null) {
                 e = ex;
@@ -82,6 +98,20 @@ public class JIBSocket {
         }
         try {
             OS = s.getOutputStream();
+        } catch (SSLHandshakeException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            if (JIBSocket.SOCKETDEBUGGING) {
+                log.error((String) null, ex);
+            }
+        } catch (EOFException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            if (JIBSocket.SOCKETDEBUGGING) {
+                log.error((String) null, ex);
+            }
         } catch (SocketException ex) {
             if (e == null) {
                 e = ex;
@@ -124,6 +154,22 @@ public class JIBSocket {
             BW.flush();
             OSW.flush();
             OS.flush();
+        } catch (SSLHandshakeException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            if (JIBSocket.SOCKETDEBUGGING) {
+                log.error((String) null, ex);
+            }
+            return null;
+        } catch (EOFException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            if (JIBSocket.SOCKETDEBUGGING) {
+                log.error((String) null, ex);
+            }
+            return null;
         } catch (SocketException ex) {
             if (e == null) {
                 e = ex;
@@ -160,6 +206,22 @@ public class JIBSocket {
                     e = new NullPointerException();
                 }
             }
+        } catch (SSLHandshakeException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            if (JIBSocket.SOCKETDEBUGGING) {
+                log.error((String) null, ex);
+            }
+            return null;
+        } catch (EOFException ex) {
+            if (e == null) {
+                e = ex;
+            }
+            if (JIBSocket.SOCKETDEBUGGING) {
+                log.error((String) null, ex);
+            }
+            return null;
         } catch (SocketException ex) {
             if (e == null) {
                 e = ex;
