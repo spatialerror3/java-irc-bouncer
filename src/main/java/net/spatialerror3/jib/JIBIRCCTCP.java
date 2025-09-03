@@ -42,7 +42,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
     }
 
     @Override
-    public void processLine(String l) {
+    public void processLine(JIBUser u, JIBIRC i, JIBIRCServer s, String l) {
         String[] sp1 = l.split(" ", 3);
         if (sp1[1].equals("PRIVMSG") || sp1[1].equals("NOTICE")) {
             JIBUserInfo ui1 = JIBUserInfo.parseNUH(sp1[0]);
