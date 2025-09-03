@@ -247,7 +247,7 @@ public class JIBHandleClient implements Runnable {
                 String[] channels = l.substring(5).split(",");
                 for (int j = 0; j < channels.length; j++) {
                     getSingleJIBIRC().simulateJoin(channels[j]);
-                    JavaIrcBouncer.jibDbUtil.addChannel(authed, channels[j]);
+                    JavaIrcBouncer.jibDbUtil.addChannel(authed, authed.getJibIRC().getConnectedTo(), channels[j]);
                 }
             } else {
                 passthrough = false;
@@ -281,7 +281,7 @@ public class JIBHandleClient implements Runnable {
             String[] sp4 = l.split(" ", 3);
             JIBUserInfo tmpWho = new JIBUserInfo();
             tmpWho.nick = trackNick1();
-            JavaIrcBouncer.jibDbUtil.removeChannel(authed, sp4[1]);
+            JavaIrcBouncer.jibDbUtil.removeChannel(authed, authed.getJibIRC().getConnectedTo(), sp4[1]);
             getSingleJIBIRC().simulatePART(this, sp4[1], tmpWho);
         }
         if (l.startsWith("RAW")) {
