@@ -250,9 +250,31 @@ public class JIBDBUtil {
         }
     }
 
+    public boolean containsClientAuth(JIBUser u) {
+        String sql = "SELECT username FROM clientauth WHERE username = ?;";
+        PreparedStatement ps2 = null;
+        ResultSet rs2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, u.getUserName());
+            rs2 = ps2.executeQuery();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        if (rs2 != null) {
+            if (cntResultSet(rs2) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addClientAuth(JIBUser u, String authToken) {
         String sql = "INSERT INTO clientauth (username,password) VALUES(?,?);";
         PreparedStatement ps2 = null;
+        if (containsClientAuth(u)) {
+            return;
+        }
         try {
             ps2 = getDatabase().prepareStatement(sql);
             ps2.setString(1, u.getUserName());
@@ -433,8 +455,7 @@ public class JIBDBUtil {
     public void addChannel(JIBUser u, String Channel) {
         addChannel(u, null, Channel);
     }
-    */
-
+     */
     public void addChannel(JIBUser u, JIBIRCServer s, String Channel) {
         if (containsChannel(u, s, Channel) != 0) {
             return;
@@ -457,8 +478,7 @@ public class JIBDBUtil {
     public void addChannels(JIBUser u, String Channels) {
         addChannels(u, null, Channels);
     }
-    */
-
+     */
     public void addChannels(JIBUser u, JIBIRCServer s, String Channels) {
         String[] Channel = Channels.split(",");
         for (int j = 0; j < Channel.length; j++) {
