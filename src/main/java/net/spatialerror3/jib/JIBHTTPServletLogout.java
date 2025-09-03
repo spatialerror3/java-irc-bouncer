@@ -39,18 +39,24 @@ public class JIBHTTPServletLogout extends JIBHTTPServletBase {
         var session = req.getSession(true);
         String path = req.getServletPath();
         log.debug(this + " " + path);
+        JIBUser u = getJIBUser(req, resp);
 
-        header(req,resp);
         try {
-            PrintWriter out = resp.getWriter();
             if (session.getAttribute("IDENTIFIEDAS") != null) {
                 session.invalidate();
             }
-            out.println("INVALIDATED SESSION");
         } catch (Exception e) {
             log.error((String) null, e);
         }
-        footer(req,resp);
+        header(req, resp);
+        try {
+            PrintWriter out = resp.getWriter();
+
+            out.println("<br>INVALIDATED SESSION");
+        } catch (Exception e) {
+            log.error((String) null, e);
+        }
+        footer(req, resp);
         resp.getWriter().close();
     }
 
@@ -79,4 +85,3 @@ public class JIBHTTPServletLogout extends JIBHTTPServletBase {
         this.doPost(req, resp);
     }
 }
-
