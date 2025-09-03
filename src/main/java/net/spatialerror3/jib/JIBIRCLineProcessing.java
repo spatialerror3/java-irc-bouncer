@@ -23,5 +23,5 @@ package net.spatialerror3.jib;
  */
 public interface JIBIRCLineProcessing {
 
-    public void processLine(JIBUser u, JIBIRC irc, JIBIRCServer s, String l);
+    public void processLine(JIBUser _u, JIBIRC _i, JIBIRCServer _s, String l);
 }
