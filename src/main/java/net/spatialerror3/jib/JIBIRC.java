@@ -35,7 +35,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author spatialerror3
  */
-public class JIBIRC implements Runnable {
+public class JIBIRC implements Runnable, JIBIRCLineProcessing {
 
     private static final Logger log = LogManager.getLogger(JIBIRC.class);
     private static boolean DEBUGGING = false;
