@@ -18,6 +18,8 @@
 package net.spatialerror3.jib;
 
 import java.io.File;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.python.util.PythonInterpreter;
 
 /**
@@ -25,7 +27,8 @@ import org.python.util.PythonInterpreter;
  * @author spatialerror3
  */
 public class JIBJython {
-
+    
+    private static final Logger log = LogManager.getLogger(JIBJython.class);
     public static PythonInterpreter interp = null;
 
     public JIBJython() {
