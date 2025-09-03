@@ -31,7 +31,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
     private String ctcpMsg(String msg) {
         String _ctcpMsg = null;
         if (msg.charAt(0) == '\001' && msg.charAt(msg.length() - 1) == '\001') {
-            _ctcpMsg = msg.substring(1, msg.length() - 2);
+            _ctcpMsg = msg.substring(1, msg.length() - 1);
             String[] _ctcpMsgSp1 = _ctcpMsg.split(" ", 2);
             log.info("Received CTCP " + _ctcpMsgSp1[0]);
             if (_ctcpMsgSp1[0].equals("ENTROPY")) {
