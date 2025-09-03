@@ -429,9 +429,11 @@ public class JIBDBUtil {
         }
     }
 
+    /*
     public void addChannel(JIBUser u, String Channel) {
         addChannel(u, null, Channel);
     }
+    */
 
     public void addChannel(JIBUser u, JIBIRCServer s, String Channel) {
         if (containsChannel(u, s, Channel) != 0) {
@@ -451,14 +453,16 @@ public class JIBDBUtil {
         }
     }
 
+    /*
     public void addChannels(JIBUser u, String Channels) {
         addChannels(u, null, Channels);
     }
+    */
 
     public void addChannels(JIBUser u, JIBIRCServer s, String Channels) {
         String[] Channel = Channels.split(",");
         for (int j = 0; j < Channel.length; j++) {
-            addChannel(u, Channel[j]);
+            addChannel(u, s, Channel[j]);
         }
     }
 
