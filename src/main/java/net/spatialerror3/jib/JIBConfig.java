@@ -66,7 +66,7 @@ public class JIBConfig implements Serializable {
         options.addOption("truststorekey", "truststorekey", true, "password of the pkcs12 truststore");
         options.addOption("keystore", "keystore", true, "keystore pkcs12 filename");
         options.addOption("keystorekey", "keystorekey", true, "password of the pkcs12 keystore");
-        
+
         return options;
     }
 
@@ -88,11 +88,15 @@ public class JIBConfig implements Serializable {
         }
         if (line != null) {
             if (line.hasOption("help")) {
-                log.info("-help             display help   ");
-                log.info("-server    [server]              ");
-                log.info("-port      [port]                ");
-                log.info("-adminuser [username]            ");
-                log.info("-adminpass [pw]                  ");
+                log.info("-help                                display help   ");
+                log.info("-server         [server]                            ");
+                log.info("-port           [port]                              ");
+                log.info("-adminuser      [username]                          ");
+                log.info("-adminpass      [pw]                                ");
+                log.info("-truststore     [pkcs12 file name]                  ");
+                log.info("-truststorekey  [pkcs12 file pw]                    ");
+                log.info("-keystore       [pkcs12 file name]                  ");
+                log.info("-keystorekey    [pkcs12 file pw]                    ");
                 System.exit(0);
             }
             if (line.hasOption("server")) {
@@ -106,6 +110,18 @@ public class JIBConfig implements Serializable {
             }
             if (line.hasOption("adminpass")) {
                 setValue("AUTHPASS", line.getOptionValue("adminpass"));
+            }
+            if (line.hasOption("truststore")) {
+                setValue("TRUSTSTORENAME", line.getOptionValue("truststore"));
+            }
+            if (line.hasOption("truststorekey")) {
+                setValue("TRUSTSTOREPASSWORD", line.getOptionValue("truststorekey"));
+            }
+            if (line.hasOption("keystore")) {
+                setValue("KEYSTORENAME", line.getOptionValue("keystore"));
+            }
+            if (line.hasOption("keystorekey")) {
+                setValue("KEYSTOREPASSWORD", line.getOptionValue("keystorekey"));
             }
         }
         /*
