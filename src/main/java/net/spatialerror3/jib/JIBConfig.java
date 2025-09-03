@@ -62,7 +62,11 @@ public class JIBConfig implements Serializable {
         options.addOption("port", "port", true, "specify irc server port for admin user");
         options.addOption("adminuser", "adminuser", true, "username for admin user");
         options.addOption("adminpass", "adminpass", true, "password for admin user");
-
+        options.addOption("truststore", "truststore", true, "truststore pkcs12 filename");
+        options.addOption("truststorekey", "truststorekey", true, "password of the pkcs12 truststore");
+        options.addOption("keystore", "keystore", true, "keystore pkcs12 filename");
+        options.addOption("keystorekey", "keystorekey", true, "password of the pkcs12 keystore");
+        
         return options;
     }
 
@@ -84,9 +88,11 @@ public class JIBConfig implements Serializable {
         }
         if (line != null) {
             if (line.hasOption("help")) {
-                log.info("-help             display help");
-                log.info("-server [server]              ");
-                log.info("-port   [port]                ");
+                log.info("-help             display help   ");
+                log.info("-server    [server]              ");
+                log.info("-port      [port]                ");
+                log.info("-adminuser [username]            ");
+                log.info("-adminpass [pw]                  ");
                 System.exit(0);
             }
             if (line.hasOption("server")) {
@@ -94,6 +100,12 @@ public class JIBConfig implements Serializable {
             }
             if (line.hasOption("port")) {
                 setValue("Port", line.getOptionValue("port"));
+            }
+            if (line.hasOption("adminuser")) {
+                setValue("AUTHUSER", line.getOptionValue("adminuser"));
+            }
+            if (line.hasOption("adminpass")) {
+                setValue("AUTHPASS", line.getOptionValue("adminpass"));
             }
         }
         /*
