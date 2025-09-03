@@ -222,7 +222,7 @@ public class JIBUser implements Serializable {
         }
         ircServers.add(ircServer);
         JavaIrcBouncer.jibDbUtil.addServer(this, ircServer);
-        JavaIrcBouncer.jibDbUtil.addChannels(this, ircServer.getChannels());
+        JavaIrcBouncer.jibDbUtil.addChannels(this, ircServer, ircServer.getChannels());
     }
 
     /**
