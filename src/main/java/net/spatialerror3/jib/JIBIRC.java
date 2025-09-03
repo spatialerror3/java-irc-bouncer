@@ -24,6 +24,10 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -76,6 +80,8 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
     private Exception connectError = null;
     //
     private boolean keepDisconnected = false;
+    //
+    private ArrayList<JIBIRCLineProcessing> additionalLineProcessors = null;
 
     public JIBIRC(JIBUser u, JIBIRCServer serv) {
         JIBIRC.DEBUGGING = JavaIrcBouncer.jibDebug.debug();
@@ -93,6 +99,13 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             serv = this.serv;
         } else {
             this.serv = serv;
+        }
+        this.additionalLineProcessors = new ArrayList<JIBIRCLineProcessing>();
+    }
+
+    public void addAdditionalLineProcessor(JIBIRCLineProcessing lp) {
+        if (!this.additionalLineProcessors.contains(lp)) {
+            this.additionalLineProcessors.add(lp);
         }
     }
 
@@ -503,6 +516,18 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
                         processLine(l);
                     } catch (Exception ex2) {
                         log.error("processLine(...)", ex2);
+                    }
+                    List<JIBIRCLineProcessing> lpl1 = Collections.synchronizedList(additionalLineProcessors);
+                    synchronized (lpl1) {
+                        Iterator<JIBIRCLineProcessing> lpl1it1 = lpl1.iterator();
+                        while (lpl1it1.hasNext()) {
+                            JIBIRCLineProcessing lp1 = lpl1it1.next();
+                            try {
+                                lp1.processLine(l);
+                            } catch (Exception ex1) {
+                                log.error("lp1(lp1=" + lp1 + ").processLine(...)", ex1);
+                            }
+                        }
                     }
                 } else {
                     connected = false;
