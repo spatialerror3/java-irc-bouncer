@@ -255,7 +255,7 @@ public class JIBDBUtil {
         PreparedStatement ps2 = null;
         ResultSet rs2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            ps2 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps2.setString(1, u.getUserName());
             rs2 = ps2.executeQuery();
         } catch (SQLException ex) {
