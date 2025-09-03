@@ -269,6 +269,20 @@ public class JIBDBUtil {
         return false;
     }
 
+    public void updateClientAuth(JIBUser u, String authToken) {
+        String sql = "UPDATE clientauth SET password = ? WHERE username = ?";
+        PreparedStatement ps2 = null;
+        try {
+            ps2 = getDatabase().prepareStatement(sql);
+            ps2.setString(1, u.getAuthToken());
+            ps2.setString(2, u.getUserName());
+            ps2.execute();
+            getDatabase().commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+    }
+
     public void addClientAuth(JIBUser u, String authToken) {
         String sql = "INSERT INTO clientauth (username,password) VALUES(?,?);";
         PreparedStatement ps2 = null;
