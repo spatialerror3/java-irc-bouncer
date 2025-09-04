@@ -53,7 +53,9 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
             if (ctcp != null) {
                 String[] ctcpsp1 = ctcp.split(" ", 2);
                 if (ctcpsp1.equals("ENTROPY")) {
-                    i.writeLine("PRIVMSG " + target + " :" + JIBStringUtil.randHexString() + "\r\n");
+                    if (!target.equals(i.getNick())) {
+                        i.writeLine("PRIVMSG " + target + " :" + JIBStringUtil.randHexString() + "\r\n");
+                    }
                 }
             }
         }
