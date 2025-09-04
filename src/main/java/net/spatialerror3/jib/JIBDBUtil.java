@@ -63,6 +63,13 @@ public class JIBDBUtil {
     }
 
     public Connection getDatabase() {
+        try {
+            Class.forName("org.h2.Driver");
+            Class.forName("org.postgresql.Driver");
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException cnfe1) {
+            log.fatal("Class not Found Database Driver", cnfe1);
+        }
         if (conn == null) {
             try {
                 conn = DriverManager.getConnection("jdbc:h2:" + this.dbFile, "sa", "");
