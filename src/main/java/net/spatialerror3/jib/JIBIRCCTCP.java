@@ -57,6 +57,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
                         String entropyToSend = JIBStringUtil.randHexString();
                         log.info("SEND ENTROPY (" + target + ") ENTROPY=" + entropyToSend);
                         i.writeLine("PRIVMSG " + target + " :\001ENTROPY " + entropyToSend + "\001\r\n");
+                        i.writeLine("NOTICE " + target + " :\001ENTROPY " + entropyToSend + "\001\r\n");
                     }
                 }
             }
