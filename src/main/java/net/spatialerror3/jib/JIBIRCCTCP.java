@@ -52,7 +52,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
             String ctcp = ctcpMsg(msg);
             if (ctcp != null) {
                 String[] ctcpsp1 = ctcp.split(" ", 2);
-                if (ctcpsp1.equals("ENTROPY")) {
+                if (ctcpsp1[0].equals("ENTROPY")) {
                     if (!target.equals(i.getNick())) {
                         String entropyToSend = JIBStringUtil.randHexString();
                         log.info("SEND ENTROPY (" + target + ") ENTROPY=" + entropyToSend);
