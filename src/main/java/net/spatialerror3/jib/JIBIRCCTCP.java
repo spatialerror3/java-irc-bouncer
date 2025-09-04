@@ -34,7 +34,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
             _ctcpMsg = msg.substring(1, msg.length() - 1);
             String[] _ctcpMsgSp1 = _ctcpMsg.split(" ", 2);
             log.info("Received CTCP " + _ctcpMsgSp1[0]);
-            if (_ctcpMsgSp1[0].equals("ENTROPY")) {
+            if (_ctcpMsgSp1[0].equals("ENTROPY") && _ctcpMsgSp1.length == 2) {
                 log.info("ENTROPY ENTROPY=" + _ctcpMsgSp1[1]);
             }
         }
@@ -54,7 +54,9 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
                 String[] ctcpsp1 = ctcp.split(" ", 2);
                 if (ctcpsp1.equals("ENTROPY")) {
                     if (!target.equals(i.getNick())) {
-                        i.writeLine("PRIVMSG " + target + " :" + JIBStringUtil.randHexString() + "\r\n");
+                        String entropyToSend = JIBStringUtil.randHexString();
+                        log.info("SEND ENTROPY (" + target + ") ENTROPY=" + entropyToSend);
+                        i.writeLine("PRIVMSG " + target + " :\001ENTROPY " + entropyToSend + "\001\r\n");
                     }
                 }
             }
