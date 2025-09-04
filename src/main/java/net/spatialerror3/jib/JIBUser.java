@@ -170,7 +170,10 @@ public class JIBUser implements Serializable {
      * @param jibhc
      */
     public void addClient(JIBHandleClient jibhc) {
-        clients.add(jibhc);
+        List<JIBHandleClient> al1 = Collections.synchronizedList(clients);
+        synchronized (al1) {
+            al1.add(jibhc);
+        }
     }
 
     /**
