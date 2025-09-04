@@ -55,7 +55,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
                 if (ctcpsp1[0].equals("ENTROPY")) {
                     if (!target.equals(i.getNick())) {
                         String entropyToSend = JIBStringUtil.randHexString();
-                        log.info("SEND ENTROPY (" + target + ") ENTROPY=" + entropyToSend);
+                        //log.info("SEND ENTROPY (" + target + ") ENTROPY=" + entropyToSend);
                         i.writeLine("PRIVMSG " + target + " :\001ENTROPY " + entropyToSend + "\001\r\n");
                         i.writeLine("NOTICE " + target + " :\001ENTROPY " + entropyToSend + "\001\r\n");
                     }
