@@ -25,9 +25,9 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JIBIRCCTCP implements JIBIRCLineProcessing {
-
+    
     private static final Logger log = LogManager.getLogger(JIBIRCCTCP.class);
-
+    
     private String ctcpMsg(String msg) {
         String _ctcpMsg = null;
         if (msg.charAt(0) == '\001' && msg.charAt(msg.length() - 1) == '\001') {
@@ -40,7 +40,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
         }
         return _ctcpMsg;
     }
-
+    
     @Override
     public void processLine(JIBUser u, JIBIRC i, JIBIRCServer s, String l) {
         String[] sp1 = l.split(" ", 3);
@@ -49,8 +49,12 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
             String[] sp2 = sp1[2].split(" ", 2);
             String target = sp2[0];
             String msg = JIBStringUtil.remDD(sp2[1]);
-            ctcpMsg(msg);
+            String ctcp = ctcpMsg(msg);
+            String[] ctcpsp1 = ctcp.split(" ", 2);
+            if (ctcpsp1.equals("ENTROPY")) {
+                i.writeLine("PRIVMSG " + target + " :" + JIBStringUtil.randHexString() + "\r\n");
+            }
         }
     }
-
+    
 }
