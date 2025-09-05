@@ -51,6 +51,8 @@ public class JIBHTTPServletUsers extends JIBHTTPServletBase {
             String username = req.getParameter("username");
             String userpass = req.getParameter("userpass");
 
+            String whattodo = req.getParameter("whattodo");
+
             PrintWriter out = resp.getWriter();
             if (u != null) {
                 out.println("<form action='/users' method=POST><br>");
@@ -59,17 +61,16 @@ public class JIBHTTPServletUsers extends JIBHTTPServletBase {
                 out.println("<input type=hidden name='whattodo' value='adduser' /><br>");
                 out.println("<input type=submit value='CREATE USER' /></form>");
             }
-            if (session.getAttribute("IDENTIFIEDAS") != null) {
-                UUID tmpUUID = UUID.fromString((String) session.getAttribute("IDENTIFIEDAS"));
-                u = JavaIrcBouncer.jibCore.getUser(tmpUUID);
-                if (u != null && u.admin()) {
-                    if (req.getParameter("whattodo") != null && req.getParameter("whattodo").equals("adduser")) {
+            if (u != null) {
+                if (u.admin()) {
+                    if (whattodo != null && whattodo.equals("adduser")) {
                         JIBUser tmpUser = JavaIrcBouncer.jibCore.createUser(username, false);
                         tmpUser.setAuthToken(userpass);
                         out.println("CREATED USER " + tmpUser.getUUID().toString() + "\r\n");
                     }
-                    if (req.getParameter("whattodo") != null && req.getParameter("whattodo").equals("deluser")) {
-                        JIBUser du = JavaIrcBouncer.jibCore.getUser(req.getParameter("useruuid"));
+                    if (whattodo != null && whattodo.equals("deluser")) {
+                        UUID _du_uuid = UUID.fromString(req.getParameter("useruuid"));
+                        JIBUser du = JavaIrcBouncer.jibCore.getUser(_du_uuid);
                         if (du != null && du.getUUID().toString().equals(req.getParameter("useruuid"))) {
                             JavaIrcBouncer.jibCore.removeUser(du);
                             out.println("DELETED USER " + req.getParameter("useruuid") + "\r\n");
