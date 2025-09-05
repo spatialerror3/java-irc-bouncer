@@ -27,18 +27,19 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @author spatialerror3
  */
 public class JIBStringUtil {
+
     public static String remEOL(String s) {
         String r = null;
-        if(s==null) {
+        if (s == null) {
             return s;
         }
         r = s.replaceAll("\r\n", "");
         return r;
     }
-    
+
     public static String remEOL2(String s) {
         String r = null;
-        if(s==null) {
+        if (s == null) {
             return s;
         }
         r = s.replaceAll("\r\n", "");
@@ -46,25 +47,40 @@ public class JIBStringUtil {
         r = r.replaceAll("\r", "");
         return r;
     }
-    
+
     public static String remDD(String s) {
-        if(s==null) {
+        if (s == null) {
             return s;
         }
-        if(s.charAt(0)==':') {
+        if (s.charAt(0) == ':') {
             return s.substring(1);
         }
         return s;
     }
-    
+
     public static String randHexString() {
         String hexStr = null;
         String randStr1 = UUID.randomUUID().toString();
         String randStr2 = Long.toString(System.currentTimeMillis());
         String randStr3 = null;
         RandomGenerator g = RandomGenerator.of("L64X128MixRandom");
-        randStr3=Long.toString(g.nextLong());
-        hexStr=DigestUtils.sha256Hex(randStr3+randStr2+randStr1);
+        randStr3 = Long.toString(g.nextLong());
+        hexStr = DigestUtils.sha256Hex(randStr3 + randStr2 + randStr1);
+        return hexStr;
+    }
+
+    public static String randHexString2() {
+        String hexStr = null;
+        String randStr1 = UUID.randomUUID().toString();
+        String randStr2 = Long.toString(System.currentTimeMillis());
+        String[] randStrZ = new String[128];
+        StringBuilder randStr3 = new StringBuilder();
+        RandomGenerator g = RandomGenerator.of("L64X128MixRandom");
+        for (int i = 0; i < randStrZ.length; i++) {
+            randStrZ[i] = Long.toString(g.nextLong());
+            randStr3.append(randStrZ[i]);
+        }
+        hexStr = DigestUtils.sha256Hex(randStr3.toString() + randStr2 + randStr1);
         return hexStr;
     }
 }
