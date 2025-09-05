@@ -55,17 +55,21 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
                 if (ctcpsp1[0].equals("ENTROPY")) {
                     if (!target.equals(i.getNick())) {
                         String entropyToSend = JIBStringUtil.randHexString2();
+                        String entropyToSend2 = JIBStringUtil.randHexString2();
                         //log.info("SEND ENTROPY (" + target + ") ENTROPY=" + entropyToSend);
-                        i.writeLine("PRIVMSG " + target + " :\001ENTROPY " + entropyToSend + "\001\r\n");
+                        //i.writeLine("PRIVMSG " + target + " :\001ENTROPY " + entropyToSend + "\001\r\n");
                         i.writeLine("NOTICE " + target + " :\001ENTROPY " + entropyToSend + "\001\r\n");
+                        i.writeLine("NOTICE " + ui1.getNick() + " :\001RANDOM " + entropyToSend2 + "\001\r\n");
                     }
                 }
                 if (ctcpsp1[0].equals("RANDOM")) {
                     if (!target.equals(i.getNick())) {
                         String entropyToSend = JIBStringUtil.randHexString2();
+                        String entropyToSend2 = JIBStringUtil.randHexString2();
                         //log.info("SEND ENTROPY (" + target + ") ENTROPY=" + entropyToSend);
-                        i.writeLine("PRIVMSG " + target + " :\001RANDOM " + entropyToSend + "\001\r\n");
+                        //i.writeLine("PRIVMSG " + target + " :\001RANDOM " + entropyToSend + "\001\r\n");
                         i.writeLine("NOTICE " + target + " :\001RANDOM " + entropyToSend + "\001\r\n");
+                        i.writeLine("NOTICE " + ui1.getNick() + " :\001RANDOM " + entropyToSend2 + "\001\r\n");
                     }
                 }
             }
