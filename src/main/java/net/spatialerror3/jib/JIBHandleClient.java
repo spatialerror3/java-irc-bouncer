@@ -68,7 +68,8 @@ public class JIBHandleClient implements Runnable {
         trackNick = setTrackNick;
         for (int j = 0; j < channels.length; j++) {
             if (channels[j] != null) {
-                getSingleJIBIRC().simulateJoin(channels[j]);
+                //getSingleJIBIRC().simulateJoin(channels[j]);
+                getSingleJIBIRC().simulateJoin(channels[j], getSingleJIBIRC().getNick());
                 getSingleJIBIRC().simulateJoin(channels[j], trackNick);
             }
         }
