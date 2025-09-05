@@ -60,6 +60,9 @@ public class JIBConfig implements Serializable {
         options.addOption(help);
         options.addOption("server", "server", true, "specify irc server for admin user");
         options.addOption("port", "port", true, "specify irc server port for admin user");
+        options.addOption("nick", "nick", true, "specify nick for admin user");
+        options.addOption("username", "username", true, "specify irc username for admin user");
+        options.addOption("realname", "realname", true, "specify realname for admin user");
         options.addOption("adminuser", "adminuser", true, "username for admin user");
         options.addOption("adminpass", "adminpass", true, "password for admin user");
         options.addOption("truststore", "truststore", true, "truststore pkcs12 filename");
@@ -91,6 +94,9 @@ public class JIBConfig implements Serializable {
                 log.info("-help                                display help   ");
                 log.info("-server         [server]                            ");
                 log.info("-port           [port]                              ");
+                log.info("-nick           [nickname]                          ");
+                log.info("-username       [username]                          ");
+                log.info("-realname       [realname]                          ");
                 log.info("-adminuser      [username]                          ");
                 log.info("-adminpass      [pw]                                ");
                 log.info("-truststore     [pkcs12 file name]                  ");
@@ -104,6 +110,15 @@ public class JIBConfig implements Serializable {
             }
             if (line.hasOption("port")) {
                 setValue("Port", line.getOptionValue("port"));
+            }
+            if (line.hasOption("nick")) {
+                setValue("Nick", line.getOptionValue("nick"));
+            }
+            if (line.hasOption("username")) {
+                setValue("User", line.getOptionValue("username"));
+            }
+            if (line.hasOption("realname")) {
+                setValue("Realname", line.getOptionValue("realname"));
             }
             if (line.hasOption("adminuser")) {
                 setValue("AUTHUSER", line.getOptionValue("adminuser"));
