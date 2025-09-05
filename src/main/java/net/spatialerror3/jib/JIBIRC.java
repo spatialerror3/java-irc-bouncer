@@ -369,6 +369,9 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         if (DEBUGGING) {
             log.debug(this + " writeLine()=" + JIBStringUtil.remEOL2(l));
         }
+        if (sock == null) {
+            return;
+        }
         sock.writeLine(l);
     }
 
