@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import java.util.Properties;
 import java.util.Vector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -63,6 +64,7 @@ public class JIBDBUtil {
     }
 
     public Connection getDatabase() {
+        Properties props = null;
         try {
             Class.forName("org.h2.Driver");
             Class.forName("org.postgresql.Driver");
@@ -72,7 +74,36 @@ public class JIBDBUtil {
         }
         if (conn == null) {
             try {
-                conn = DriverManager.getConnection("jdbc:h2:" + this.dbFile, "sa", "");
+                if (JavaIrcBouncer.jibConfig.getValue("ALTDBTYPE") == null) {
+                    conn = DriverManager.getConnection("jdbc:h2:" + this.dbFile, "sa", "");
+                } else {
+                    String altDbType = JavaIrcBouncer.jibConfig.getValue("ALTDBTYPE");
+                    String dbHost = JavaIrcBouncer.jibConfig.getValue("DBHOST");
+                    String dbPort = JavaIrcBouncer.jibConfig.getValue("DBPORT");
+                    String dbUser = JavaIrcBouncer.jibConfig.getValue("DBUSER");
+                    String dbPass = JavaIrcBouncer.jibConfig.getValue("DBPASS");
+                    String dbName = JavaIrcBouncer.jibConfig.getValue("DBNAME");
+                    if (altDbType.equals("MARIA") || altDbType.equals("MARIADB")) {
+                        props = new Properties();
+                        props.setProperty("user", dbUser);
+                        props.setProperty("password", dbPass);
+                        conn = DriverManager.getConnection("jdbc:mariadb://" + dbHost + ":" + dbPort + "/" + dbName, props);
+                    }
+                    if (altDbType.equals("PGSQL") || altDbType.equals("POSTGRE")) {
+                        props = new Properties();
+                        props.setProperty("user", dbUser);
+                        props.setProperty("password", dbPass);
+                        props.setProperty("host", dbHost);
+                        props.setProperty("port", dbPort);
+                        props.setProperty("database", dbName);
+                        props.setProperty("ssl", "true");
+                        props.setProperty("sslmode", "prefer");
+                        conn = DriverManager.getConnection("jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName, props);
+                    }
+                    if (JavaIrcBouncer.jibConfig.getValue("ALTDBTYPE").equals("H2")) {
+                        conn = DriverManager.getConnection("jdbc:h2:" + this.dbFile, "sa", "");
+                    }
+                }
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
