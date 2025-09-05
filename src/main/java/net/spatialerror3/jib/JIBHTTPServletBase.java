@@ -66,7 +66,7 @@ public class JIBHTTPServletBase extends HttpServlet {
                     session.setAttribute("IDENTIFIEDAS", u.getUUID().toString());
                 } else {
                     log.error("JIBHTTP Web Auth failed for user=" + user);
-                    out.println("<br>AUTH FAILED");
+                    //out.println("<br>AUTH FAILED");
                 }
             }
         } catch (Exception e) {
