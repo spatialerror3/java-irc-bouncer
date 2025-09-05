@@ -275,7 +275,7 @@ public class JIBDBUtil {
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
-            ps2.setLong(1, u.getUserId());
+            ps2.setString(1, u.getUUID().toString());
             ps2.execute();
             getDatabase().commit();
         } catch (SQLException ex) {
