@@ -442,6 +442,9 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
     }
 
     public void simulateJoin(String chan) {
+        if (myInfo == null) {
+            return;
+        }
         String joinSim = ":" + myInfo.nuh() + " JOIN " + chan + " * :" + realname;
         String joinSim2 = ":" + myInfo.nuh() + " JOIN :" + chan;
         if (ircv32 == true) {
