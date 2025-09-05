@@ -60,7 +60,16 @@ public class JIBDBUtil {
     }
 
     public void shutdown() {
-
+        try {
+            conn.commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
     }
 
     public Connection getDatabase() {
