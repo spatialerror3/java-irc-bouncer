@@ -29,7 +29,7 @@ import java.util.Vector;
  * @author spatialerror3
  */
 public class JIBCore {
-
+    
     private static long userCnt = 0;
     ArrayList<JIBUser> users = null;
     HashMap<String, JIBUser> userMap = null;
@@ -51,7 +51,7 @@ public class JIBCore {
      * @return
      */
     public JIBUser createUser(String userName, boolean admin) {
-        return createUser(userName, admin, false);
+        return createUser(userName, admin, false, null);
     }
 
     /**
@@ -59,9 +59,10 @@ public class JIBCore {
      * @param userName
      * @param admin
      * @param nodb
+     * @param _uuid
      * @return
      */
-    public JIBUser createUser(String userName, boolean admin, boolean nodb) {
+    public JIBUser createUser(String userName, boolean admin, boolean nodb, UUID _uuid) {
         if (getUser(userName) != null) {
             return getUser(userName);
         }
@@ -72,6 +73,9 @@ public class JIBCore {
         u.setUserId(newUserId);
         u.setUserName(userName);
         u.setAdmin(admin);
+        if (_uuid != null) {
+            u.setUUID(_uuid);
+        }
         userMap.put(userName, u);
         userMap2.put(u.getUUID(), u);
         users.add(u);
@@ -80,7 +84,7 @@ public class JIBCore {
         }
         return u;
     }
-
+    
     public JIBUser loadUser(JIBUser u, String userName, boolean admin) {
         if (getUser(userName) != null) {
             return getUser(userName);
