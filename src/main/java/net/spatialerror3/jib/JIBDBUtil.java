@@ -237,7 +237,7 @@ public class JIBDBUtil {
                 } catch (SQLException ex) {
                     log.error((String) null, ex);
                 }
-                sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt mediumblob);";
+                sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt mediumblob, u varchar(256));";
                 try {
                     PreparedStatement ps4 = getDatabase().prepareStatement(sql);
                     ps4.execute();
@@ -312,7 +312,7 @@ public class JIBDBUtil {
                     tmpu = null;
                     tmpu = JavaIrcBouncer.jibCore.loadUser(opt, rs5.getString(3), rs5.getBoolean(5));
                 } else if (altDbTypeMariadb()) {
-                    tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5), true);
+                    tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5), true, UUID.fromString(rs5.getString(7)));
                 }
                 tmpu.setUserId(rs5.getLong(1));
                 if (rs5.getObject("_uuid") != null) {
@@ -320,6 +320,7 @@ public class JIBDBUtil {
                 } else {
                     tmpu.setUUID(UUID.fromString(rs5.getString(7)));
                 }
+                tmpu.setUUID(UUID.fromString(rs5.getString(7)));
                 tmpu.setUserName(rs5.getString(3));
                 tmpu.setAuthToken(rs5.getString(4));
                 tmpu.setAdmin(rs5.getBoolean(5));
