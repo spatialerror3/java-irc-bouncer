@@ -262,9 +262,15 @@ public class JIBDBUtil {
         }
         try {
             while (rs5 != null && rs5.next()) {
-                JIBUser opt = rs5.getObject("opt", JIBUser.class);
-                JIBUser tmpu = null;//JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5), true);
-                tmpu = JavaIrcBouncer.jibCore.loadUser(opt, rs5.getString(3), rs5.getBoolean(5));
+                JIBUser opt = null;
+                JIBUser tmpu = null;
+                if(altDbType == null) {
+                    opt = rs5.getObject("opt", JIBUser.class);
+                    tmpu = null;
+                    tmpu = JavaIrcBouncer.jibCore.loadUser(opt, rs5.getString(3), rs5.getBoolean(5));
+                } else if(altDbType.equals("MARIA")) {
+                    tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5), true);
+                }
                 tmpu.setUserId(rs5.getLong(1));
                 tmpu.setUUID((UUID) rs5.getObject("_uuid"));
                 tmpu.setAuthToken(rs5.getString(4));
