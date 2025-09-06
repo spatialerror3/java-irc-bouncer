@@ -121,40 +121,81 @@ public class JIBDBUtil {
     }
 
     public void initSchema() {
-        String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, ssl boolean, ipv6 boolean, clientbind varchar(256), serverpass varchar(256), nick varchar(256), username varchar(256), realname varchar(256), nsacct varchar(256), nspass varchar(256), channels varchar(512), u varchar(256), s varchar(256), opt object(10000000));";
-        try {
-            PreparedStatement ps1 = getDatabase().prepareStatement(sql);
-            ps1.execute();
-        } catch (SQLException ex) {
-            log.error((String) null, ex);
-        }
-        sql = "CREATE TABLE IF NOT EXISTS channels (id int auto_increment primary key, channel varchar(256), u varchar(256), s varchar(256));";
-        try {
-            PreparedStatement ps4 = getDatabase().prepareStatement(sql);
-            ps4.execute();
-        } catch (SQLException ex) {
-            log.error((String) null, ex);
-        }
-        sql = "CREATE TABLE IF NOT EXISTS clientauth (id int auto_increment primary key, username varchar(256), password varchar(256));";
-        try {
-            PreparedStatement ps3 = getDatabase().prepareStatement(sql);
-            ps3.execute();
-        } catch (SQLException ex) {
-            log.error((String) null, ex);
-        }
-        sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513), u varchar(256), s varchar(256), ts1 timestamp DEFAULT NOW());";
-        try {
-            PreparedStatement ps4 = getDatabase().prepareStatement(sql);
-            ps4.execute();
-        } catch (SQLException ex) {
-            log.error((String) null, ex);
-        }
-        sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt object(10000000));";
-        try {
-            PreparedStatement ps4 = getDatabase().prepareStatement(sql);
-            ps4.execute();
-        } catch (SQLException ex) {
-            log.error((String) null, ex);
+        String altDbType = JavaIrcBouncer.jibConfig.getValue("ALTDBTYPE");
+        if (altDbType == null) {
+            String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key, server varchar(256), port integer, ssl boolean, ipv6 boolean, clientbind varchar(256), serverpass varchar(256), nick varchar(256), username varchar(256), realname varchar(256), nsacct varchar(256), nspass varchar(256), channels varchar(512), u varchar(256), s varchar(256), opt object(10000000));";
+            try {
+                PreparedStatement ps1 = getDatabase().prepareStatement(sql);
+                ps1.execute();
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
+            sql = "CREATE TABLE IF NOT EXISTS channels (id int auto_increment primary key, channel varchar(256), u varchar(256), s varchar(256));";
+            try {
+                PreparedStatement ps4 = getDatabase().prepareStatement(sql);
+                ps4.execute();
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
+            sql = "CREATE TABLE IF NOT EXISTS clientauth (id int auto_increment primary key, username varchar(256), password varchar(256));";
+            try {
+                PreparedStatement ps3 = getDatabase().prepareStatement(sql);
+                ps3.execute();
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
+            sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513), u varchar(256), s varchar(256), ts1 timestamp DEFAULT NOW());";
+            try {
+                PreparedStatement ps4 = getDatabase().prepareStatement(sql);
+                ps4.execute();
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
+            sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt object(10000000));";
+            try {
+                PreparedStatement ps4 = getDatabase().prepareStatement(sql);
+                ps4.execute();
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
+        } else {
+            if (altDbType.equals("MARIA") || altDbType.equals("MARIADB")) {
+                String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key,server varchar(256),port int,`ssl` boolean,`ipv6` boolean,clientbind varchar(256),serverpass varchar(256),nick varchar(256),username varchar(256),realname varchar(256),nsacct varchar(256),nspass varchar(256),channels varchar(512),u varchar(256),s varchar(256),opt mediumblob);";
+                try {
+                    PreparedStatement ps1 = getDatabase().prepareStatement(sql);
+                    ps1.execute();
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+                sql = "CREATE TABLE IF NOT EXISTS channels (id int auto_increment primary key, channel varchar(256), u varchar(256), s varchar(256));";
+                try {
+                    PreparedStatement ps4 = getDatabase().prepareStatement(sql);
+                    ps4.execute();
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+                sql = "CREATE TABLE IF NOT EXISTS clientauth (id int auto_increment primary key, username varchar(256), password varchar(256));";
+                try {
+                    PreparedStatement ps3 = getDatabase().prepareStatement(sql);
+                    ps3.execute();
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+                sql = "CREATE TABLE IF NOT EXISTS log1 (id int auto_increment primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513), u varchar(256), s varchar(256), ts1 timestamp DEFAULT NOW());";
+                try {
+                    PreparedStatement ps4 = getDatabase().prepareStatement(sql);
+                    ps4.execute();
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+                sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt mediumblob);";
+                try {
+                    PreparedStatement ps4 = getDatabase().prepareStatement(sql);
+                    ps4.execute();
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+            }
         }
         try {
             getDatabase().commit();
