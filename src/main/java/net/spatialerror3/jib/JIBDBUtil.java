@@ -574,7 +574,7 @@ public class JIBDBUtil {
     }
 
     public ArrayList<JIBIRCServer> getServers(JIBUser u) {
-        String sql = "SELECT u, s, server, port, ssl, ipv6,clientbind,serverpass,nick,username,realname,nsacct,nspass,channels, opt FROM servers WHERE u = ?;";
+        String sql = "SELECT u, s, server, port, `ssl`, `ipv6`,clientbind,serverpass,nick,username,realname,nsacct,nspass,channels, opt FROM servers WHERE u = ?;";
         ArrayList<JIBIRCServer> ret = null;
         ret = new ArrayList<JIBIRCServer>();
         PreparedStatement ps5 = null;
