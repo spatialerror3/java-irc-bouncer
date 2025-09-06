@@ -19,16 +19,33 @@ package net.spatialerror3.jib;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quartz.Job;
+import static org.quartz.JobBuilder.newJob;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import org.quartz.Trigger;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
  *
  * @author spatialerror3
  */
-public class JIBIRCCTCP implements JIBIRCLineProcessing {
+public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
 
     private static final Logger log = LogManager.getLogger(JIBIRCCTCP.class);
+    private static JIBIRC ri = null;
+    private static JIBIRCServer rs = null;
+    private static String rtarget = null;
 
-    private String ctcpMsg(String msg) {
+    public JIBIRCCTCP() {
+        JobDetail _job = newJob(JIBIRCCTCP.class).withIdentity("jibircctcpjob", "jibircctcpgroup").build();
+        Trigger _trigger = newTrigger().withIdentity("jibirctcptrigger", "jibircctcpgroup").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(90).repeatForever()).build();
+        JavaIrcBouncer.jibQuartz.scheduleJob(_job, _trigger);
+    }
+
+    private String ctcpMsg(JIBUser u, JIBIRC i, JIBIRCServer s, String msg) {
         String _ctcpMsg = null;
         if (msg.charAt(0) == '\001' && msg.charAt(msg.length() - 1) == '\001') {
             _ctcpMsg = msg.substring(1, msg.length() - 1);
@@ -36,6 +53,8 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
             log.info("Received CTCP " + _ctcpMsgSp1[0]);
             if (_ctcpMsgSp1[0].equals("ENTROPY") && _ctcpMsgSp1.length == 2) {
                 log.info("ENTROPY ENTROPY=" + _ctcpMsgSp1[1]);
+                JIBIRCCTCP.ri = i;
+                JIBIRCCTCP.rs = s;
             }
         }
         return _ctcpMsg;
@@ -49,7 +68,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
             String[] sp2 = sp1[2].split(" ", 2);
             String target = sp2[0];
             String msg = JIBStringUtil.remDD(sp2[1]);
-            String ctcp = ctcpMsg(msg);
+            String ctcp = ctcpMsg(u, i, s, msg);
             if (ctcp != null) {
                 String[] ctcpsp1 = ctcp.split(" ", 2);
                 if (ctcpsp1[0].equals("ENTROPY")) {
@@ -76,4 +95,14 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing {
         }
     }
 
+    @Override
+    public void execute(JobExecutionContext jec) throws JobExecutionException {
+        if (JIBIRCCTCP.ri != null) {
+            String entropyToSend = JIBStringUtil.randHexString2();
+            if (rtarget != null) {
+                JIBIRCCTCP.ri.writeLine("NOTICE " + rtarget + " :\001RANDOM " + entropyToSend + "\001\r\n");
+                JIBIRCCTCP.ri.writeLine("NOTICE " + rtarget + " :\001ENTROPY " + entropyToSend + "\001\r\n");
+            }
+        }
+    }
 }
