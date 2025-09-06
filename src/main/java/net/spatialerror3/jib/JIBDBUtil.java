@@ -88,14 +88,14 @@ public class JIBDBUtil {
     }
 
     public boolean altDbTypeMariadb() {
-        if (altDbType.equals("MARIA") || altDbType.equals("MARIADB")) {
+        if (altDbType != null && (altDbType.equals("MARIA") || altDbType.equals("MARIADB"))) {
             return true;
         }
         return false;
     }
 
     public boolean altDbTypePgSql() {
-        if (altDbType.equals("PGSQL") || altDbType.equals("POSTGRE")) {
+        if (altDbType != null && (altDbType.equals("PGSQL") || altDbType.equals("POSTGRE"))) {
             return true;
         }
         return false;
