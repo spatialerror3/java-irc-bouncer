@@ -106,6 +106,14 @@ public class JIBQuartz {
         }
     }
     
+    public void scheduleJob(JobDetail _job, Trigger _trigger) {
+        try {
+            scheduler.scheduleJob(_job, _trigger);
+        } catch (SchedulerException ex) {
+            log.error((String) null, ex);
+        }        
+    }
+    
     public void shutdown() {
         try {
             scheduler.shutdown(true);
