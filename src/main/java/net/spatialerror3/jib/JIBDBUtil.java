@@ -17,6 +17,7 @@
  */
 package net.spatialerror3.jib;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,9 +29,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Properties;
 import java.util.Vector;
+import javax.sql.rowset.serial.SerialBlob;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.h2.tools.Server;
+import java.io.OutputStream;
 
 /**
  *
@@ -43,10 +46,12 @@ public class JIBDBUtil {
     private Connection conn = null;
     private Server server = null;
     private long dbLoadedUsers = 0L;
+    private String altDbType = null;
 
     public JIBDBUtil(String dbFile) {
         log.debug("JIBDBUtil() this=" + this);
         this.dbFile = dbFile;
+        this.altDbType = JavaIrcBouncer.jibConfig.getValue("ALTDBTYPE");
         getDatabase();
         if (JavaIrcBouncer.jibConfig.getValue("H2SERVER") != null) {
             try {
@@ -289,7 +294,23 @@ public class JIBDBUtil {
             ps2.setString(3, u.getUserName());
             ps2.setString(4, u.getAuthToken());
             ps2.setBoolean(5, u.admin());
-            ps2.setObject(6, u);
+            if (altDbType == null) {
+                ps2.setObject(6, u);
+            } else if (altDbType.equals("MARIA")) {
+                SerialBlob blob1 = new SerialBlob(new byte[10000000]);
+                java.io.ObjectOutputStream oos = null;
+                try {
+                    oos = new java.io.ObjectOutputStream(blob1.setBinaryStream(0));
+                    oos.writeObject(u);
+                } catch (IOException ex) {
+                    log.error((String) null, ex);
+                }
+                if (oos != null) {
+                    ps2.setBlob(6, blob1);
+                } else {
+                    ps2.setNull(6, java.sql.Types.BLOB);
+                }
+            }
             ps2.execute();
             getDatabase().commit();
         } catch (SQLException ex) {
@@ -423,7 +444,23 @@ public class JIBDBUtil {
             ps2.setString(12, serv.getNickServUser());
             ps2.setString(13, serv.getNickServPass());
             ps2.setString(14, serv.getChannels());
-            ps2.setObject(15, serv);
+            if (altDbType == null) {
+                ps2.setObject(15, serv);
+            } else if (altDbType.equals("MARIA")) {
+                SerialBlob blob1 = new SerialBlob(new byte[10000000]);
+                java.io.ObjectOutputStream oos = null;
+                try {
+                    oos = new java.io.ObjectOutputStream(blob1.setBinaryStream(0));
+                    oos.writeObject(serv);
+                } catch (IOException ex) {
+                    log.error((String) null, ex);
+                }
+                if (oos != null) {
+                    ps2.setBlob(15, blob1);
+                } else {
+                    ps2.setNull(15, java.sql.Types.BLOB);
+                }
+            }
             ps2.execute();
         } catch (SQLException ex) {
             log.error((String) null, ex);
@@ -737,7 +774,12 @@ public class JIBDBUtil {
     }
 
     public void clearLogOlderThan2Days() {
-        String sql = "DELETE FROM log1 WHERE NOW() - ts1 > INTERVAL '2' DAY;";
+        String sql = null;
+        if (altDbType == null) {
+            sql = "DELETE FROM log1 WHERE NOW() - ts1 > INTERVAL '2' DAY;";
+        } else if (altDbType.equals("MARIA")) {
+
+        }
         PreparedStatement ps2 = null;
         try {
             ps2 = getDatabase().prepareStatement(sql);
