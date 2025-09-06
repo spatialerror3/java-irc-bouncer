@@ -66,15 +66,17 @@ public class JIBDBUtil {
     }
 
     public void shutdown() {
-        try {
-            conn.commit();
-        } catch (SQLException ex) {
-            log.error((String) null, ex);
-        }
-        try {
-            conn.close();
-        } catch (SQLException ex) {
-            log.error((String) null, ex);
+        if (conn != null) {
+            try {
+                conn.commit();
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
         }
     }
 
@@ -198,7 +200,7 @@ public class JIBDBUtil {
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
-            sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt object(10000000));";
+            sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt object(10000000), u varchar(256));";
             try {
                 PreparedStatement ps4 = getDatabase().prepareStatement(sql);
                 ps4.execute();
@@ -292,7 +294,7 @@ public class JIBDBUtil {
 
     public long loadUsers() {
         long loadedUsers = 0L;
-        String sql = "SELECT userId,_uuid,username,authtoken,admin,opt FROM users;";
+        String sql = "SELECT userId,_uuid,username,authtoken,admin,opt,u FROM users;";
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
         try {
@@ -313,8 +315,14 @@ public class JIBDBUtil {
                     tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5), true);
                 }
                 tmpu.setUserId(rs5.getLong(1));
-                tmpu.setUUID((UUID) rs5.getObject("_uuid"));
+                if (rs5.getObject("_uuid") != null) {
+                    tmpu.setUUID((UUID) rs5.getObject("_uuid", UUID.class));
+                } else {
+                    tmpu.setUUID(UUID.fromString(rs5.getString(7)));
+                }
+                tmpu.setUserName(rs5.getString(3));
                 tmpu.setAuthToken(rs5.getString(4));
+                tmpu.setAdmin(rs5.getBoolean(5));
 
                 log.debug("Contains User=" + rs5.getString(3));
                 loadedUsers++;
@@ -333,10 +341,12 @@ public class JIBDBUtil {
     }
 
     public void addUser(JIBUser u) {
-        String sql = "INSERT INTO users (userId,_uuid,username,authtoken,admin,opt) VALUES(?,?,?,?,?,?);";
+        String sql = "INSERT INTO users (userId,_uuid,username,authtoken,admin,opt,u) VALUES(?,?,?,?,?,?,?);";
+        Connection zconn = null;
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setLong(1, u.getUserId());
             ps2.setString(2, u.getUUID().toString());
             ps2.setString(3, u.getUserName());
@@ -360,8 +370,9 @@ public class JIBDBUtil {
                     ps2.setNull(6, java.sql.Types.BLOB);
                 }
             }
+            ps2.setString(7, u.getUUID().toString());
             ps2.execute();
-            getDatabase().commit();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
