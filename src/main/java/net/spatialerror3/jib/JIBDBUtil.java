@@ -907,8 +907,8 @@ public class JIBDBUtil {
         String sql = null;
         if (altDbType == null) {
             sql = "DELETE FROM log1 WHERE NOW() - ts1 > INTERVAL '2' DAY;";
-        } else if (altDbType.equals("MARIA")) {
-            sql = "DELETE FROM log1;";
+        } else if (altDbTypeMariadb()) {
+            sql = "DELETE FROM log1 WHERE TIMESTAMP_DIFF(DAY,ts1,NOW()) > INTERVAL 2 DAY;";
         }
         PreparedStatement ps2 = null;
         try {
