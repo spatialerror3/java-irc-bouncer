@@ -875,7 +875,7 @@ public class JIBDBUtil {
     }
 
     public ArrayList<String> replayLogDays(JIBUser u, int days) {
-        String sql = "SELECT loguser,logtarget,logmessage,TIMESTAMP_DIFF(DAY,ts1,NOW()) AS tsdiffdays FROM log1 WHERE u = ? AND tsdiffdays <= 2;";
+        String sql = "SELECT loguser,logtarget,logmessage,TIMESTAMPDIFF(DAY,ts1,NOW()) AS tsdiffdays FROM log1 WHERE u = ? AND tsdiffdays <= 2;";
         ArrayList<String> replay = new ArrayList<String>();
         PreparedStatement ps8 = null;
         ResultSet rs8 = null;
@@ -947,7 +947,7 @@ public class JIBDBUtil {
         if (altDbType == null) {
             sql = "DELETE FROM log1 WHERE NOW() - ts1 > INTERVAL '2' DAY;";
         } else if (altDbTypeMariadb()) {
-            sql = "DELETE FROM log1 WHERE TIMESTAMP_DIFF(DAY,ts1,NOW()) > 2;";
+            sql = "DELETE FROM log1 WHERE TIMESTAMPDIFF(DAY,ts1,NOW()) > 2;";
             return;
         }
         PreparedStatement ps2 = null;
