@@ -169,7 +169,7 @@ public class JIBCommand {
             JavaIrcBouncer.jibDbUtil.clearLog(null);
         }
         if (authed.admin() && excmd[0].equals("UPTIME")) {
-            hc.sendJibMsg("Uptime: " + JavaIrcBouncer.jibStatus.getUptime());
+            hc.sendJibMsg("Uptime: " + (JavaIrcBouncer.jibStatus.getUptime() / 1000));
         }
         if (authed.admin() && excmd[0].equals("ADDUSER")) {
             String[] up = excmd[1].split(" ", 2);
