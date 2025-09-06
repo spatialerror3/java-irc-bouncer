@@ -149,6 +149,13 @@ public class JIBCommand {
                 hc.sendLine(logReplayStr + "\r\n");
             }
         }
+        if (excmd[0].equals("REPLAYLOGL2D")) {
+            Iterator<String> logReplay = JavaIrcBouncer.jibDbUtil.replayLogDays(authed, 2).iterator();
+            while (logReplay.hasNext()) {
+                String logReplayStr = logReplay.next();
+                hc.sendLine(logReplayStr + "\r\n");
+            }
+        }
         if (excmd[0].equals("CLEAR")) {
             JavaIrcBouncer.jibDbUtil.clearLog(authed);
         }
