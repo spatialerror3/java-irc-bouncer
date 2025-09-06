@@ -538,13 +538,15 @@ public class JIBDBUtil {
     }
 
     public void addServer(JIBUser u, JIBIRCServer serv) {
+        Connection zconn = null;
         String sql = "INSERT INTO servers (s,server,port,u,`ssl`,`ipv6`,clientbind,serverpass,nick,username,realname,nsacct,nspass,channels,opt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement ps2 = null;
         if (hasServer(u, serv)) {
             return;
         }
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setString(1, serv.getUUID().toString());
             ps2.setString(2, serv.getServer());
             ps2.setInt(3, serv.getPort());
@@ -578,6 +580,7 @@ public class JIBDBUtil {
                 }
             }
             ps2.execute();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
