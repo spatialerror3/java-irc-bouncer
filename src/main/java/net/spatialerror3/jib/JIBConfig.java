@@ -69,6 +69,7 @@ public class JIBConfig implements Serializable {
         options.addOption("truststorekey", "truststorekey", true, "password of the pkcs12 truststore");
         options.addOption("keystore", "keystore", true, "keystore pkcs12 filename");
         options.addOption("keystorekey", "keystorekey", true, "password of the pkcs12 keystore");
+        options.addOption("altdbtype", "altdbtype", true, "alternative database type");
 
         return options;
     }
@@ -137,6 +138,9 @@ public class JIBConfig implements Serializable {
             }
             if (line.hasOption("keystorekey")) {
                 setValue("KEYSTOREPASSWORD", line.getOptionValue("keystorekey"));
+            }
+            if (line.hasOption("altdbtype")) {
+                setValue("ALTDBTYPE", line.getOptionValue("altdbtype"));
             }
         }
         /*
