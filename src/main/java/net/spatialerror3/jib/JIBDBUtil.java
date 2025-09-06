@@ -78,6 +78,47 @@ public class JIBDBUtil {
         }
     }
 
+    public boolean altDbTypeH2() {
+        if (altDbType == null || altDbType.equals("H2")) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean altDbTypeMariadb() {
+        if (altDbType.equals("MARIA") || altDbType.equals("MARIADB")) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean altDbTypePgSql() {
+        if (altDbType.equals("PGSQL") || altDbType.equals("POSTGRE")) {
+            return true;
+        }
+        return false;
+    }
+
+    public Connection getDatabaseMariadb() {
+        Connection conn = null;
+        Properties props = null;
+        String dbHost = JavaIrcBouncer.jibConfig.getValue("DBHOST");
+        String dbPort = JavaIrcBouncer.jibConfig.getValue("DBPORT");
+        String dbUser = JavaIrcBouncer.jibConfig.getValue("DBUSER");
+        String dbPass = JavaIrcBouncer.jibConfig.getValue("DBPASS");
+        String dbName = JavaIrcBouncer.jibConfig.getValue("DBNAME");
+        props = new Properties();
+        props.setProperty("user", dbUser);
+        props.setProperty("password", dbPass);
+        try {
+            conn = DriverManager.getConnection("jdbc:mariadb://" + dbHost + ":" + dbPort + "/" + dbName, props);
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+
+        return conn;
+    }
+
     public Connection getDatabase() {
         Properties props = null;
         try {
@@ -86,6 +127,9 @@ public class JIBDBUtil {
             Class.forName("org.mariadb.jdbc.Driver");
         } catch (ClassNotFoundException cnfe1) {
             log.fatal("Class not Found Database Driver", cnfe1);
+        }
+        if (altDbTypeMariadb()) {
+            return getDatabaseMariadb();
         }
         if (conn == null) {
             try {
@@ -99,10 +143,7 @@ public class JIBDBUtil {
                     String dbPass = JavaIrcBouncer.jibConfig.getValue("DBPASS");
                     String dbName = JavaIrcBouncer.jibConfig.getValue("DBNAME");
                     if (altDbType.equals("MARIA") || altDbType.equals("MARIADB")) {
-                        props = new Properties();
-                        props.setProperty("user", dbUser);
-                        props.setProperty("password", dbPass);
-                        conn = DriverManager.getConnection("jdbc:mariadb://" + dbHost + ":" + dbPort + "/" + dbName, props);
+                        return getDatabaseMariadb();
                     }
                     if (altDbType.equals("PGSQL") || altDbType.equals("POSTGRE")) {
                         props = new Properties();
@@ -264,11 +305,11 @@ public class JIBDBUtil {
             while (rs5 != null && rs5.next()) {
                 JIBUser opt = null;
                 JIBUser tmpu = null;
-                if(altDbType == null) {
+                if (altDbType == null) {
                     opt = rs5.getObject("opt", JIBUser.class);
                     tmpu = null;
                     tmpu = JavaIrcBouncer.jibCore.loadUser(opt, rs5.getString(3), rs5.getBoolean(5));
-                } else if(altDbType.equals("MARIA")) {
+                } else if (altDbTypeMariadb()) {
                     tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5), true);
                 }
                 tmpu.setUserId(rs5.getLong(1));
@@ -301,17 +342,18 @@ public class JIBDBUtil {
             ps2.setString(3, u.getUserName());
             ps2.setString(4, u.getAuthToken());
             ps2.setBoolean(5, u.admin());
-            if (altDbType == null) {
+            if (altDbTypeH2()) {
                 ps2.setObject(6, u);
-            } else if (altDbType.equals("MARIA")) {
+            } else if (altDbTypeMariadb()) {
                 SerialBlob blob1 = new SerialBlob(new MariaDbBlob(new byte[10000000]));
                 java.io.ObjectOutputStream oos = null;
+                /*
                 try {
                     oos = new java.io.ObjectOutputStream(blob1.setBinaryStream(1));
                     oos.writeObject(u);
                 } catch (IOException ex) {
                     log.error((String) null, ex);
-                }
+                }*/
                 if (oos != null) {
                     ps2.setBlob(6, blob1);
                 } else {
@@ -354,13 +396,25 @@ public class JIBDBUtil {
 
     public void refreshUser(JIBUser u) {
         String sql = "UPDATE users SET opt = ? WHERE _uuid = ?;";
+        Connection zconn = null;
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
-            ps2.setObject(1, u);
-            ps2.setString(2, u.getUUID().toString());
-            ps2.execute();
-            getDatabase().commit();
+            if (altDbTypeH2()) {
+                ps2 = getDatabase().prepareStatement(sql);
+                ps2.setObject(1, u);
+                ps2.setString(2, u.getUUID().toString());
+                ps2.execute();
+                getDatabase().commit();
+            }
+            if (altDbTypeMariadb()) {
+                zconn = getDatabaseMariadb();
+                ps2 = zconn.prepareStatement(sql);
+                ps2.setNull(1, java.sql.Types.BLOB);
+                ps2.setString(2, u.getUUID().toString());
+                ps2.execute();
+                zconn.commit();
+                zconn.close();
+            }
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
@@ -430,7 +484,7 @@ public class JIBDBUtil {
     }
 
     public void addServer(JIBUser u, JIBIRCServer serv) {
-        String sql = "INSERT INTO servers (s,server,port,u,ssl,ipv6,clientbind,serverpass,nick,username,realname,nsacct,nspass,channels,opt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        String sql = "INSERT INTO servers (s,server,port,u,`ssl`,`ipv6`,clientbind,serverpass,nick,username,realname,nsacct,nspass,channels,opt) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement ps2 = null;
         if (hasServer(u, serv)) {
             return;
@@ -451,17 +505,18 @@ public class JIBDBUtil {
             ps2.setString(12, serv.getNickServUser());
             ps2.setString(13, serv.getNickServPass());
             ps2.setString(14, serv.getChannels());
-            if (altDbType == null) {
+            if (altDbTypeH2()) {
                 ps2.setObject(15, serv);
-            } else if (altDbType.equals("MARIA")) {
+            } else if (altDbTypeMariadb()) {
                 SerialBlob blob1 = new SerialBlob(new MariaDbBlob(new byte[10000000]));
                 java.io.ObjectOutputStream oos = null;
+                /*
                 try {
                     oos = new java.io.ObjectOutputStream(blob1.setBinaryStream(1));
                     oos.writeObject(serv);
                 } catch (IOException ex) {
                     log.error((String) null, ex);
-                }
+                }*/
                 if (oos != null) {
                     ps2.setBlob(15, blob1);
                 } else {
