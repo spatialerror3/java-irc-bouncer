@@ -874,6 +874,45 @@ public class JIBDBUtil {
         return replay;
     }
 
+    public ArrayList<String> replayLogDays(JIBUser u, int days) {
+        String sql = "SELECT loguser,logtarget,logmessage,TIMESTAMP_DIFF(DAY,ts1,NOW()) AS tsdiffdays FROM log1 WHERE u = ? AND tsdiffdays <= 2;";
+        ArrayList<String> replay = new ArrayList<String>();
+        PreparedStatement ps8 = null;
+        ResultSet rs8 = null;
+        try {
+            ps8 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ps8.setString(1, u.getUUID().toString());
+            ps8.setInt(2, days);
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        try {
+            rs8 = ps8.executeQuery();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        if (rs8 != null) {
+            String replayStr = null;
+            String logUser = null;
+            String logTarget = null;
+            String logMessage = null;
+            log.debug("rs8 rowCnt=" + cntResultSet(rs8));
+            try {
+                rs8.beforeFirst();
+                while (rs8.next()) {
+                    logUser = rs8.getString(1);
+                    logTarget = rs8.getString(2);
+                    logMessage = rs8.getString(3);
+                    replayStr = ":" + logUser + " PRIVMSG " + logTarget + " :" + logMessage + "\r\n";
+                    replay.add(replayStr);
+                }
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
+        }
+        return replay;
+    }
+
     public void clearLog(JIBUser u) {
         Connection zconn = null;
         if (u != null) {
@@ -908,7 +947,8 @@ public class JIBDBUtil {
         if (altDbType == null) {
             sql = "DELETE FROM log1 WHERE NOW() - ts1 > INTERVAL '2' DAY;";
         } else if (altDbTypeMariadb()) {
-            sql = "DELETE FROM log1 WHERE TIMESTAMP_DIFF(DAY,ts1,NOW()) > INTERVAL 2 DAY;";
+            sql = "DELETE FROM log1 WHERE TIMESTAMP_DIFF(DAY,ts1,NOW()) > 2;";
+            return;
         }
         PreparedStatement ps2 = null;
         try {
