@@ -715,6 +715,7 @@ public class JIBDBUtil {
     }
      */
     public void addChannel(JIBUser u, JIBIRCServer s, String Channel) {
+        Connection zconn = null;
         if (containsChannel(u, s, Channel) != 0) {
             return;
         }
@@ -724,12 +725,13 @@ public class JIBDBUtil {
         String sql = "INSERT INTO channels (channel,u,s) VALUES(?,?,?);";
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setString(1, Channel);
             ps2.setString(2, u.getUUID().toString());
             ps2.setString(3, s.getUUID().toString());
             ps2.execute();
-            getDatabase().commit();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
@@ -748,17 +750,20 @@ public class JIBDBUtil {
     }
 
     public void removeChannel(JIBUser u, JIBIRCServer s, String Channel) {
+        Connection zconn = null;
         if (containsChannel(u, s, Channel) < 1) {
             return;
         }
         String sql = "DELETE FROM channels WHERE channel = ? AND u = ? AND s = ?;";
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setString(1, Channel);
             ps2.setString(2, u.getUUID().toString());
             ps2.setString(3, s.getUUID().toString());
             ps2.execute();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
@@ -813,17 +818,19 @@ public class JIBDBUtil {
     }
 
     public void logUserTargetMessage(JIBUser u, JIBIRCServer s, String logUser, String logTarget, String logMessage) {
+        Connection zconn = null;
         String sql = "INSERT INTO log1 (loguser,logtarget,logmessage,u,s) VALUES(?,?,?,?,?);";
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setString(1, logUser.substring(1));
             ps2.setString(2, logTarget);
             ps2.setString(3, logMessage.substring(1));
             ps2.setString(4, u.getUUID().toString());
             ps2.setString(5, s.getUUID().toString());
             ps2.execute();
-            getDatabase().commit();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
@@ -868,14 +875,16 @@ public class JIBDBUtil {
     }
 
     public void clearLog(JIBUser u) {
+        Connection zconn = null;
         if (u != null) {
             String sql = "DELETE FROM log1 WHERE u = ?;";
             PreparedStatement ps2 = null;
             try {
-                ps2 = getDatabase().prepareStatement(sql);
+                zconn = getDatabase();
+                ps2 = zconn.prepareStatement(sql);
                 ps2.setString(1, u.getUUID().toString());
                 ps2.execute();
-                getDatabase().commit();
+                zconn.commit();
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
@@ -883,9 +892,10 @@ public class JIBDBUtil {
             String sql = "DELETE FROM log1;";
             PreparedStatement ps2 = null;
             try {
-                ps2 = getDatabase().prepareStatement(sql);
+                zconn = getDatabase();
+                ps2 = zconn.prepareStatement(sql);
                 ps2.execute();
-                getDatabase().commit();
+                zconn.commit();
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
@@ -893,6 +903,7 @@ public class JIBDBUtil {
     }
 
     public void clearLogOlderThan2Days() {
+        Connection zconn = null;
         String sql = null;
         if (altDbType == null) {
             sql = "DELETE FROM log1 WHERE NOW() - ts1 > INTERVAL '2' DAY;";
@@ -901,9 +912,10 @@ public class JIBDBUtil {
         }
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.execute();
-            getDatabase().commit();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
