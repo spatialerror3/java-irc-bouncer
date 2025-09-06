@@ -34,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.h2.tools.Server;
 import java.io.OutputStream;
+import org.mariadb.jdbc.MariaDbBlob;
 
 /**
  *
@@ -297,10 +298,10 @@ public class JIBDBUtil {
             if (altDbType == null) {
                 ps2.setObject(6, u);
             } else if (altDbType.equals("MARIA")) {
-                SerialBlob blob1 = new SerialBlob(new byte[10000000]);
+                SerialBlob blob1 = new SerialBlob(new MariaDbBlob(new byte[10000000]));
                 java.io.ObjectOutputStream oos = null;
                 try {
-                    oos = new java.io.ObjectOutputStream(blob1.setBinaryStream(0));
+                    oos = new java.io.ObjectOutputStream(blob1.setBinaryStream(1));
                     oos.writeObject(u);
                 } catch (IOException ex) {
                     log.error((String) null, ex);
@@ -447,10 +448,10 @@ public class JIBDBUtil {
             if (altDbType == null) {
                 ps2.setObject(15, serv);
             } else if (altDbType.equals("MARIA")) {
-                SerialBlob blob1 = new SerialBlob(new byte[10000000]);
+                SerialBlob blob1 = new SerialBlob(new MariaDbBlob(new byte[10000000]));
                 java.io.ObjectOutputStream oos = null;
                 try {
-                    oos = new java.io.ObjectOutputStream(blob1.setBinaryStream(0));
+                    oos = new java.io.ObjectOutputStream(blob1.setBinaryStream(1));
                     oos.writeObject(serv);
                 } catch (IOException ex) {
                     log.error((String) null, ex);
@@ -778,7 +779,7 @@ public class JIBDBUtil {
         if (altDbType == null) {
             sql = "DELETE FROM log1 WHERE NOW() - ts1 > INTERVAL '2' DAY;";
         } else if (altDbType.equals("MARIA")) {
-
+            sql = "DELETE FROM log1;";
         }
         PreparedStatement ps2 = null;
         try {
