@@ -17,6 +17,9 @@
  */
 package net.spatialerror3.jib;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
@@ -45,7 +48,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
     public void schedule() {
         JobDetail _job = newJob(JIBIRCCTCP.class).withIdentity("jibircctcpjob", "jibircctcpgroup").build();
         Trigger _trigger = newTrigger().withIdentity("jibirctcptrigger", "jibircctcpgroup").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(900).repeatForever()).build();
-        JavaIrcBouncer.jibQuartz.scheduleJob(_job, _trigger);
+        JavaIrcBouncer.jibQuartz.scheduleJobNoDuplicates(_job, _trigger);
     }
 
     private String ctcpMsg(JIBUser u, JIBIRC i, JIBIRCServer s, String msg, JIBUserInfo src, String tgt) {
@@ -59,15 +62,17 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
                 JIBIRCCTCP.ri = i;
                 JIBIRCCTCP.rs = s;
                 JIBIRCCTCP.rtarget = tgt;
+                appendStringURandom(_ctcpMsgSp1[1]);
             }
             if (_ctcpMsgSp1[0].equals("ENTROPY") && _ctcpMsgSp1.length == 1) {
 
             }
             if (_ctcpMsgSp1[0].equals("RANDOM") && _ctcpMsgSp1.length == 2) {
-                
+                log.info("RANDOM RANDOM=" + _ctcpMsgSp1[1]);
+                appendStringURandom(_ctcpMsgSp1[1]);
             }
             if (_ctcpMsgSp1[0].equals("RANDOM") && _ctcpMsgSp1.length == 1) {
-                
+
             }
         }
         return _ctcpMsg;
@@ -76,7 +81,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
     @Override
     public void processLine(JIBUser u, JIBIRC i, JIBIRCServer s, String l) {
         String[] sp1 = l.split(" ", 3);
-        if (sp1[1].equals("PRIVMSG") || sp1[1].equals("NOTICE")) {
+        if (sp1[1].equals("PRIVMSG")) {
             JIBUserInfo ui1 = JIBUserInfo.parseNUH(sp1[0]);
             String[] sp2 = sp1[2].split(" ", 2);
             String target = sp2[0];
@@ -104,6 +109,24 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
                         i.writeLine("NOTICE " + ui1.getNick() + " :\001RANDOM " + entropyToSend2 + "\001\r\n");
                     }
                 }
+            }
+        }
+    }
+
+    public void appendStringURandom(String randString) {
+        FileOutputStream FOS = null;
+        try {
+            FOS = new FileOutputStream("/dev/urandom", true);
+        } catch (FileNotFoundException ex) {
+            log.error((String) null, ex);
+        }
+        if (FOS != null) {
+            try {
+                FOS.write(randString.getBytes());
+                FOS.flush();
+                FOS.close();
+            } catch (IOException ex) {
+                log.error((String) null, ex);
             }
         }
     }
