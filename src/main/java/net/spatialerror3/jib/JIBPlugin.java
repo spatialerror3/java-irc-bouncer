@@ -22,5 +22,5 @@ package net.spatialerror3.jib;
  * @author spatialerror3
  */
 public interface JIBPlugin {
-    
+    public void initialize();
 }
