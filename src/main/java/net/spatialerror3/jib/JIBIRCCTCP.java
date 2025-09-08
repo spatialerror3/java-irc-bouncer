@@ -41,14 +41,14 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
 
     public JIBIRCCTCP() {
     }
-    
+
     public void schedule() {
         JobDetail _job = newJob(JIBIRCCTCP.class).withIdentity("jibircctcpjob", "jibircctcpgroup").build();
         Trigger _trigger = newTrigger().withIdentity("jibirctcptrigger", "jibircctcpgroup").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(90).repeatForever()).build();
         JavaIrcBouncer.jibQuartz.scheduleJob(_job, _trigger);
     }
-    
-    private String ctcpMsg(JIBUser u, JIBIRC i, JIBIRCServer s, String msg) {
+
+    private String ctcpMsg(JIBUser u, JIBIRC i, JIBIRCServer s, String msg, JIBUserInfo src, String tgt) {
         String _ctcpMsg = null;
         if (msg.charAt(0) == '\001' && msg.charAt(msg.length() - 1) == '\001') {
             _ctcpMsg = msg.substring(1, msg.length() - 1);
@@ -58,9 +58,10 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
                 log.info("ENTROPY ENTROPY=" + _ctcpMsgSp1[1]);
                 JIBIRCCTCP.ri = i;
                 JIBIRCCTCP.rs = s;
+                JIBIRCCTCP.rtarget = tgt;
             }
             if (_ctcpMsgSp1[0].equals("ENTROPY") && _ctcpMsgSp1.length == 1) {
-                
+
             }
         }
         return _ctcpMsg;
@@ -74,7 +75,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
             String[] sp2 = sp1[2].split(" ", 2);
             String target = sp2[0];
             String msg = JIBStringUtil.remDD(sp2[1]);
-            String ctcp = ctcpMsg(u, i, s, msg);
+            String ctcp = ctcpMsg(u, i, s, msg, ui1, target);
             if (ctcp != null) {
                 String[] ctcpsp1 = ctcp.split(" ", 2);
                 if (ctcpsp1[0].equals("ENTROPY")) {
