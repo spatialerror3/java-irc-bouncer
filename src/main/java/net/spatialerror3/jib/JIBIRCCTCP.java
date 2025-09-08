@@ -40,11 +40,14 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
     private static String rtarget = null;
 
     public JIBIRCCTCP() {
+    }
+    
+    public void schedule() {
         JobDetail _job = newJob(JIBIRCCTCP.class).withIdentity("jibircctcpjob", "jibircctcpgroup").build();
         Trigger _trigger = newTrigger().withIdentity("jibirctcptrigger", "jibircctcpgroup").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(90).repeatForever()).build();
         JavaIrcBouncer.jibQuartz.scheduleJob(_job, _trigger);
     }
-
+    
     private String ctcpMsg(JIBUser u, JIBIRC i, JIBIRCServer s, String msg) {
         String _ctcpMsg = null;
         if (msg.charAt(0) == '\001' && msg.charAt(msg.length() - 1) == '\001') {
@@ -55,6 +58,9 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
                 log.info("ENTROPY ENTROPY=" + _ctcpMsgSp1[1]);
                 JIBIRCCTCP.ri = i;
                 JIBIRCCTCP.rs = s;
+            }
+            if (_ctcpMsgSp1[0].equals("ENTROPY") && _ctcpMsgSp1.length == 1) {
+                
             }
         }
         return _ctcpMsg;
