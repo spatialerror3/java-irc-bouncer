@@ -149,6 +149,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             return JIBIRC._jibIrcCtcp;
         }
         JIBIRC._jibIrcCtcp = new JIBIRCCTCP();
+        JIBIRC._jibIrcCtcp.schedule();
         return JIBIRC._jibIrcCtcp;
     }
 
