@@ -81,6 +81,13 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
     @Override
     public void processLine(JIBUser u, JIBIRC i, JIBIRCServer s, String l) {
         String[] sp1 = l.split(" ", 3);
+        if (sp1[1].equals("NOTICE")) {
+            JIBUserInfo ui1 = JIBUserInfo.parseNUH(sp1[0]);
+            String[] sp2 = sp1[2].split(" ", 2);
+            String target = sp2[0];
+            String msg = JIBStringUtil.remDD(sp2[1]);
+            String ctcp = ctcpMsg(u, i, s, msg, ui1, target);
+        }
         if (sp1[1].equals("PRIVMSG")) {
             JIBUserInfo ui1 = JIBUserInfo.parseNUH(sp1[0]);
             String[] sp2 = sp1[2].split(" ", 2);
