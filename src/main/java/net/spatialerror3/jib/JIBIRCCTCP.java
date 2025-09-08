@@ -44,7 +44,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
 
     public void schedule() {
         JobDetail _job = newJob(JIBIRCCTCP.class).withIdentity("jibircctcpjob", "jibircctcpgroup").build();
-        Trigger _trigger = newTrigger().withIdentity("jibirctcptrigger", "jibircctcpgroup").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(90).repeatForever()).build();
+        Trigger _trigger = newTrigger().withIdentity("jibirctcptrigger", "jibircctcpgroup").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(900).repeatForever()).build();
         JavaIrcBouncer.jibQuartz.scheduleJob(_job, _trigger);
     }
 
@@ -62,6 +62,12 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
             }
             if (_ctcpMsgSp1[0].equals("ENTROPY") && _ctcpMsgSp1.length == 1) {
 
+            }
+            if (_ctcpMsgSp1[0].equals("RANDOM") && _ctcpMsgSp1.length == 2) {
+                
+            }
+            if (_ctcpMsgSp1[0].equals("RANDOM") && _ctcpMsgSp1.length == 1) {
+                
             }
         }
         return _ctcpMsg;
