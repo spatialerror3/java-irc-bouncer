@@ -19,6 +19,9 @@ package net.spatialerror3.jib;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,19 +32,31 @@ import org.apache.logging.log4j.Logger;
 public class JIBPluginCore {
 
     private static final Logger log = LogManager.getLogger(JIBPluginCore.class);
+    private ArrayList<JIBPlugin> plugins = null;
 
     public JIBPluginCore() {
-        
+        this.plugins = new ArrayList<JIBPlugin>();
     }
 
     public JIBPlugin load(String jarPath, String className) throws Exception {
         File jarFile = new File(jarPath);
         URL jarUrl = jarFile.toURI().toURL();
+        JIBPlugin p = null;
 
         // Use the custom IsolatedClassLoader
         try (JIBClassLoader loader = new JIBClassLoader(jarUrl)) {
             Class<?> clazz = Class.forName(className, true, loader);
-            return (JIBPlugin) clazz.getDeclaredConstructor().newInstance();
+            p = (JIBPlugin) clazz.getDeclaredConstructor().newInstance();
+            p.initialize();
+            registerPlugin(p);
+            return p;
+        }
+    }
+
+    public void registerPlugin(JIBPlugin p) {
+        List<JIBPlugin> _plugins = Collections.synchronizedList(plugins);
+        synchronized (_plugins) {
+            plugins.add(p);
         }
     }
 }
