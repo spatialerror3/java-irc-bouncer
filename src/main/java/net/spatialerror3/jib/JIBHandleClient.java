@@ -245,7 +245,7 @@ public class JIBHandleClient implements Runnable {
         }
         if (l.startsWith("JOIN")) {
             if (!l.equals("JOIN :")) {
-                String[] channels = l.substring(5).split(",");
+                String[] channels = JIBStringUtil.remDD(l.substring(5)).split(",");
                 for (int j = 0; j < channels.length; j++) {
                     getSingleJIBIRC().simulateJoin(channels[j]);
                     JavaIrcBouncer.jibDbUtil.addChannel(authed, authed.getJibIRC().getConnectedTo(), channels[j]);
