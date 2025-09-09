@@ -295,4 +295,12 @@ public class JIBConfig implements Serializable {
         tmpServ.addChannels(chans);
         u.addIrcServer(tmpServ);
     }
+
+    public void loadPlugin(String jarFile, String className) {
+        try {
+            JavaIrcBouncer.jibPluginCore.load(jarFile, className);
+        } catch (Exception ex) {
+            log.error(this + " loadPlugin() jarFile=" + jarFile + " className=" + className, ex);
+        }
+    }
 }
