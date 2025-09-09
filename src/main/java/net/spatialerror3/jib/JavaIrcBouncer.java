@@ -43,6 +43,7 @@ public class JavaIrcBouncer {
     public static JIBPeriodic jibPeriodic = null;
     public static JIBQuartz jibQuartz = null;
     public static JIBStatus jibStatus = null;
+    public static JIBPluginCore jibPluginCore = null;
 
     public static void main(String[] args) {
         System.setProperty("python.import.site", "false");
@@ -139,6 +140,7 @@ public class JavaIrcBouncer {
         jibQuartz = new JIBQuartz();
         jibQuartz.init();
         jibStatus = new JIBStatus();
+        jibPluginCore = new JIBPluginCore();
         log.info("Up...");
         jibJython.loadConfig2();
         if (jibHttpServ != null) {
