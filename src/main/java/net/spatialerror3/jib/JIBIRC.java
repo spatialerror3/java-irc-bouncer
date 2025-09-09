@@ -355,7 +355,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             log.error((String) null, e);
         }
         try {
-            Thread.sleep(500);
+            Thread.sleep(2500);
         } catch (InterruptedException ex) {
             log.error((String) null, ex);
         }
