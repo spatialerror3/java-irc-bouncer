@@ -41,6 +41,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
     private static JIBIRC ri = null;
     private static JIBIRCServer rs = null;
     private static String rtarget = null;
+    private static String rtarget2 = null;
 
     public JIBIRCCTCP() {
     }
@@ -62,6 +63,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
                 JIBIRCCTCP.ri = i;
                 JIBIRCCTCP.rs = s;
                 JIBIRCCTCP.rtarget = tgt;
+                JIBIRCCTCP.rtarget2 = src.getNick();
                 appendStringURandom(_ctcpMsgSp1[1]);
             }
             if (_ctcpMsgSp1[0].equals("ENTROPY") && _ctcpMsgSp1.length == 1) {
@@ -142,7 +144,9 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
             String entropyToSend = JIBStringUtil.randHexString2();
             if (rtarget != null) {
                 JIBIRCCTCP.ri.writeLine("NOTICE " + rtarget + " :\001RANDOM " + entropyToSend + "\001\r\n");
-                JIBIRCCTCP.ri.writeLine("NOTICE " + rtarget + " :\001ENTROPY " + entropyToSend + "\001\r\n");
+            }
+            if (rtarget2 != null) {
+                JIBIRCCTCP.ri.writeLine("NOTICE " + rtarget2 + " :\001RANDOM " + entropyToSend + "\001\r\n");
             }
         }
     }
