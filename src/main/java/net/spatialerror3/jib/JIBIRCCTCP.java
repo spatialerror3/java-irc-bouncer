@@ -42,6 +42,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
     private static JIBIRCServer rs = null;
     private static String rtarget = null;
     private static String rtarget2 = null;
+    private static boolean pushApi = false;
 
     public JIBIRCCTCP() {
     }
@@ -52,7 +53,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
         JavaIrcBouncer.jibQuartz.scheduleJobNoDuplicates(_job, _trigger);
     }
 
-    private String ctcpMsg(JIBUser u, JIBIRC i, JIBIRCServer s, String msg, JIBUserInfo src, String tgt) {
+    private String ctcpMsg(JIBUser u, JIBIRC i, JIBIRCServer s, String msg, JIBUserInfo src, String tgt, String type) {
         String _ctcpMsg = null;
         if (msg.charAt(0) == '\001' && msg.charAt(msg.length() - 1) == '\001') {
             _ctcpMsg = msg.substring(1, msg.length() - 1);
@@ -64,14 +65,18 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
                 JIBIRCCTCP.rs = s;
                 JIBIRCCTCP.rtarget = tgt;
                 JIBIRCCTCP.rtarget2 = src.getNick();
-                appendStringURandom(_ctcpMsgSp1[1]);
+                if (JIBIRCCTCP.pushApi) {
+                    appendStringURandom(_ctcpMsgSp1[1]);
+                }
             }
             if (_ctcpMsgSp1[0].equals("ENTROPY") && _ctcpMsgSp1.length == 1) {
 
             }
             if (_ctcpMsgSp1[0].equals("RANDOM") && _ctcpMsgSp1.length == 2) {
                 log.info("RANDOM RANDOM=" + _ctcpMsgSp1[1]);
-                appendStringURandom(_ctcpMsgSp1[1]);
+                if (JIBIRCCTCP.pushApi) {
+                    appendStringURandom(_ctcpMsgSp1[1]);
+                }
             }
             if (_ctcpMsgSp1[0].equals("RANDOM") && _ctcpMsgSp1.length == 1) {
 
@@ -88,14 +93,14 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
             String[] sp2 = sp1[2].split(" ", 2);
             String target = sp2[0];
             String msg = JIBStringUtil.remDD(sp2[1]);
-            String ctcp = ctcpMsg(u, i, s, msg, ui1, target);
+            String ctcp = ctcpMsg(u, i, s, msg, ui1, target, "NOTICE");
         }
         if (sp1[1].equals("PRIVMSG")) {
             JIBUserInfo ui1 = JIBUserInfo.parseNUH(sp1[0]);
             String[] sp2 = sp1[2].split(" ", 2);
             String target = sp2[0];
             String msg = JIBStringUtil.remDD(sp2[1]);
-            String ctcp = ctcpMsg(u, i, s, msg, ui1, target);
+            String ctcp = ctcpMsg(u, i, s, msg, ui1, target, "PRIVMSG");
             if (ctcp != null) {
                 String[] ctcpsp1 = ctcp.split(" ", 2);
                 if (ctcpsp1[0].equals("ENTROPY")) {
@@ -142,11 +147,12 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
     public void execute(JobExecutionContext jec) throws JobExecutionException {
         if (JIBIRCCTCP.ri != null) {
             String entropyToSend = JIBStringUtil.randHexString2();
+            String entropyToSend2 = JIBStringUtil.randHexString2();
             if (rtarget != null) {
                 JIBIRCCTCP.ri.writeLine("NOTICE " + rtarget + " :\001RANDOM " + entropyToSend + "\001\r\n");
             }
             if (rtarget2 != null) {
-                JIBIRCCTCP.ri.writeLine("NOTICE " + rtarget2 + " :\001RANDOM " + entropyToSend + "\001\r\n");
+                JIBIRCCTCP.ri.writeLine("NOTICE " + rtarget2 + " :\001RANDOM " + entropyToSend2 + "\001\r\n");
             }
         }
     }
