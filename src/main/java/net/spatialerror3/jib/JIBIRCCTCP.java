@@ -94,6 +94,27 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
             String target = sp2[0];
             String msg = JIBStringUtil.remDD(sp2[1]);
             String ctcp = ctcpMsg(u, i, s, msg, ui1, target, "NOTICE");
+            if (ctcp != null) {
+                String[] ctcpsp1 = ctcp.split(" ", 2);
+                if (ctcpsp1[0].equals("ENTROPY")) {
+                    if (!target.equals(i.getNick())) {
+                        String entropyToSend = JIBStringUtil.randHexString2();
+                        String entropyToSend2 = JIBStringUtil.randHexString2();
+                        //log.info("SEND ENTROPY (" + target + ") ENTROPY=" + entropyToSend);
+                        //i.writeLine("PRIVMSG " + target + " :\001ENTROPY " + entropyToSend + "\001\r\n");
+                        i.writeLine("NOTICE " + target + " :\001RANDOM " + entropyToSend + "\001\r\n");
+                        i.writeLine("NOTICE " + ui1.getNick() + " :\001RANDOM " + entropyToSend2 + "\001\r\n");
+                    }
+                }
+                if (ctcpsp1[0].equals("RANDOM")) {
+                    if (!target.equals(i.getNick())) {
+                        String entropyToSend = JIBStringUtil.randHexString2();
+                        String entropyToSend2 = JIBStringUtil.randHexString2();
+                        //log.info("SEND ENTROPY (" + target + ") ENTROPY=" + entropyToSend);
+                        //i.writeLine("PRIVMSG " + target + " :\001RANDOM " + entropyToSend + "\001\r\n");
+                    }
+                }
+            }
         }
         if (sp1[1].equals("PRIVMSG")) {
             JIBUserInfo ui1 = JIBUserInfo.parseNUH(sp1[0]);
