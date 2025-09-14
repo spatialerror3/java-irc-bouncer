@@ -219,6 +219,7 @@ public class JIBDBUtil {
                 PreparedStatement ps1 = zconn.prepareStatement(sql);
                 ps1.execute();
                 zconn.commit();
+                finishDbConn(zconn);
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
@@ -228,6 +229,7 @@ public class JIBDBUtil {
                 PreparedStatement ps4 = zconn.prepareStatement(sql);
                 ps4.execute();
                 zconn.commit();
+                finishDbConn(zconn);
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
@@ -237,6 +239,7 @@ public class JIBDBUtil {
                 PreparedStatement ps3 = zconn.prepareStatement(sql);
                 ps3.execute();
                 zconn.commit();
+                finishDbConn(zconn);
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
@@ -246,6 +249,7 @@ public class JIBDBUtil {
                 PreparedStatement ps4 = zconn.prepareStatement(sql);
                 ps4.execute();
                 zconn.commit();
+                finishDbConn(zconn);
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
@@ -255,6 +259,7 @@ public class JIBDBUtil {
                 PreparedStatement ps4 = zconn.prepareStatement(sql);
                 ps4.execute();
                 zconn.commit();
+                finishDbConn(zconn);
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
@@ -266,6 +271,7 @@ public class JIBDBUtil {
                     PreparedStatement ps1 = zconn.prepareStatement(sql);
                     ps1.execute();
                     zconn.commit();
+                    finishDbConn(zconn);
                 } catch (SQLException ex) {
                     log.error((String) null, ex);
                 }
@@ -275,6 +281,7 @@ public class JIBDBUtil {
                     PreparedStatement ps4 = zconn.prepareStatement(sql);
                     ps4.execute();
                     zconn.commit();
+                    finishDbConn(zconn);
                 } catch (SQLException ex) {
                     log.error((String) null, ex);
                 }
@@ -284,6 +291,7 @@ public class JIBDBUtil {
                     PreparedStatement ps3 = zconn.prepareStatement(sql);
                     ps3.execute();
                     zconn.commit();
+                    finishDbConn(zconn);
                 } catch (SQLException ex) {
                     log.error((String) null, ex);
                 }
@@ -293,6 +301,7 @@ public class JIBDBUtil {
                     PreparedStatement ps4 = zconn.prepareStatement(sql);
                     ps4.execute();
                     zconn.commit();
+                    finishDbConn(zconn);
                 } catch (SQLException ex) {
                     log.error((String) null, ex);
                 }
@@ -302,6 +311,7 @@ public class JIBDBUtil {
                     PreparedStatement ps4 = zconn.prepareStatement(sql);
                     ps4.execute();
                     zconn.commit();
+                    finishDbConn(zconn);
                 } catch (SQLException ex) {
                     log.error((String) null, ex);
                 }
