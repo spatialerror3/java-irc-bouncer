@@ -33,6 +33,7 @@ public class JIBIRCLogon implements Runnable {
     public JIBIRCLogon(JIBIRC i, JIBUser u) {
         this.i = i;
         this.u = u;
+        this.i.setPreLogon(false);
     }
 
     public void run() {
