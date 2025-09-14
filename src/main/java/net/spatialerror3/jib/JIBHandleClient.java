@@ -64,8 +64,8 @@ public class JIBHandleClient implements Runnable {
 
     public void onAuthDone() {
         String[] channels = null;
-        //String setTrackNick = getSingleJIBIRC().simulateNick(trackNick, null);
-        //trackNick = setTrackNick;
+        String setTrackNick = getSingleJIBIRC().simulateNick(trackNick, null);
+        trackNick = setTrackNick;
         refreshNick();
         try {
             channels = JavaIrcBouncer.jibDbUtil.getChannels(authed);
