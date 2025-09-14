@@ -40,7 +40,7 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JIBIRC implements Runnable, JIBIRCLineProcessing {
-
+    
     private static final Logger log = LogManager.getLogger(JIBIRC.class);
     private static boolean DEBUGGING = false;
     private static JIBIRCCTCP _jibIrcCtcp = null;
@@ -84,7 +84,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
     private boolean keepDisconnected = false;
     //
     private ArrayList<JIBIRCLineProcessing> additionalLineProcessors = null;
-
+    
     public JIBIRC(JIBUser u, JIBIRCServer serv) {
         JIBIRC.DEBUGGING = JavaIrcBouncer.jibDebug.debug();
         this.u = u;
@@ -104,13 +104,13 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         }
         this.additionalLineProcessors = new ArrayList<JIBIRCLineProcessing>();
     }
-
+    
     public void addAdditionalLineProcessor(JIBIRCLineProcessing lp) {
         if (!this.additionalLineProcessors.contains(lp)) {
             this.additionalLineProcessors.add(lp);
         }
     }
-
+    
     public void init() {
         //
         this.Server = serv.getServer();
@@ -144,7 +144,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         //connect(null);
         addAdditionalLineProcessor(getJIBIRCCTCP());
     }
-
+    
     public JIBIRCCTCP getJIBIRCCTCP() {
         if (JIBIRC._jibIrcCtcp != null) {
             return JIBIRC._jibIrcCtcp;
@@ -153,11 +153,11 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         JIBIRC._jibIrcCtcp.schedule();
         return JIBIRC._jibIrcCtcp;
     }
-
+    
     public String getNick() {
         return this.nick;
     }
-
+    
     public boolean connected() {
         if (connecting == true) {
             return true;
@@ -171,10 +171,10 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         if (connected == true) {
             return true;
         }
-
+        
         return false;
     }
-
+    
     public void connect2(JIBIRCServer serv) {
         if (serv == null) {
             this.serv = u.getIrcServer();
@@ -187,7 +187,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         init();
         connect(serv);
     }
-
+    
     private void connect(JIBIRCServer serv) {
         SSLContext sslctx = null;
         if (connected == true) {
@@ -296,7 +296,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         }
         connecting = false;
     }
-
+    
     public void disconnect(JIBIRCServer serv) {
         if (this.serv.equals(serv)) {
             // FIXME: disconnect from server
@@ -304,7 +304,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             writeLine("QUIT :\r\n");
         }
     }
-
+    
     public void reconnect() {
         if (DEBUGGING) {
             log.debug("reconnect() called...");
@@ -320,11 +320,11 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             connect(null);
         }
     }
-
+    
     public JIBIRCServer getConnectedTo() {
         return this.serv;
     }
-
+    
     public void onConnect() {
         ping1 = new JIBPinger(sock);
         ping1.setPingStr();
@@ -345,19 +345,19 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         t4.start();
         ping1.doPing();
     }
-
+    
     public JIBIRCNickServ getNS() {
         return this.ns;
     }
-
+    
     public JIBIRCPerform getPerform() {
         return this.perform;
     }
-
+    
     public void setPreLogon(boolean preLogon) {
         this.preLogon = preLogon;
     }
-
+    
     public void onLogon() {
         boolean _threaded = true;
         if (DEBUGGING) {
@@ -401,7 +401,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             preLogon = false;
         }
     }
-
+    
     public void writeLine(String l) {
         if (DEBUGGING) {
             log.debug(this + " writeLine()=" + JIBStringUtil.remEOL2(l));
@@ -411,7 +411,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         }
         sock.writeLine(l);
     }
-
+    
     public void processLine(JIBUser _u, JIBIRC _i, JIBIRCServer _s, String l) {
         if (DEBUGGING) {
             log.debug(this + " l=" + l);
@@ -467,7 +467,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         }
         u.writeAllClients(l);
     }
-
+    
     public String simulateNick(String oldnick, String newnick) {
         if (newnick == null) {
             if (myInfo != null && myInfo.nick != null && myInfo.nick.length() > 0) {
@@ -480,7 +480,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         u.writeAllClients(nickSim + "\r\n");
         return newnick;
     }
-
+    
     public void simulateJoin(String chan) {
         if (myInfo == null) {
             return;
@@ -493,7 +493,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             u.writeAllClients(joinSim2 + "\r\n");
         }
     }
-
+    
     public void simulateJoin(String chan, String nick) {
         String joinSim = ":" + nick + " JOIN " + chan + " * :" + realname;
         String joinSim2 = ":" + nick + " JOIN :" + chan;
@@ -507,30 +507,31 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             writeLine("NAMES " + chan + "\r\n");
             u.writeAllClients(":JIB.jib 324 " + nick + " " + chan + " +nt\r\n");
             u.writeAllClients(":JIB.jib 329 " + nick + " " + chan + " 0\r\n");
+            u.writeAllClients(":JIB.jib 352 " + nick + " " + chan + " " + myInfo.getUser() + " " + myInfo.getHost() + " JIB.jib " + nick + " H :0 " + myInfo.getRealname());
             u.writeAllClients(":JIB.jib 315 " + nick + " " + chan + " :End of /WHO list.\r\n");
         }
     }
-
+    
     public void simulatePART(String chan, JIBUserInfo who) {
         String partSim = ":" + who.nuh() + " PART " + chan;
         u.writeAllClients(partSim + "\r\n");
     }
-
+    
     public void simulatePART(JIBHandleClient skip, String chan, JIBUserInfo who) {
         String partSim = ":" + who.nuh() + " PART " + chan;
         u.writeAllClients(skip, partSim + "\r\n");
     }
-
+    
     public void simulatePRIVMSG(String chan, String msg) {
         String msgSim = ":" + myInfo.nuh() + " PRIVMSG " + chan + " :" + msg;
         u.writeAllClients(msgSim + "\r\n");
     }
-
+    
     public void simulatePRIVMSG(JIBHandleClient skip, String chan, String msg) {
         String msgSim = ":" + myInfo.nuh() + " PRIVMSG " + chan + " :" + msg;
         u.writeAllClients(skip, msgSim + "\r\n");
     }
-
+    
     public Exception getError() {
         if (sock != null && sock.getError() != null) {
             connected = false;
@@ -540,11 +541,11 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         }
         return sock.getError();
     }
-
+    
     public Exception getConnectError() {
         return this.connectError;
     }
-
+    
     public void run() {
         String l = null;
         while (errorCounter < 15) {
