@@ -345,39 +345,58 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         ping1.doPing();
     }
 
+    public JIBIRCNickServ getNS() {
+        return this.ns;
+    }
+
+    public JIBIRCPerform getPerform() {
+        return this.perform;
+    }
+
+    public void setPreLogon(boolean preLogon) {
+        this.preLogon = preLogon;
+    }
+
     public void onLogon() {
+        boolean _threaded = true;
         if (DEBUGGING) {
             log.debug("onLogon()");
         }
-        try {
-            this.ns.identify();
-        } catch (Exception e) {
-            log.error((String) null, e);
-        }
-        try {
-            Thread.sleep(2500);
-        } catch (InterruptedException ex) {
-            log.error((String) null, ex);
-        }
-        try {
-            this.perform.perform();
-        } catch (Exception e) {
-            log.error((String) null, e);
-        }
-        try {
-            String[] chans = JavaIrcBouncer.jibDbUtil.getChannels(u);
-            for (int i = 0; i < chans.length; i++) {
-                if (chans[i] != null) {
-                    writeLine("JOIN " + chans[i] + "\r\n");
-                }
+        if (_threaded) {
+            JIBIRCLogon _logon = new JIBIRCLogon(this, u);
+            Thread logonThread = new Thread(_logon);
+            logonThread.start();
+        } else {
+            try {
+                this.ns.identify();
+            } catch (Exception e) {
+                log.error((String) null, e);
             }
-        } catch (Exception e) {
-            log.error((String) null, e);
+            try {
+                Thread.sleep(2500);
+            } catch (InterruptedException ex) {
+                log.error((String) null, ex);
+            }
+            try {
+                this.perform.perform();
+            } catch (Exception e) {
+                log.error((String) null, e);
+            }
+            try {
+                String[] chans = JavaIrcBouncer.jibDbUtil.getChannels(u);
+                for (int i = 0; i < chans.length; i++) {
+                    if (chans[i] != null) {
+                        writeLine("JOIN " + chans[i] + "\r\n");
+                    }
+                }
+            } catch (Exception e) {
+                log.error((String) null, e);
+            }
+            if (DEBUGGING) {
+                log.debug("preLogon=false");
+            }
+            preLogon = false;
         }
-        if (DEBUGGING) {
-            log.debug("preLogon=false");
-        }
-        preLogon = false;
     }
 
     public void writeLine(String l) {
