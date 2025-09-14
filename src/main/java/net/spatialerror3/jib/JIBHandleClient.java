@@ -67,8 +67,8 @@ public class JIBHandleClient implements Runnable {
         String setTrackNick = getSingleJIBIRC().simulateNick(trackNick, null);
         trackNick = setTrackNick;
         try {
-            JavaIrcBouncer.jibDbUtil.getChannels(authed);
-            for (int j = 0; j < channels.length; j++) {
+            channels = JavaIrcBouncer.jibDbUtil.getChannels(authed);
+            for (int j = 0; channels != null && j < channels.length; j++) {
                 if (channels[j] != null) {
                     //getSingleJIBIRC().simulateJoin(channels[j]);
                     getSingleJIBIRC().simulateJoin(channels[j], getSingleJIBIRC().getNick());
