@@ -190,6 +190,25 @@ public class JIBDBUtil {
         return conn;
     }
 
+    private void finishDbConn(Connection _zconn) {
+        if (_zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    _zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+            if (altDbTypePgSql()) {
+                try {
+                    _zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+        }
+    }
+
     public void initSchema() {
         Connection zconn = null;
         String altDbType = JavaIrcBouncer.jibConfig.getValue("ALTDBTYPE");
@@ -335,12 +354,14 @@ public class JIBDBUtil {
     }
 
     public long loadUsers() {
+        Connection zconn = null;
         long loadedUsers = 0L;
         String sql = "SELECT userId,_uuid,username,authtoken,admin,opt,u FROM users;";
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
         try {
-            ps5 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps5 = zconn.prepareStatement(sql);
             rs5 = ps5.executeQuery();
         } catch (SQLException ex) {
             log.error((String) null, ex);
@@ -376,6 +397,7 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
         this.dbLoadedUsers = loadedUsers;
+        finishDbConn(zconn);
         return loadedUsers;
     }
 
@@ -419,32 +441,63 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+        }
     }
 
     public void addUserAuthToken(JIBUser u) {
+        Connection zconn = null;
         String sql = "UPDATE users SET authtoken = ? WHERE _uuid = ?";
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setString(1, u.getAuthToken());
             ps2.setString(2, u.getUUID().toString());
             ps2.execute();
-            getDatabase().commit();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
         }
     }
 
     public void removeUser(JIBUser u) {
+        Connection zconn = null;
         String sql = "DELETE FROM users WHERE _uuid = ?;";
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setString(1, u.getUUID().toString());
             ps2.execute();
-            getDatabase().commit();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
         }
     }
 
@@ -475,11 +528,13 @@ public class JIBDBUtil {
     }
 
     public boolean containsClientAuth(JIBUser u) {
+        Connection zconn = null;
         String sql = "SELECT username FROM clientauth WHERE username = ?;";
         PreparedStatement ps2 = null;
         ResultSet rs2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps2.setString(1, u.getUserName());
             rs2 = ps2.executeQuery();
         } catch (SQLException ex) {
@@ -487,39 +542,64 @@ public class JIBDBUtil {
         }
         if (rs2 != null) {
             if (cntResultSet(rs2) > 0) {
+                finishDbConn(zconn);
                 return true;
             }
         }
+        finishDbConn(zconn);
         return false;
     }
 
     public void updateClientAuth(JIBUser u, String authToken) {
+        Connection zconn = null;
         String sql = "UPDATE clientauth SET password = ? WHERE username = ?;";
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setString(1, u.getAuthToken());
             ps2.setString(2, u.getUserName());
             ps2.execute();
-            getDatabase().commit();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
         }
     }
 
     public void addClientAuth(JIBUser u, String authToken) {
+        Connection zconn = null;
         String sql = "INSERT INTO clientauth (username,password) VALUES(?,?);";
         PreparedStatement ps2 = null;
         if (containsClientAuth(u)) {
             return;
         }
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setString(1, u.getUserName());
             ps2.setString(2, authToken);
             ps2.execute();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
         }
     }
 
@@ -584,30 +664,53 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+        }
     }
 
     public void removeServer(JIBUser u, JIBIRCServer serv) {
+        Connection zconn = null;
         String sql = "DELETE FROM servers WHERE server = ? AND port = ? AND u = ? AND s = ?;";
         PreparedStatement ps2 = null;
         try {
-            ps2 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps2 = zconn.prepareStatement(sql);
             ps2.setString(1, serv.getServer());
             ps2.setInt(2, serv.getPort());
             ps2.setString(3, u.getUUID().toString());
             ps2.setString(4, serv.getUUID().toString());
             ps2.execute();
+            zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
         }
     }
 
     public boolean hasServer(JIBUser u, JIBIRCServer serv) {
+        Connection zconn = null;
         String sql = "SELECT u,s FROM servers WHERE u = ? AND s = ?";
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
 
         try {
-            ps5 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps5 = zconn.prepareStatement(sql);
             ps5.setString(1, u.getUUID().toString());
             ps5.setString(2, serv.getUUID().toString());
             rs5 = ps5.executeQuery();
@@ -620,6 +723,7 @@ public class JIBDBUtil {
                 String useruuid = rs5.getString(1);
                 String servuuid = rs5.getString(2);
                 if (u.getUUID().toString().equals(useruuid) && serv.getUUID().toString().equals(servuuid)) {
+                    finishDbConn(zconn);
                     return true;
                 }
             }
@@ -627,10 +731,12 @@ public class JIBDBUtil {
             log.error((String) null, ex);
         }
 
+        finishDbConn(zconn);
         return false;
     }
 
     public ArrayList<JIBIRCServer> getServers(JIBUser u) {
+        Connection zconn = null;
         String sql = "SELECT u, s, server, port, `ssl`, `ipv6`,clientbind,serverpass,nick,username,realname,nsacct,nspass,channels, opt FROM servers WHERE u = ?;";
         ArrayList<JIBIRCServer> ret = null;
         ret = new ArrayList<JIBIRCServer>();
@@ -638,7 +744,8 @@ public class JIBDBUtil {
         ResultSet rs5 = null;
 
         try {
-            ps5 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps5 = zconn.prepareStatement(sql);
             ps5.setString(1, u.getUUID().toString());
             rs5 = ps5.executeQuery();
         } catch (SQLException ex) {
@@ -671,6 +778,15 @@ public class JIBDBUtil {
             }
         } catch (SQLException ex) {
             log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
         }
 
         return ret;
@@ -877,12 +993,14 @@ public class JIBDBUtil {
     }
 
     public ArrayList<String> replayLog(JIBUser u) {
+        Connection zconn = null;
         String sql = "SELECT loguser,logtarget,logmessage FROM log1 WHERE u = ?;";
         ArrayList<String> replay = new ArrayList<String>();
         PreparedStatement ps8 = null;
         ResultSet rs8 = null;
         try {
-            ps8 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            zconn = getDatabase();
+            ps8 = zconn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps8.setString(1, u.getUUID().toString());
         } catch (SQLException ex) {
             log.error((String) null, ex);
@@ -911,16 +1029,27 @@ public class JIBDBUtil {
                 log.error((String) null, ex);
             }
         }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+        }
         return replay;
     }
 
     public ArrayList<String> replayLogDays(JIBUser u, int days) {
+        Connection zconn = null;
         String sql = "SELECT loguser,logtarget,logmessage,(SELECT TIMESTAMPDIFF(DAY,ts1,NOW())) AS tsdiffdays FROM log1 WHERE u = ? AND (SELECT TIMESTAMPDIFF(DAY,ts1,NOW())) <= 2;";
         ArrayList<String> replay = new ArrayList<String>();
         PreparedStatement ps8 = null;
         ResultSet rs8 = null;
         try {
-            ps8 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            zconn = getDatabase();
+            ps8 = zconn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps8.setString(1, u.getUUID().toString());
             ps8.setInt(2, days);
         } catch (SQLException ex) {
@@ -948,6 +1077,15 @@ public class JIBDBUtil {
                 }
             } catch (SQLException ex) {
                 log.error((String) null, ex);
+            }
+        }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
             }
         }
         return replay;
@@ -1019,11 +1157,13 @@ public class JIBDBUtil {
     }
 
     public boolean checkUserPass(String User, String Pass) {
+        Connection zconn = null;
         String sql = "SELECT COUNT(*) FROM clientauth WHERE username = ? AND password = ?;";
         PreparedStatement ps9 = null;
         ResultSet rs9 = null;
         try {
-            ps9 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            zconn = getDatabase();
+            ps9 = zconn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
@@ -1036,8 +1176,10 @@ public class JIBDBUtil {
             try {
                 while (rs9.next()) {
                     if (rs9.getInt(1) > 0) {
+                        finishDbConn(zconn);
                         return true;
                     } else {
+                        finishDbConn(zconn);
                         return false;
                     }
                 }
@@ -1045,6 +1187,7 @@ public class JIBDBUtil {
                 log.error((String) null, se);
             }
         }
+        finishDbConn(zconn);
         return false;
     }
 }
