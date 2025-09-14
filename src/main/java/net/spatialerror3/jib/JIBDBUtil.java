@@ -735,6 +735,15 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+        }
     }
 
     /*
@@ -767,20 +776,32 @@ public class JIBDBUtil {
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+        }
     }
 
     public String[] getChannels(JIBUser u) {
+        Connection zconn = null;
         Vector<String> cv = new Vector<String>();
         String[] channels = new String[100];
         PreparedStatement ps5 = null;
         ResultSet rs5 = null;
         String sql = "SELECT channel FROM channels WHERE u = ?;";
         try {
-            ps5 = getDatabase().prepareStatement(sql);
+            zconn = getDatabase();
+            ps5 = zconn.prepareStatement(sql);
             ps5.setString(1, u.getUUID().toString());
             rs5 = ps5.executeQuery();
         } catch (SQLException ex) {
             log.error((String) null, ex);
+            return new String[0];
         }
         try {
             //if (rs5 != null) {
@@ -792,8 +813,18 @@ public class JIBDBUtil {
             }
         } catch (SQLException ex) {
             log.error((String) null, ex);
+            return new String[0];
         }
         channels = (String[]) cv.toArray(channels);
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+        }
         return channels;
     }
 
@@ -833,6 +864,15 @@ public class JIBDBUtil {
             zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
         }
     }
 
@@ -939,6 +979,15 @@ public class JIBDBUtil {
                 log.error((String) null, ex);
             }
         }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+        }
     }
 
     public void clearLogOlderThan2Days() {
@@ -957,6 +1006,15 @@ public class JIBDBUtil {
             zconn.commit();
         } catch (SQLException ex) {
             log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
         }
     }
 
