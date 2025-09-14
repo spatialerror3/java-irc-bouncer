@@ -245,6 +245,10 @@ public class JIBHandleClient implements Runnable {
             checkUserPass();
             //sendLine(l);
         }
+        if (l.startsWith("AUTHENTICATE PLAIN")) {
+            passthrough = false;
+            sendLine("AUTHENTICATE +\r\n");
+        }
         if (l.startsWith("QUIT")) {
             passthrough = false;
             return;
