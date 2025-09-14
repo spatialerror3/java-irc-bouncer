@@ -63,15 +63,20 @@ public class JIBHandleClient implements Runnable {
     }
 
     public void onAuthDone() {
-        String[] channels = JavaIrcBouncer.jibDbUtil.getChannels(authed);
+        String[] channels = null;
         String setTrackNick = getSingleJIBIRC().simulateNick(trackNick, null);
         trackNick = setTrackNick;
-        for (int j = 0; j < channels.length; j++) {
-            if (channels[j] != null) {
-                //getSingleJIBIRC().simulateJoin(channels[j]);
-                getSingleJIBIRC().simulateJoin(channels[j], getSingleJIBIRC().getNick());
-                getSingleJIBIRC().simulateJoin(channels[j], trackNick);
+        try {
+            JavaIrcBouncer.jibDbUtil.getChannels(authed);
+            for (int j = 0; j < channels.length; j++) {
+                if (channels[j] != null) {
+                    //getSingleJIBIRC().simulateJoin(channels[j]);
+                    getSingleJIBIRC().simulateJoin(channels[j], getSingleJIBIRC().getNick());
+                    getSingleJIBIRC().simulateJoin(channels[j], trackNick);
+                }
             }
+        } catch (Exception e) {
+            log.error(e);
         }
         sendLine(":JIB.jib NOTICE " + trackNick + " :IDENTIFIED AS " + authed.getUUID().toString() + "\r\n");
         // FIXME: ADD REPLAY
