@@ -63,6 +63,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
     private boolean noSsl = false;
     //
     private boolean preLogon = true;
+    private JIBIRCLogon _logon = null;
     private JIBIRCNickServ ns = null;
     private JIBIRCPerform perform = null;
     //
@@ -363,7 +364,9 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             log.debug("onLogon()");
         }
         if (_threaded) {
-            JIBIRCLogon _logon = new JIBIRCLogon(this, u);
+            if (_logon == null) {
+                _logon = new JIBIRCLogon(this, u);
+            }
             Thread logonThread = new Thread(_logon);
             logonThread.start();
         } else {
