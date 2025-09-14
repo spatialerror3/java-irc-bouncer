@@ -36,6 +36,7 @@ public class JIBIRCLogon implements Runnable {
     }
 
     public void run() {
+        this.i.setPreLogon(false);
         try {
             this.i.getNS().identify();
         } catch (Exception e) {
@@ -61,6 +62,5 @@ public class JIBIRCLogon implements Runnable {
         } catch (Exception e) {
             log.error((String) null, e);
         }
-        this.i.setPreLogon(false);
     }
 }
