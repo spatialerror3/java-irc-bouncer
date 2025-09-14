@@ -316,6 +316,9 @@ public class JIBDBUtil {
                     log.error((String) null, ex);
                 }
             }
+            if (altDbTypePgSql()) {
+                // FIXME
+            }
         }
         try {
             getDatabase().commit();
@@ -853,7 +856,7 @@ public class JIBDBUtil {
         try {
             zconn = getDatabase();
             ps2 = zconn.prepareStatement(sql);
-            ps2.setString(1, Channel);
+            ps2.setString(1, Channel.trim());
             ps2.setString(2, u.getUUID().toString());
             ps2.setString(3, s.getUUID().toString());
             ps2.execute();
@@ -894,7 +897,7 @@ public class JIBDBUtil {
         try {
             zconn = getDatabase();
             ps2 = zconn.prepareStatement(sql);
-            ps2.setString(1, Channel);
+            ps2.setString(1, Channel.trim());
             ps2.setString(2, u.getUUID().toString());
             ps2.setString(3, s.getUUID().toString());
             ps2.execute();
@@ -935,7 +938,7 @@ public class JIBDBUtil {
             //}
             while (rs5 != null && rs5.next()) {
                 cv.add(rs5.getString(1));
-                log.debug("Contains Channel=" + rs5.getString(1));
+                log.debug("Contains Channel=" + rs5.getString(1).trim());
             }
         } catch (SQLException ex) {
             log.error((String) null, ex);
@@ -962,7 +965,7 @@ public class JIBDBUtil {
         try {
             ps5 = getDatabase().prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ps5.setString(1, u.getUUID().toString());
-            ps5.setString(2, chan);
+            ps5.setString(2, chan.trim());
             ps5.setString(3, s.getUUID().toString());
             rs5 = ps5.executeQuery();
         } catch (SQLException ex) {
