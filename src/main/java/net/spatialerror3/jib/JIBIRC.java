@@ -340,6 +340,9 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         if (ping1 == null) {
             ping1 = new JIBPinger(sock);
         }
+        if (ping1.getJIBSocket() != sock) {
+            ping1 = new JIBPinger(sock);
+        }
         return ping1;
     }
 
