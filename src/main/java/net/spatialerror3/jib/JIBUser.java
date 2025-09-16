@@ -175,7 +175,14 @@ public class JIBUser implements Serializable {
             al1.add(jibhc);
         }
     }
-
+    
+    public void delClient(JIBHandleClient jibhc) {
+        List<JIBHandleClient> al1 = Collections.synchronizedList(clients);
+        synchronized (al1) {
+            al1.remove(jibhc);
+        }
+    }
+    
     /**
      *
      * @param l
