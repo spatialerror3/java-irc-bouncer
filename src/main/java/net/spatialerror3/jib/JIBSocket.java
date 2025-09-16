@@ -49,6 +49,9 @@ public class JIBSocket {
     BufferedWriter BW = null;
     //
     Exception e = null;
+    //
+    long linesWritten = 0L;
+    long linesRead = 0L;
 
     /**
      *
@@ -149,6 +152,7 @@ public class JIBSocket {
         if (getError() != null) {
             return null;
         }
+        linesWritten++;
         try {
             BW.write(l);
             BW.flush();
@@ -238,6 +242,7 @@ public class JIBSocket {
         if (JIBSocket.SOCKETDEBUGGING) {
             System.err.println(this.s + " readLine()=" + JIBStringUtil.remEOL(l));
         }
+        linesRead++;
         return l;
     }
 
@@ -247,6 +252,14 @@ public class JIBSocket {
      */
     public Exception getError() {
         return e;
+    }
+
+    public long getLinesRead() {
+        return this.linesRead;
+    }
+
+    public long getLinesWritten() {
+        return this.linesWritten;
     }
 
     /**
