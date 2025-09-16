@@ -30,6 +30,10 @@ public class JIBPinger implements Runnable, JIBIRCLineProcessing {
         this.s = s;
     }
 
+    public JIBSocket getJIBSocket() {
+        return this.s;
+    }
+
     public void setPingStr() {
         pingStr = "LAG" + System.currentTimeMillis();
     }
