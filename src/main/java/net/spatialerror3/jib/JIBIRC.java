@@ -44,6 +44,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
     private static final Logger log = LogManager.getLogger(JIBIRC.class);
     private static boolean DEBUGGING = false;
     private static JIBIRCCTCP _jibIrcCtcp = null;
+    private static JIBIRCState _jibIrcState = null;
     private SSLSocket ircServer = null;
     private Socket ircServerNoSsl = null;
     private JIBSocket sock = null;
@@ -143,6 +144,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         //FIXME: 
         //connect(null);
         addAdditionalLineProcessor(getJIBIRCCTCP());
+        addAdditionalLineProcessor(getJIBIRCState());
     }
     
     public JIBIRCCTCP getJIBIRCCTCP() {
@@ -152,6 +154,14 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         JIBIRC._jibIrcCtcp = new JIBIRCCTCP();
         JIBIRC._jibIrcCtcp.schedule();
         return JIBIRC._jibIrcCtcp;
+    }
+    
+    public JIBIRCState getJIBIRCState() {
+        if (JIBIRC._jibIrcState != null) {
+            return JIBIRC._jibIrcState;
+        }
+        JIBIRC._jibIrcState = new JIBIRCState(this.u, this, this.serv);
+        return JIBIRC._jibIrcState;
     }
     
     public String getNick() {
