@@ -20,6 +20,7 @@ package net.spatialerror3.jib;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
@@ -49,6 +50,9 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
 
     public void init() {
         if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+            JIBIRCCTCP.pushApi = true;
+        }
+        if (SystemUtils.IS_OS_LINUX) {
             JIBIRCCTCP.pushApi = true;
         }
     }
