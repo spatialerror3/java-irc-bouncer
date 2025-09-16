@@ -47,6 +47,12 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
     public JIBIRCCTCP() {
     }
 
+    public void init() {
+        if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+            JIBIRCCTCP.pushApi = true;
+        }
+    }
+
     public void schedule() {
         JobDetail _job = newJob(JIBIRCCTCP.class).withIdentity("jibircctcpjob", "jibircctcpgroup").build();
         Trigger _trigger = newTrigger().withIdentity("jibirctcptrigger", "jibircctcpgroup").startNow().withSchedule(simpleSchedule().withIntervalInSeconds(900).repeatForever()).build();
@@ -88,7 +94,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
     @Override
     public void processLine(JIBUser u, JIBIRC i, JIBIRCServer s, String l) {
         String[] sp1 = l.split(" ", 3);
-        if (sp1[1].equals("NOTICE")) {
+        if (sp1.length >= 2 && sp1[1].equals("NOTICE")) {
             JIBUserInfo ui1 = JIBUserInfo.parseNUH(sp1[0]);
             String[] sp2 = sp1[2].split(" ", 2);
             String target = sp2[0];
@@ -116,7 +122,7 @@ public class JIBIRCCTCP implements JIBIRCLineProcessing, Job {
                 }
             }
         }
-        if (sp1[1].equals("PRIVMSG")) {
+        if (sp1.length >= 2 && sp1[1].equals("PRIVMSG")) {
             JIBUserInfo ui1 = JIBUserInfo.parseNUH(sp1[0]);
             String[] sp2 = sp1[2].split(" ", 2);
             String target = sp2[0];
