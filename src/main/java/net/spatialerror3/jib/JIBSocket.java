@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import javax.net.ssl.SSLHandshakeException;
 import org.apache.logging.log4j.LogManager;
@@ -52,6 +53,8 @@ public class JIBSocket {
     //
     long linesWritten = 0L;
     long linesRead = 0L;
+    //
+    SocketAddress remoteAddr = null;
 
     /**
      *
@@ -66,6 +69,7 @@ public class JIBSocket {
             }
             return;
         }
+        this.remoteAddr = s.getRemoteSocketAddress();
         try {
             IS = s.getInputStream();
         } catch (SSLHandshakeException ex) {
