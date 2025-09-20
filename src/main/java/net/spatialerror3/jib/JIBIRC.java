@@ -48,6 +48,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
     private SSLSocket ircServer = null;
     private Socket ircServerNoSsl = null;
     private JIBSocket sock = null;
+    private JIBSocketThread sockt = null;
     //
     private String Server = null;
     private int Port = -1;
@@ -80,6 +81,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
     //
     private Thread t3 = null;
     private Thread t4 = null;
+    private Thread t5 = null;
     //
     private Exception connectError = null;
     //
@@ -297,6 +299,9 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
                 sock = new JIBSocket(ircServerNoSsl);
             }
             if (sock != null && sock.getError() == null) {
+                sockt = new JIBSocketThread(sock, 512);
+                t5 = new Thread(sockt);
+                t5.start();
                 connected = true;
                 onConnect();
             }
@@ -432,7 +437,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         if (sock == null) {
             return;
         }
-        sock.writeLine(l);
+        sock.queueLine(l);
     }
 
     public void processLine(JIBUser _u, JIBIRC _i, JIBIRCServer _s, String l) {
