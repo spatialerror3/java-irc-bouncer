@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JIBHandleClient implements Runnable {
-    
+
     private static final Logger log = LogManager.getLogger(JIBHandleClient.class);
     private static boolean DEBUGGING = false;
     JIBSocket sock = null;
@@ -39,18 +39,18 @@ public class JIBHandleClient implements Runnable {
     private JIBUser authed = null;
     //
     private String trackNick = null;
-    
+
     public JIBHandleClient(Socket cs) {
         JIBHandleClient.DEBUGGING = JavaIrcBouncer.jibDebug.debug();
         sock = new JIBSocket(cs);
         onConnect();
     }
-    
+
     public void onConnect() {
         //sendLine("");
         sendLine(":JIB.jib NOTICE " + "*" + " :AUTHENTICATION MANDATORY\r\n");
     }
-    
+
     public void refreshNick() {
         String nickInIRC = null;
         if (inAuth == false && getSingleJIBIRC() != null) {
@@ -61,7 +61,7 @@ public class JIBHandleClient implements Runnable {
             }
         }
     }
-    
+
     public void onAuthDone() {
         String[] channels = null;
         String setTrackNick = getSingleJIBIRC().simulateNick(trackNick, null);
@@ -85,15 +85,15 @@ public class JIBHandleClient implements Runnable {
         sendLine(":JIB.jib NOTICE " + trackNick + " :IDENTIFIED AS " + authed.getUUID().toString() + "\r\n");
         // FIXME: ADD REPLAY
     }
-    
+
     public Exception getError() {
         return sock.getError();
     }
-    
+
     public boolean getConnected() {
         return sock.connected();
     }
-    
+
     public JIBIRC getSingleJIBIRC() {
         if (authOk == false) {
             return null;
@@ -103,6 +103,7 @@ public class JIBHandleClient implements Runnable {
             dstPort = Integer.valueOf(JavaIrcBouncer.jibConfig.getValue("Port")).intValue();
         }
         JIBIRC jibIRC = null;
+        JIBIRCServer tmpServ2 = null;
         if (authed.getJibIRC() == null) {
             if (JavaIrcBouncer.jibConfig.getValue("Server") != null) {
                 JIBIRCServer tmpServ = null;
@@ -154,12 +155,16 @@ public class JIBHandleClient implements Runnable {
                 }
                 authed.setJibIRC(jibIRC);
             } else {
-                System.exit(255);
+                if (authed.getIrcServer() != null) {
+                    tmpServ2 = authed.getIrcServer();
+                    jibIRC = new JIBIRC(authed, tmpServ2);
+                    authed.setJibIRC(jibIRC);
+                }
             }
         }
         return authed.getJibIRC();
     }
-    
+
     public void processError() {
         if (JavaIrcBouncer.jibIRC != null) {
             if (JavaIrcBouncer.jibIRC.getError() != null) {
@@ -167,11 +172,11 @@ public class JIBHandleClient implements Runnable {
             }
         }
     }
-    
+
     public void sendLine(String l) {
         sock.writeLineNoEOL(l);
     }
-    
+
     public void checkUserPass() {
         if (this.authUser == null) {
             return;
@@ -192,18 +197,18 @@ public class JIBHandleClient implements Runnable {
         }
         this.inAuth = false;
     }
-    
+
     public String trackNick1() {
         if (trackNick == null) {
             return "*";
         }
         return trackNick;
     }
-    
+
     public void sendJibMsg(String message) {
         sendLine(":*jib!jib@JIB.jib PRIVMSG " + trackNick1() + " :" + message + "\r\n");
     }
-    
+
     public void processLine(String l) {
         boolean passthrough = true;
         if (l == null) {
@@ -316,13 +321,13 @@ public class JIBHandleClient implements Runnable {
             }
         }
     }
-    
+
     private void processInterrupted() {
         if (this.authed != null) {
             this.authed.delClient(this);
         }
     }
-    
+
     public void run() {
         String l = null;
         String pl = "";
