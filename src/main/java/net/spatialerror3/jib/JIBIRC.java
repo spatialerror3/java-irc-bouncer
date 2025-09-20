@@ -440,6 +440,16 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
         sock.queueLine(l);
     }
 
+    public void writeLineQuick(String l) {
+        if (DEBUGGING) {
+            log.debug(this + " writeLine()=" + JIBStringUtil.remEOL2(l));
+        }
+        if (sock == null) {
+            return;
+        }
+        sock.writeLine(l);
+    }
+
     public void processLine(JIBUser _u, JIBIRC _i, JIBIRCServer _s, String l) {
         if (DEBUGGING) {
             log.debug(this + " l=" + l);
