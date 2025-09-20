@@ -59,7 +59,7 @@ public class JIBServer implements Runnable {
     public void cleanErrorClients() {
         Iterator<JIBHandleClient> it1 = null;
         synchronized (clients) {
-            clients.iterator();
+            it1 = clients.iterator();
             while (it1.hasNext()) {
                 JIBHandleClient tc = it1.next();
                 if (tc.getError() != null) {
@@ -75,7 +75,7 @@ public class JIBServer implements Runnable {
         cleanErrorClients();
         Iterator<JIBHandleClient> it1 = null;
         synchronized (clients) {
-            clients.iterator();
+            it1 = clients.iterator();
             while (it1.hasNext()) {
                 JIBHandleClient tc = it1.next();
                 tc.sendLine(l);
