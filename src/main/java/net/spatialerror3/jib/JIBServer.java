@@ -57,30 +57,36 @@ public class JIBServer implements Runnable {
     }
 
     public void cleanErrorClients() {
-        Iterator<JIBHandleClient> it1 = clients.iterator();
-        while (it1.hasNext()) {
-            JIBHandleClient tc = it1.next();
-            if (tc.getError() != null) {
-                it1.remove();
-            } else if (tc.getConnected() == false) {
-                it1.remove();
+        Iterator<JIBHandleClient> it1 = null;
+        synchronized (clients) {
+            clients.iterator();
+            while (it1.hasNext()) {
+                JIBHandleClient tc = it1.next();
+                if (tc.getError() != null) {
+                    it1.remove();
+                } else if (tc.getConnected() == false) {
+                    it1.remove();
+                }
             }
         }
     }
 
     public void writeAllClients(String l) {
         cleanErrorClients();
-        Iterator<JIBHandleClient> it1 = clients.iterator();
-        while (it1.hasNext()) {
-            JIBHandleClient tc = it1.next();
-            tc.sendLine(l);
+        Iterator<JIBHandleClient> it1 = null;
+        synchronized (clients) {
+            clients.iterator();
+            while (it1.hasNext()) {
+                JIBHandleClient tc = it1.next();
+                tc.sendLine(l);
+            }
         }
     }
-    
+
     public void tidy() {
         cleanErrorClients();
     }
-    
+
     public void run() {
         Socket cs = null;
         JIBHandleClient nc = null;
