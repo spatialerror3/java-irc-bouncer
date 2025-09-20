@@ -28,6 +28,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.util.LinkedList;
+import java.util.Queue;
 import javax.net.ssl.SSLHandshakeException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,6 +56,8 @@ public class JIBSocket {
     long linesWritten = 0L;
     long linesRead = 0L;
     //
+    Queue<String> writeQueue = null;
+    //
     SocketAddress remoteAddr = null;
 
     /**
@@ -69,6 +73,7 @@ public class JIBSocket {
             }
             return;
         }
+        this.writeQueue = new LinkedList<String>();
         this.remoteAddr = s.getRemoteSocketAddress();
         try {
             IS = s.getInputStream();
@@ -135,6 +140,32 @@ public class JIBSocket {
         if (OS != null) {
             OSW = new OutputStreamWriter(OS);
             BW = new BufferedWriter(OSW);
+        }
+    }
+
+    public JIBSocket queueLineNoEOL(String l) {
+        return queueLine(JIBStringUtil.remEOL2(l) + "\r\n");
+    }
+
+    public JIBSocket queueLine(String l) {
+        if (getError() != null) {
+            return null;
+        }
+        linesWritten++;
+        writeQueue.offer(l);
+        return this;
+    }
+
+    public void processQueue(long processLength) {
+        long processed = 0L;
+        String elem = null;
+        while (processed < processLength) {
+            elem = writeQueue.poll();
+            if (elem == null) {
+                return;
+            }
+            processed += elem.length();
+            writeLine(elem);
         }
     }
 
