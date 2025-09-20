@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.net.ssl.SSLHandshakeException;
+import org.apache.commons.collections4.queue.SynchronizedQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,7 +58,7 @@ public class JIBSocket {
     long linesWritten = 0L;
     long linesRead = 0L;
     //
-    LinkedList<String> writeQueueRaw = null;
+    Queue<String> writeQueueRaw = null;
     Queue<String> writeQueue = null;
     //
     SocketAddress remoteAddr = null;
@@ -76,7 +77,7 @@ public class JIBSocket {
             return;
         }
         this.writeQueueRaw = new LinkedList<String>();
-        this.writeQueue = (Queue<String>) Collections.synchronizedCollection(this.writeQueueRaw);
+        this.writeQueue = SynchronizedQueue.synchronizedQueue(this.writeQueueRaw);
         this.remoteAddr = s.getRemoteSocketAddress();
         try {
             IS = s.getInputStream();
