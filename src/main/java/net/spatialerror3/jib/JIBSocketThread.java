@@ -38,11 +38,13 @@ public class JIBSocketThread implements Runnable {
 
     @Override
     public void run() {
-        this.s.processQueue(this.charsPerSecond / 2);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException ex) {
-            System.getLogger(JIBSocketThread.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        while (this.s.getError() == null) {
+            this.s.processQueue(this.charsPerSecond / 2);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                System.getLogger(JIBSocketThread.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
         }
     }
 }
