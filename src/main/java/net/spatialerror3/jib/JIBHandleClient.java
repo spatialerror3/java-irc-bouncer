@@ -18,6 +18,7 @@
 package net.spatialerror3.jib;
 
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +31,7 @@ public class JIBHandleClient implements Runnable {
 
     private static final Logger log = LogManager.getLogger(JIBHandleClient.class);
     private static boolean DEBUGGING = false;
+    private static ArrayList<JIBProcessor> processors = new ArrayList<JIBProcessor>();
     JIBSocket sock = null;
     private boolean inAuth = true;
     private String authUser = null;
@@ -260,6 +262,15 @@ public class JIBHandleClient implements Runnable {
         }
         if (l.startsWith("CAP END")) {
             getSingleJIBIRC();
+        }
+        // FIXME: add Processors
+        Iterator<JIBProcessor> itp = JIBHandleClient.processors.iterator();
+        while (itp.hasNext()) {
+            JIBProcessor _p = itp.next();
+            passthrough = _p.processLine(this, authed, l);
+            if (passthrough == false) {
+                return;
+            }
         }
         if (l.startsWith("JOIN")) {
             if (!l.equals("JOIN :")) {
