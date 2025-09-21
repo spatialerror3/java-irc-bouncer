@@ -17,7 +17,10 @@
  */
 package net.spatialerror3.jib;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -112,8 +115,10 @@ public class JIBDBUtil {
         props = new Properties();
         props.setProperty("user", dbUser);
         props.setProperty("password", dbPass);
+        props.setProperty("autocommit", "false");
         try {
             conn = DriverManager.getConnection("jdbc:mariadb://" + dbHost + ":" + dbPort + "/" + dbName, props);
+            conn.setAutoCommit(false);
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
@@ -139,6 +144,7 @@ public class JIBDBUtil {
         props.setProperty("sslmode", "prefer");
         try {
             conn = DriverManager.getConnection("jdbc:postgresql://" + dbHost + ":" + dbPort + "/" + dbName, props);
+            conn.setAutoCommit(false);
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
@@ -318,6 +324,56 @@ public class JIBDBUtil {
             }
             if (altDbTypePgSql()) {
                 // FIXME
+                String sql = "CREATE TABLE IF NOT EXISTS servers (id bigserial primary key, server varchar(256), port integer, ssl boolean, ipv6 boolean, clientbind varchar(256), serverpass varchar(256), nick varchar(256), username varchar(256), realname varchar(256), nsacct varchar(256), nspass varchar(256), channels varchar(512), u varchar(256), s varchar(256), opt bytea);";
+                try {
+                    zconn = getDatabase();
+                    PreparedStatement ps1 = zconn.prepareStatement(sql);
+                    ps1.execute();
+                    zconn.commit();
+                    finishDbConn(zconn);
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+                sql = "CREATE TABLE IF NOT EXISTS channels (id bigserial primary key, channel varchar(256), u varchar(256), s varchar(256));";
+                try {
+                    zconn = getDatabase();
+                    PreparedStatement ps4 = zconn.prepareStatement(sql);
+                    ps4.execute();
+                    zconn.commit();
+                    finishDbConn(zconn);
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+                sql = "CREATE TABLE IF NOT EXISTS clientauth (id bigserial primary key, username varchar(256), password varchar(256));";
+                try {
+                    zconn = getDatabase();
+                    PreparedStatement ps3 = zconn.prepareStatement(sql);
+                    ps3.execute();
+                    zconn.commit();
+                    finishDbConn(zconn);
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+                sql = "CREATE TABLE IF NOT EXISTS log1 (id bigserial primary key, loguser varchar(256), logtarget varchar(256), logmessage varchar(513), u varchar(256), s varchar(256), ts1 timestamp DEFAULT NOW());";
+                try {
+                    zconn = getDatabase();
+                    PreparedStatement ps4 = zconn.prepareStatement(sql);
+                    ps4.execute();
+                    zconn.commit();
+                    finishDbConn(zconn);
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+                sql = "CREATE TABLE IF NOT EXISTS users (id bigserial primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt bytea, u varchar(256));";
+                try {
+                    zconn = getDatabase();
+                    PreparedStatement ps4 = zconn.prepareStatement(sql);
+                    ps4.execute();
+                    zconn.commit();
+                    finishDbConn(zconn);
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
             }
         }
         try {
@@ -388,6 +444,8 @@ public class JIBDBUtil {
                     tmpu = null;
                     tmpu = JavaIrcBouncer.jibCore.loadUser(opt, rs5.getString(3), rs5.getBoolean(5));
                 } else if (altDbTypeMariadb()) {
+                    tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5), true, UUID.fromString(rs5.getString(7)));
+                } else if (altDbTypePgSql()) {
                     tmpu = JavaIrcBouncer.jibCore.createUser(rs5.getString(3), rs5.getBoolean(5), true, UUID.fromString(rs5.getString(7)));
                 }
                 tmpu.setUserId(rs5.getLong(1));
@@ -535,6 +593,27 @@ public class JIBDBUtil {
                 zconn.commit();
                 zconn.close();
             }
+            if (altDbTypePgSql()) {
+                // FIXME
+                zconn = getDatabasePgSql();
+                ps2 = zconn.prepareStatement(sql);
+
+                try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ObjectOutputStream oos = new ObjectOutputStream(baos);
+                    oos.writeObject(u);
+                    oos.close();
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    ps2.setBinaryStream(1, bais);
+                } catch (Exception e) {
+                    ps2.setNull(1, java.sql.Types.BINARY);
+                }
+
+                ps2.setString(2, u.getUUID().toString());
+                ps2.execute();
+                zconn.commit();
+                finishDbConn(zconn);
+            }
         } catch (SQLException ex) {
             log.error((String) null, ex);
         }
@@ -671,6 +750,17 @@ public class JIBDBUtil {
                 } else {
                     ps2.setNull(15, java.sql.Types.BLOB);
                 }
+            } else if (altDbTypePgSql()) {
+                try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    ObjectOutputStream oos = new ObjectOutputStream(baos);
+                    oos.writeObject(u);
+                    oos.close();
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    ps2.setBinaryStream(15, bais);
+                } catch (Exception e) {
+                    ps2.setNull(15, java.sql.Types.BINARY);
+                }
             }
             ps2.execute();
             zconn.commit();
@@ -684,6 +774,9 @@ public class JIBDBUtil {
                 } catch (SQLException ex) {
                     log.error(ex);
                 }
+            }
+            if (altDbTypePgSql()) {
+                finishDbConn(zconn);
             }
         }
     }
@@ -711,6 +804,8 @@ public class JIBDBUtil {
                 } catch (SQLException ex) {
                     log.error(ex);
                 }
+            } else {
+                finishDbConn(zconn);
             }
         }
     }
