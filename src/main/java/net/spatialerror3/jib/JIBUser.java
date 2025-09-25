@@ -44,7 +44,7 @@ public class JIBUser implements Serializable {
     private ArrayList<JIBIRCServer> ircServers = null;
     private JIBUserInfo ircUserInfo = null;
     //
-    ArrayList<JIBHandleClient> clients = new ArrayList<JIBHandleClient>();
+    transient ArrayList<JIBHandleClient> clients = new ArrayList<JIBHandleClient>();
 
     /**
      *
