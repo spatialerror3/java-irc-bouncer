@@ -72,6 +72,7 @@ public class JavaIrcBouncer {
         if (jibConfig.getValue("DEBUGGING") != null) {
             jibDebug.setDebugging(true);
         }
+        jibSysEnv.envToConfig("RANDAUTHTOKENS");
         jibSysEnv.envToConfig("ALTDBTYPE");
         jibSysEnv.envToConfig("DBUSER");
         jibSysEnv.envToConfig("DBPASS");
@@ -141,6 +142,9 @@ public class JavaIrcBouncer {
         jibQuartz.init();
         jibStatus = new JIBStatus();
         jibPluginCore = new JIBPluginCore();
+        if (jibConfig.getValue("RANDAUTHTOKENS").equals("TRUE")) {
+            jibCore.randAuthTokens();
+        }
         log.info("Up...");
         jibJython.loadConfig2();
         if (jibHttpServ != null) {
