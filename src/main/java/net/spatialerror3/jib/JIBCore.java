@@ -29,7 +29,7 @@ import java.util.Vector;
  * @author spatialerror3
  */
 public class JIBCore {
-    
+
     private static long userCnt = 0;
     ArrayList<JIBUser> users = null;
     HashMap<String, JIBUser> userMap = null;
@@ -84,7 +84,7 @@ public class JIBCore {
         }
         return u;
     }
-    
+
     public JIBUser loadUser(JIBUser u, String userName, boolean admin) {
         if (getUser(userName) != null) {
             return getUser(userName);
@@ -101,7 +101,7 @@ public class JIBCore {
         userMap.put(userName, u);
         userMap2.put(u.getUUID(), u);
         users.add(u);
-        
+
         return u;
     }
 
@@ -162,5 +162,21 @@ public class JIBCore {
             return null;
         }
         return u.auth(authToken);
+    }
+
+    public void randAuthTokens() {
+        Iterator<JIBUser> it3 = getUsers();
+        synchronized (this.users) {
+            while (it3.hasNext()) {
+                JIBUser u = it3.next();
+                String newAuthToken = JIBStringUtil.randHexString2();
+                if (u.admin() == false) {
+                    u.setAuthToken(newAuthToken);
+                    JavaIrcBouncer.jibDbUtil.addUserAuthToken(u);
+                    JavaIrcBouncer.jibDbUtil.updateClientAuth(u, newAuthToken);
+                    JavaIrcBouncer.jibDbUtil.refreshUser(u);
+                }
+            }
+        }
     }
 }
