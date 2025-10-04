@@ -168,5 +168,11 @@
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>2.20.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.msgpack/msgpack-core -->
+        <dependency>
+            <groupId>org.msgpack</groupId>
+            <artifactId>msgpack-core</artifactId>
+            <version>0.9.10</version>
+        </dependency>
     </dependencies>
 </project>
