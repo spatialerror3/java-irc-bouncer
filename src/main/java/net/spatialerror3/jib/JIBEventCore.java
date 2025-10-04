@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -29,6 +31,7 @@ import java.util.Map;
  */
 public class JIBEventCore {
 
+    private static final Logger log = LogManager.getLogger(JIBEventCore.class);
     public ArrayList<JIBEventHandler> eventHandlers = null;
 
     public JIBEventCore() {
