@@ -38,5 +38,8 @@ public class JIBQuartzHourly implements Job {
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
         JavaIrcBouncer.jibDbUtil.clearLogOlderThan2Days();
+        JIBEvent<String, Object> event = new JIBEvent<String, Object>();
+        event.put("TYPE", "HOURLY");
+        JavaIrcBouncer.jibEventCore.handleEvent(event);
     }
 }
