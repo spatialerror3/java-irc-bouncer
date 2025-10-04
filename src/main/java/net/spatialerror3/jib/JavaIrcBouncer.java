@@ -44,6 +44,7 @@ public class JavaIrcBouncer {
     public static JIBQuartz jibQuartz = null;
     public static JIBStatus jibStatus = null;
     public static JIBPluginCore jibPluginCore = null;
+    public static JIBEventCore jibEventCore = null;
 
     public static void main(String[] args) {
         System.setProperty("python.import.site", "false");
@@ -142,6 +143,7 @@ public class JavaIrcBouncer {
         jibQuartz.init();
         jibStatus = new JIBStatus();
         jibPluginCore = new JIBPluginCore();
+        jibEventCore = new JIBEventCore();
         if (jibConfig.getValue("RANDAUTHTOKENS").equals("TRUE")) {
             jibCore.randAuthTokens();
         }
