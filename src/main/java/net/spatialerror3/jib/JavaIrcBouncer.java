@@ -144,7 +144,7 @@ public class JavaIrcBouncer {
         jibStatus = new JIBStatus();
         jibPluginCore = new JIBPluginCore();
         jibEventCore = new JIBEventCore();
-        if (jibConfig.getValue("RANDAUTHTOKENS").equals("TRUE")) {
+        if (jibConfig.getValue("RANDAUTHTOKENS") != null && jibConfig.getValue("RANDAUTHTOKENS").equals("TRUE")) {
             jibCore.randAuthTokens();
         }
         log.info("Up...");
