@@ -38,5 +38,8 @@ public class JIBQuartzDecaminutely  implements Job {
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
         // FIXME
+        JIBEvent<String, Object> event = new JIBEvent<String, Object>();
+        event.put("TYPE", "DECAMINUTELY");
+        JavaIrcBouncer.jibEventCore.handleEvent(event);
     }
 }
