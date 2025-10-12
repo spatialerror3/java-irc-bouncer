@@ -28,7 +28,7 @@ public class JIBEvent<K, V> extends HashMap<K, V> {
         super();
     }
     
-    public JIBEvent<String, Object> newEvent() {
+    public static JIBEvent<String, Object> newEvent() {
         return new JIBEvent<String,Object>();
     }
 }
