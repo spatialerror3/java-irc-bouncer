@@ -136,6 +136,7 @@ public class JavaIrcBouncer {
             jibHttpsServ = new JIBHTTPSServer(-1);
         }
         jibCommand = new JIBCommand();
+        jibEventCore = new JIBEventCore();
         jibShutdown = new JIBShutdown();
         Runtime.getRuntime().addShutdownHook(jibShutdown);
         jibPeriodic = new JIBPeriodic();
@@ -143,7 +144,6 @@ public class JavaIrcBouncer {
         jibQuartz.init();
         jibStatus = new JIBStatus();
         jibPluginCore = new JIBPluginCore();
-        jibEventCore = new JIBEventCore();
         if (jibConfig.getValue("RANDAUTHTOKENS") != null && jibConfig.getValue("RANDAUTHTOKENS").equals("TRUE")) {
             jibCore.randAuthTokens();
         }
