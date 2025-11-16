@@ -59,4 +59,24 @@ public class JIBPluginCore {
             plugins.add(p);
         }
     }
+
+    public void scanPluginDirectory() {
+        File pluginDirFile = new File("./plugins");
+        File[] pluginDirList = pluginDirFile.listFiles();
+        String pluginName = null;
+
+        for (int i = 0; i < pluginDirList.length; i++) {
+            System.err.println("pluginDirList[i]= i=" + i + " File=" + pluginDirList[i].toString() + "");
+            if (pluginDirList[i].toString().endsWith(".jar")) {
+                // FIXME
+                pluginName = pluginDirList[i].getName().replaceAll(".jar", "");
+                System.err.println("pluginName=" + pluginName);
+                try {
+                    load(pluginDirList[i].getAbsolutePath(), pluginName);
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    }
 }
