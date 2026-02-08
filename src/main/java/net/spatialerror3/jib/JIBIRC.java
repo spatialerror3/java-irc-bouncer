@@ -497,7 +497,7 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
             if (lsp[1].equals("NICK")) {
                 JIBUserInfo src = JIBUserInfo.parseNUH(lsp[0]);
                 String srcNewNick = JIBStringUtil.remDD(lsp[2]);
-                if (src.getNick().equals(this.nick)) {
+                if (src != null && src.getNick() != null && src.getNick().equals(this.nick)) {
                     this.nick = srcNewNick;
                 }
             }
