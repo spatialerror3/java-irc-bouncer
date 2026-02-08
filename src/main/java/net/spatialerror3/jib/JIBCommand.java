@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.python.core.PyObject;
+import org.python.util.PythonInterpreter;
 
 /**
  *
@@ -175,6 +177,11 @@ public class JIBCommand {
             String[] up = excmd[1].split(" ", 2);
             JavaIrcBouncer.jibConfig.createUser(up[0], up[1]);
             hc.sendJibMsg("ADDED USER: " + up[0]);
+        }
+        if (excmd[0].equals("PY")) {
+            PythonInterpreter pyi = JavaIrcBouncer.jibJython.getPyInterpForUser(authed);
+            PyObject ret = pyi.eval(excmd[1]);
+            hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + ret + " " + ret.toString());
         }
         if (excmd[0].equals("HELP")) {
             hc.sendLine(":*jib!jib@JIB.jib PRIVMSG " + hc.trackNick1() + " :" + "AVAILABLE COMMANDS:" + "\r\n");
