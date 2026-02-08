@@ -71,6 +71,9 @@ public class JIBJython {
     
     public PythonInterpreter getPyInterpForUser(JIBUser u) {
         PythonInterpreter pyi = interpz.get(u);
+        if(u == null) {
+            return null;
+        }
         if(pyi != null) {
             return pyi;
         }
