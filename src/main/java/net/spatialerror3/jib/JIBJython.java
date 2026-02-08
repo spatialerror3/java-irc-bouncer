@@ -18,6 +18,7 @@
 package net.spatialerror3.jib;
 
 import java.io.File;
+import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.python.util.PythonInterpreter;
@@ -30,6 +31,7 @@ public class JIBJython {
     
     private static final Logger log = LogManager.getLogger(JIBJython.class);
     public static PythonInterpreter interp = null;
+    public static HashMap<JIBUser, PythonInterpreter> interpz = new HashMap<>();
 
     public JIBJython() {
         interp = new PythonInterpreter();
@@ -65,5 +67,15 @@ public class JIBJython {
 
     public JIBConfig rJIBConfig() {
         return JavaIrcBouncer.jibConfig;
+    }
+    
+    public PythonInterpreter getPyInterpForUser(JIBUser u) {
+        PythonInterpreter pyi = interpz.get(u);
+        if(pyi != null) {
+            return pyi;
+        }
+        pyi = new PythonInterpreter();
+        interpz.put(u, pyi);
+        return pyi;
     }
 }
