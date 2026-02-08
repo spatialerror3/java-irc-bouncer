@@ -24,10 +24,25 @@ package net.spatialerror3.jib;
 public class JIBEventSimple {
     public static JIBEvent eventCONNECTED(JIBUser u, JIBIRCServer s) {
         JIBEvent r = JIBEvent.newEvent();
+        r.put("CONNECTED", "CONNECTED");
         r.put("USER", u);
         r.put("UUID", u.getUUID());
         r.put("SERVER", s);
         r.put("SERVERUUID", s.getUUID());
+        return r;
+    }
+    
+    public static JIBEvent eventERROR(JIBUser u, Exception ex, Error err) {
+        JIBEvent r = JIBEvent.newEvent();
+        r.put("ERROR", "ERROR");
+        r.put("USER", u);
+        r.put("UUID", u.getUUID());
+        if(ex != null) {
+          r.put("EX", ex);
+        }
+        if(err != null) {
+          r.put("ERR", err);
+        }
         return r;
     }
 }
