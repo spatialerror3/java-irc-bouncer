@@ -40,7 +40,9 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         try {
             while (it1.hasNext()) {
                 JIBBookmark nbm = it1.next();
-                resp.getWriter().println("bookmark[" + nbm.getUuid().toString() + "]= (" + nbm.getTitle() + ") " + nbm.getUrl() + "<br/>");
+                if (nbm.getUser().getUUID().toString().equals(u.getUUID().toString())) {
+                    resp.getWriter().println("bookmark[" + nbm.getUuid().toString() + "]= (" + nbm.getTitle() + ") <a href='" + nbm.getUrl() + "'>" + nbm.getUrl() + "</a><br/>");
+                }
             }
         } catch (IOException ex) {
             System.getLogger(JIBHTTPServletBookmarks.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
