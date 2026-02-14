@@ -27,6 +27,7 @@ public class JIBBookmark {
     private UUID uuid = null;
     private String title = null;
     private String url = null;
+    private String memo = null;
     
     public JIBBookmark() {
         
@@ -72,5 +73,19 @@ public class JIBBookmark {
      */
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    /**
+     * @return the memo
+     */
+    public String getMemo() {
+        return memo;
+    }
+
+    /**
+     * @param memo the memo to set
+     */
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 }
