@@ -45,6 +45,7 @@ public class JavaIrcBouncer {
     public static JIBStatus jibStatus = null;
     public static JIBPluginCore jibPluginCore = null;
     public static JIBEventCore jibEventCore = null;
+    public static JIBBookmarkManager jibBookmarkManager = null;
 
     public static void main(String[] args) {
         System.setProperty("python.import.site", "false");
@@ -155,6 +156,7 @@ public class JavaIrcBouncer {
         if (jibHttpsServ != null) {
             log.info(jibHttpsServ.toString());
         }
+        jibBookmarkManager = new JIBBookmarkManager();
         while (true) {
             try {
                 Thread.sleep(60000);
