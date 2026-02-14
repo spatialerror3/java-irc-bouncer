@@ -44,7 +44,7 @@ import org.eclipse.jetty.util.security.Credential;
  * @author spatialerror3
  */
 public class JIBWebBase {
-    
+
     private static final Logger log = LogManager.getLogger(JIBWebBase.class);
     private int Port = -1;
     private String protocol = null;
@@ -54,29 +54,29 @@ public class JIBWebBase {
     //
     private String realm = "JIB";
     private SecurityHandler sh = null;
-    
+
     public JIBWebBase() {
-        
+
     }
-    
+
     public void setPort(int Port, String protocol) {
         this.Port = Port;
         this.protocol = protocol;
     }
-    
+
     public int getPort() {
         return this.Port;
     }
-    
+
     public void setServer(Server server, String serverName) {
         this.server = server;
         this.serverName = serverName;
     }
-    
+
     public Server getServer() {
         return this.server;
     }
-    
+
     public void addSessionIdManager() {
         DefaultSessionIdManager idMgr = new DefaultSessionIdManager(server);
         idMgr.setWorkerName(this.serverName);
@@ -100,7 +100,7 @@ public class JIBWebBase {
             log.error((String) null, e2);
         }
     }
-    
+
     public void addSecurityHandler() {
         HashLoginService loginService = new HashLoginService();
         loginService.setName(realm);
@@ -110,7 +110,7 @@ public class JIBWebBase {
         sh.setRealmName(realm);
         sh.setLoginService(loginService);
     }
-    
+
     public void addHandlers() {
         ServletContextHandler handler = new ServletContextHandler("/", true, true);
         URL staticResources = getClass().getClassLoader().getResource("static");
@@ -125,6 +125,8 @@ public class JIBWebBase {
         //handler.addServlet(JIBHTTPServletUsers.class.getName(), "/users/");
         handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status");
         //handler.addServlet(JIBHTTPServletStatus.class.getName(), "/status/");
+        handler.addServlet(JIBHTTPServletBookmarks.class.getName(), "/bookmarks");
+        handler.addServlet(JIBHTTPServletBookmarks.class.getName(), "/bookmark");
         handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout");
         //handler.addServlet(JIBHTTPServletLogout.class.getName(), "/logout/");
 
@@ -132,7 +134,7 @@ public class JIBWebBase {
         defaultHolder.setInitParameter("baseResource", staticResources.toExternalForm());
         handler.addServlet(defaultHolder, "/static/*");
         handler.addServlet(defaultHolder, "/static/JIB.png");
-        
+
         ResourceHandler handler3 = new ResourceHandler();
         handler3.setBaseResource(ResourceFactory.of(handler3).newResource("./static/"));
         handler3.setAcceptRanges(true);
@@ -149,6 +151,8 @@ public class JIBWebBase {
         //contextCollection.addHandler(new ContextHandler(handler, "/users/"));
         contextCollection.addHandler(new ContextHandler(handler, "/status"));
         //contextCollection.addHandler(new ContextHandler(handler, "/status/"));
+        contextCollection.addHandler(new ContextHandler(handler, "/bookmarks"));
+        contextCollection.addHandler(new ContextHandler(handler, "/bookmark"));
         contextCollection.addHandler(new ContextHandler(handler, "/logout"));
         //contextCollection.addHandler(new ContextHandler(handler, "/logout/"));
         server.setHandler(contextCollection);
@@ -163,11 +167,11 @@ public class JIBWebBase {
         //server.setDefaultHandler(new JIBHTTPHandler());
         server.setDefaultHandler(handler);
     }
-    
+
     public String getURL() {
         return this.protocol + "://127.0.0.1:" + this.Port + "/login";
     }
-    
+
     public String toString() {
         return "Enter " + getURL() + " into your web browser to login...";
     }
