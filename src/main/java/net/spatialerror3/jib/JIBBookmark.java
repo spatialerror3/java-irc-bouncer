@@ -17,6 +17,7 @@
  */
 package net.spatialerror3.jib;
 
+import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -30,6 +31,12 @@ public class JIBBookmark {
     private String title = null;
     private String url = null;
     private String memo = null;
+    private long add_date = 0L;
+    private long last_modified = 0L;
+    private URL icon_uri = null;
+    private String onto = null;
+    private String category = null;
+    private String browser = null;
     
     public JIBBookmark() {
         uuid = UUID.randomUUID();
@@ -103,5 +110,89 @@ public class JIBBookmark {
      */
     public void setUser(JIBUser u) {
         this.u = u;
+    }
+
+    /**
+     * @return the add_date
+     */
+    public long getAddDate() {
+        return add_date;
+    }
+
+    /**
+     * @param add_date the add_date to set
+     */
+    public void setAddDate(long add_date) {
+        this.add_date = add_date;
+    }
+
+    /**
+     * @return the last_modified
+     */
+    public long getLastModified() {
+        return last_modified;
+    }
+
+    /**
+     * @param last_modified the last_modified to set
+     */
+    public void setLastModified(long last_modified) {
+        this.last_modified = last_modified;
+    }
+
+    /**
+     * @return the icon_uri
+     */
+    public URL getIconUri() {
+        return icon_uri;
+    }
+
+    /**
+     * @param icon_uri the icon_uri to set
+     */
+    public void setIconUri(URL icon_uri) {
+        this.icon_uri = icon_uri;
+    }
+
+    /**
+     * @return the onto
+     */
+    public String getOnto() {
+        return onto;
+    }
+
+    /**
+     * @param onto the onto to set
+     */
+    public void setOnto(String onto) {
+        this.onto = onto;
+    }
+
+    /**
+     * @return the category
+     */
+    public String getCategory() {
+        return category;
+    }
+
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    /**
+     * @return the browser
+     */
+    public String getBrowser() {
+        return browser;
+    }
+
+    /**
+     * @param browser the browser to set
+     */
+    public void setBrowser(String browser) {
+        this.browser = browser;
     }
 }
