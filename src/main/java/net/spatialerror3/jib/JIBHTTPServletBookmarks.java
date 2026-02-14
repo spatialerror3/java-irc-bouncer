@@ -39,6 +39,7 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
     public void addBookmark(JIBUser u, String title, String url) {
         JIBBookmark newBookmark = new JIBBookmark();
         
+        newBookmark.setUser(u);
         newBookmark.setTitle(title);
         newBookmark.setUrl(url);
     }

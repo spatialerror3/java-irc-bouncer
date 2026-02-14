@@ -24,13 +24,15 @@ import java.util.UUID;
  * @author spatialerror3
  */
 public class JIBBookmark {
+    private JIBUser u = null;
+    //
     private UUID uuid = null;
     private String title = null;
     private String url = null;
     private String memo = null;
     
     public JIBBookmark() {
-        
+        uuid = UUID.randomUUID();
     }
 
     /**
@@ -87,5 +89,19 @@ public class JIBBookmark {
      */
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    /**
+     * @return the u
+     */
+    public JIBUser getUser() {
+        return u;
+    }
+
+    /**
+     * @param u the u to set
+     */
+    public void setUser(JIBUser u) {
+        this.u = u;
     }
 }
