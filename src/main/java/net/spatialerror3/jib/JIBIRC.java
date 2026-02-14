@@ -467,6 +467,8 @@ public class JIBIRC implements Runnable, JIBIRCLineProcessing {
                 }
                 if (sp5.length > 1 && sp5[1].equals("376")) {
                     onLogon();
+                    JIBEvent e = JIBEventSimple.eventCONNECTED(_u, _s);
+                    JavaIrcBouncer.jibEventCore.handleEvent(e);
                 }
                 if (sp5.length > 1 && sp5[1].equals("431")) {
                     String randNick = "C" + JIBStringUtil.randHexString().substring(0, 8);
