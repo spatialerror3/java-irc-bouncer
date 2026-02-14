@@ -21,6 +21,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,16 +33,23 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
 
     private static final Logger log = LogManager.getLogger(JIBHTTPServletBookmarks.class);
 
-    public void listBookmarks(JIBUser u) {
-
+    public void listBookmarks(JIBUser u, HttpServletResponse resp) {
+        List<JIBBookmark> bms = JavaIrcBouncer.jibBookmarkManager.getBookmarks();
+        try {
+            resp.getWriter().println("bookmark["+bms.get(0).getUuid().toString()+"]= ("+bms.get(0).getTitle()+") "+bms.get(0).getUrl());
+        } catch (IOException ex) {
+            System.getLogger(JIBHTTPServletBookmarks.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
 
     public void addBookmark(JIBUser u, String title, String url) {
         JIBBookmark newBookmark = new JIBBookmark();
-        
+
         newBookmark.setUser(u);
         newBookmark.setTitle(title);
         newBookmark.setUrl(url);
+
+        JavaIrcBouncer.jibBookmarkManager.addBookmark(newBookmark);
     }
 
     @Override
@@ -61,7 +69,7 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
                 if (whattodo != null && whattodo.equals("addbm")) {
                     addBookmark(u, bm_title, bm_url);
                 }
-                listBookmarks(u);
+                listBookmarks(u, resp);
             }
         } catch (Exception ex1) {
             log.error((String) null, ex1);
