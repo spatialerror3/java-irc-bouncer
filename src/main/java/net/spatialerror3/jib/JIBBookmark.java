@@ -37,6 +37,7 @@ public class JIBBookmark {
     private String onto = null;
     private String category = null;
     private String browser = null;
+    private String folder = null;
     
     public JIBBookmark() {
         uuid = UUID.randomUUID();

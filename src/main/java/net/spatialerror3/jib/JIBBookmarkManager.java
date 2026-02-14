@@ -19,6 +19,7 @@ package net.spatialerror3.jib;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,17 +27,47 @@ import java.util.List;
  * @author spatialerror3
  */
 public class JIBBookmarkManager {
+
     private ArrayList<JIBBookmark> bookmarks = null;
-    
+
     public JIBBookmarkManager() {
         bookmarks = new ArrayList<>();
     }
-    
-    public void addBookmark(JIBBookmark b) {
-        bookmarks.add(b);
+
+    public JIBBookmark findUrl(JIBUser u, String url) {
+        Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
+        while (it3.hasNext()) {
+            JIBBookmark tmp = it3.next();
+            if (tmp.getUrl().equals(url)) {
+                return tmp;
+            }
+        }
+        return null;
     }
-    
+
+    public void addBookmark(JIBBookmark b) {
+        if (findUrl(b.getUser(), b.getUrl()) == null) {
+            bookmarks.add(b);
+        }
+    }
+
+    public void removeBookmark(JIBBookmark b) {
+        bookmarks.remove(b);
+    }
+
     public List<JIBBookmark> getBookmarks() {
         return Collections.synchronizedList(bookmarks);
+    }
+
+    public List<JIBBookmark> getBookmarksForJIBUser(JIBUser u) {
+        ArrayList<JIBBookmark> ubms = new ArrayList<>();
+        Iterator<JIBBookmark> it2 = getBookmarks().iterator();
+        while (it2.hasNext()) {
+            JIBBookmark bm2 = it2.next();
+            if (bm2.getUser().equals(u)) {
+                ubms.add(bm2);
+            }
+        }
+        return ubms;
     }
 }

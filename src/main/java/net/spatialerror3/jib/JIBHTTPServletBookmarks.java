@@ -35,7 +35,7 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
     private static final Logger log = LogManager.getLogger(JIBHTTPServletBookmarks.class);
 
     public void listBookmarks(JIBUser u, HttpServletResponse resp) {
-        List<JIBBookmark> bms = JavaIrcBouncer.jibBookmarkManager.getBookmarks();
+        List<JIBBookmark> bms = JavaIrcBouncer.jibBookmarkManager.getBookmarksForJIBUser(u);
         Iterator<JIBBookmark> it1 = bms.iterator();
         try {
             while (it1.hasNext()) {
