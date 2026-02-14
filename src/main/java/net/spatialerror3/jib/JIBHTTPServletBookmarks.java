@@ -21,6 +21,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,8 +36,12 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
 
     public void listBookmarks(JIBUser u, HttpServletResponse resp) {
         List<JIBBookmark> bms = JavaIrcBouncer.jibBookmarkManager.getBookmarks();
+        Iterator<JIBBookmark> it1 = bms.iterator();
         try {
-            resp.getWriter().println("bookmark["+bms.get(0).getUuid().toString()+"]= ("+bms.get(0).getTitle()+") "+bms.get(0).getUrl());
+            while (it1.hasNext()) {
+                JIBBookmark nbm = it1.next();
+                resp.getWriter().println("bookmark[" + nbm.getUuid().toString() + "]= (" + nbm.getTitle() + ") " + nbm.getUrl() + "<br/>");
+            }
         } catch (IOException ex) {
             System.getLogger(JIBHTTPServletBookmarks.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
