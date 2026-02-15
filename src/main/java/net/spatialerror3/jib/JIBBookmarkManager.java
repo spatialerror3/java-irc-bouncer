@@ -57,6 +57,28 @@ public class JIBBookmarkManager {
         return null;
     }
 
+    public JIBBookmark findBmCat(JIBUser u, String category) {
+        Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
+        while (it3.hasNext()) {
+            JIBBookmark tmp = it3.next();
+            if (tmp.getCategory().equals(category)) {
+                return tmp;
+            }
+        }
+        return null;
+    }
+
+    public JIBBookmark findBmFolder(JIBUser u, String folder) {
+        Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
+        while (it3.hasNext()) {
+            JIBBookmark tmp = it3.next();
+            if (tmp.getFolder().equals(folder)) {
+                return tmp;
+            }
+        }
+        return null;
+    }
+
     public void addBookmark(JIBBookmark b) {
         if (findUrl(b.getUser(), b.getUrl()) == null) {
             b.setAddDate(Instant.now().getEpochSecond());
