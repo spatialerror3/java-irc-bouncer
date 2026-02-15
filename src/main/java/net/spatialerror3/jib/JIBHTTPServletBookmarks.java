@@ -80,6 +80,7 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         String whattodo = req.getParameter("whattodo");
         String bm_title = req.getParameter("bmtitle");
         String bm_url = req.getParameter("bmurl");
+        String apikey = req.getParameter("bmapikey");
 
         login(req, resp);
         header(req, resp);
