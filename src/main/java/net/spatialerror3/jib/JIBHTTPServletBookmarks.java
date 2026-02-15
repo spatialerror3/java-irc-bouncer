@@ -31,9 +31,9 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
-    
+
     private static final Logger log = LogManager.getLogger(JIBHTTPServletBookmarks.class);
-    
+
     public void listBookmarks(JIBUser u, HttpServletResponse resp) {
         List<JIBBookmark> bms = JavaIrcBouncer.jibBookmarkManager.getBookmarksForJIBUser(u);
         Iterator<JIBBookmark> it1 = bms.iterator();
@@ -42,30 +42,35 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
                 JIBBookmark nbm = it1.next();
                 if (nbm.getUser().getUUID().toString().equals(u.getUUID().toString())) {
                     resp.getWriter().println("{" + nbm.getFolder() + "} bookmark[" + nbm.getUuid().toString() + "]= (" + nbm.getTitle() + ") <a href='" + nbm.getUrl() + "'>" + nbm.getUrl() + "</a><br/>");
+                    String nbmmemo = nbm.getMemo();
+                    if (nbmmemo != null) {
+                        resp.getWriter().println("{" + nbm.getFolder() + "} bookmark[" + nbm.getUuid().toString() + "]= (" + nbm.getTitle() + ") MEMO: " + nbmmemo + "<br/>");
+                    }
+                    resp.getWriter().println("{" + nbm.getFolder() + "} bookmark[" + nbm.getUuid().toString() + "]= (" + nbm.getTitle() + ") <form method='GET'><input type='hidden' name='whattodo' value='delbm'/><input type='hidden' name='bmuuid' value=''/><input type='submit'>[[DEL BOOKMARK]]</input></form><br/>");
                 }
             }
         } catch (IOException ex) {
             System.getLogger(JIBHTTPServletBookmarks.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-    
+
     public void addBookmark(JIBUser u, String title, String url) {
         JIBBookmark newBookmark = new JIBBookmark();
-        
+
         newBookmark.setUser(u);
         newBookmark.setTitle(title);
         newBookmark.setUrl(url);
-        
+
         JavaIrcBouncer.jibBookmarkManager.addBookmark(newBookmark);
     }
-    
+
     public void delBookmark(JIBUser u, String bmUuid) {
         JIBBookmark bmtmp = JavaIrcBouncer.jibBookmarkManager.findBmUuid(u, bmUuid);
         if (bmtmp != null) {
             JavaIrcBouncer.jibBookmarkManager.removeBookmark(bmtmp);
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var session = req.getSession(true);
@@ -75,7 +80,7 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         String whattodo = req.getParameter("whattodo");
         String bm_title = req.getParameter("bmtitle");
         String bm_url = req.getParameter("bmurl");
-        
+
         login(req, resp);
         header(req, resp);
         try {
@@ -92,30 +97,30 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         footer(req, resp);
         resp.getWriter().close();
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.doPost(req, resp);
     }
-    
+
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.doPost(req, resp);
     }
-    
+
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.doPost(req, resp);
     }
-    
+
     @Override
     protected void doHead(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.doPost(req, resp);
     }
-    
+
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.doPost(req, resp);
     }
-    
+
 }
