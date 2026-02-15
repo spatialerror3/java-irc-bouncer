@@ -25,6 +25,7 @@ import java.util.UUID;
  * @author spatialerror3
  */
 public class JIBBookmark {
+
     private JIBUser u = null;
     //
     private UUID uuid = null;
@@ -195,5 +196,19 @@ public class JIBBookmark {
      */
     public void setBrowser(String browser) {
         this.browser = browser;
+    }
+    
+    /**
+     * @return the folder
+     */
+    public String getFolder() {
+        return folder;
+    }
+
+    /**
+     * @param folder the folder to set
+     */
+    public void setFolder(String folder) {
+        this.folder = folder;
     }
 }
