@@ -23,20 +23,24 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author spatialerror3
  */
 public class JIBBookmarkManager {
-
+    
+    private static final Logger log = LogManager.getLogger(JIBBookmarkManager.class);
     private ArrayList<JIBBookmark> bookmarks = null;
     private UUID bmApiKey = UUID.randomUUID();
-
+    
     public JIBBookmarkManager() {
         bookmarks = new ArrayList<>();
+        log.error(this + " BMAPIKEY=" + this.bmApiKey);
     }
-
+    
     public JIBBookmark findUrl(JIBUser u, String url) {
         Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
         while (it3.hasNext()) {
@@ -47,7 +51,7 @@ public class JIBBookmarkManager {
         }
         return null;
     }
-
+    
     public JIBBookmark findBmUuid(JIBUser u, String uuid) {
         Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
         while (it3.hasNext()) {
@@ -58,7 +62,7 @@ public class JIBBookmarkManager {
         }
         return null;
     }
-
+    
     public JIBBookmark findBmCat(JIBUser u, String category) {
         Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
         while (it3.hasNext()) {
@@ -69,7 +73,7 @@ public class JIBBookmarkManager {
         }
         return null;
     }
-
+    
     public JIBBookmark findBmFolder(JIBUser u, String folder) {
         Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
         while (it3.hasNext()) {
@@ -80,22 +84,22 @@ public class JIBBookmarkManager {
         }
         return null;
     }
-
+    
     public void addBookmark(JIBBookmark b) {
         if (findUrl(b.getUser(), b.getUrl()) == null) {
             b.setAddDate(Instant.now().getEpochSecond());
             bookmarks.add(b);
         }
     }
-
+    
     public void removeBookmark(JIBBookmark b) {
         bookmarks.remove(b);
     }
-
+    
     public List<JIBBookmark> getBookmarks() {
         return Collections.synchronizedList(bookmarks);
     }
-
+    
     public List<JIBBookmark> getBookmarksForJIBUser(JIBUser u) {
         ArrayList<JIBBookmark> ubms = new ArrayList<>();
         Iterator<JIBBookmark> it2 = getBookmarks().iterator();
