@@ -17,6 +17,7 @@
  */
 package net.spatialerror3.jib;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -58,6 +59,7 @@ public class JIBBookmarkManager {
 
     public void addBookmark(JIBBookmark b) {
         if (findUrl(b.getUser(), b.getUrl()) == null) {
+            b.setAddDate(Instant.now().getEpochSecond());
             bookmarks.add(b);
         }
     }

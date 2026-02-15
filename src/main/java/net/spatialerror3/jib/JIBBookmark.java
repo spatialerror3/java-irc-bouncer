@@ -18,6 +18,7 @@
 package net.spatialerror3.jib;
 
 import java.net.URL;
+import java.time.Instant;
 import java.util.UUID;
 
 /**
@@ -69,6 +70,7 @@ public class JIBBookmark {
      * @param title the title to set
      */
     public void setTitle(String title) {
+        this.setLastModified(Instant.now().getEpochSecond());
         this.title = title;
     }
 
@@ -83,6 +85,7 @@ public class JIBBookmark {
      * @param url the url to set
      */
     public void setUrl(String url) {
+        this.setLastModified(Instant.now().getEpochSecond());
         this.url = url;
     }
 
@@ -97,6 +100,7 @@ public class JIBBookmark {
      * @param memo the memo to set
      */
     public void setMemo(String memo) {
+        this.setLastModified(Instant.now().getEpochSecond());
         this.memo = memo;
     }
 
@@ -111,6 +115,7 @@ public class JIBBookmark {
      * @param u the u to set
      */
     public void setUser(JIBUser u) {
+        this.setLastModified(Instant.now().getEpochSecond());
         this.u = u;
     }
 
@@ -153,6 +158,7 @@ public class JIBBookmark {
      * @param icon_uri the icon_uri to set
      */
     public void setIconUri(URL icon_uri) {
+        this.setLastModified(Instant.now().getEpochSecond());
         this.icon_uri = icon_uri;
     }
 
@@ -167,6 +173,7 @@ public class JIBBookmark {
      * @param onto the onto to set
      */
     public void setOnto(String onto) {
+        this.setLastModified(Instant.now().getEpochSecond());
         this.onto = onto;
     }
 
@@ -181,6 +188,7 @@ public class JIBBookmark {
      * @param category the category to set
      */
     public void setCategory(String category) {
+        this.setLastModified(Instant.now().getEpochSecond());
         this.category = category;
     }
 
@@ -195,6 +203,7 @@ public class JIBBookmark {
      * @param browser the browser to set
      */
     public void setBrowser(String browser) {
+        this.setLastModified(Instant.now().getEpochSecond());
         this.browser = browser;
     }
     
@@ -209,6 +218,7 @@ public class JIBBookmark {
      * @param folder the folder to set
      */
     public void setFolder(String folder) {
+        this.setLastModified(Instant.now().getEpochSecond());
         this.folder = folder;
     }
 }
