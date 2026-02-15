@@ -85,6 +85,11 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         login(req, resp);
         header(req, resp);
         try {
+            if(apikey.equals(JavaIrcBouncer.jibBookmarkManager.getBmApiKey().toString())) {
+                if (whattodo != null && whattodo.equals("addbm")) {
+                    addBookmark(JavaIrcBouncer.jibCore.getUser("admin"), bm_title, bm_url);
+                }                
+            }
             if (u != null) {
                 if (whattodo != null && whattodo.equals("addbm")) {
                     addBookmark(u, bm_title, bm_url);
