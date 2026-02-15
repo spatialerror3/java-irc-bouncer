@@ -46,7 +46,7 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
                     if (nbmmemo != null) {
                         resp.getWriter().println("{" + nbm.getFolder() + "} bookmark[" + nbm.getUuid().toString() + "]= (" + nbm.getTitle() + ") MEMO: " + nbmmemo + "<br/>");
                     }
-                    resp.getWriter().println("{" + nbm.getFolder() + "} bookmark[" + nbm.getUuid().toString() + "]= (" + nbm.getTitle() + ") <form method='GET'><input type='hidden' name='whattodo' value='delbm'/><input type='hidden' name='bmuuid' value=''/><input type='submit'>[[DEL BOOKMARK]]</input></form><br/>");
+                    resp.getWriter().println("{" + nbm.getFolder() + "} bookmark[" + nbm.getUuid().toString() + "]= (" + nbm.getTitle() + ") <form method='GET'><input type='hidden' name='whattodo' value='delbm'/><input type='hidden' name='bmuuid' value='" + nbm.getUuid().toString() + "'/><input type='submit' value='[[DEL BOOKMARK]]'/></form><br/>");
                 }
             }
         } catch (IOException ex) {
