@@ -88,6 +88,9 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
                 if (whattodo != null && whattodo.equals("addbm")) {
                     addBookmark(u, bm_title, bm_url);
                 }
+                if (whattodo != null && whattodo.equals("delbm")) {
+                    delBookmark(u, req.getParameter("bmuuid"));
+                }
                 listBookmarks(u, resp);
             }
         } catch (Exception ex1) {
