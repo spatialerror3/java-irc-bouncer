@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -30,6 +31,7 @@ import java.util.List;
 public class JIBBookmarkManager {
 
     private ArrayList<JIBBookmark> bookmarks = null;
+    private UUID bmApiKey = UUID.randomUUID();
 
     public JIBBookmarkManager() {
         bookmarks = new ArrayList<>();
@@ -104,5 +106,19 @@ public class JIBBookmarkManager {
             }
         }
         return ubms;
+    }
+
+    /**
+     * @return the bmApiKey
+     */
+    public UUID getBmApiKey() {
+        return bmApiKey;
+    }
+
+    /**
+     * @param bmApiKey the bmApiKey to set
+     */
+    public void setBmApiKey(UUID bmApiKey) {
+        this.bmApiKey = bmApiKey;
     }
 }
