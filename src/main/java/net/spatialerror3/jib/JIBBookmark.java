@@ -40,7 +40,7 @@ public class JIBBookmark {
     private String category = null;
     private String browser = null;
     private String folder = null;
-    
+
     public JIBBookmark() {
         uuid = UUID.randomUUID();
     }
@@ -192,6 +192,10 @@ public class JIBBookmark {
         this.category = category;
     }
 
+    public void appendCategory(String category) {
+        this.category = this.category + "/" + category;
+    }
+
     /**
      * @return the browser
      */
@@ -206,7 +210,7 @@ public class JIBBookmark {
         this.setLastModified(Instant.now().getEpochSecond());
         this.browser = browser;
     }
-    
+
     /**
      * @return the folder
      */
@@ -220,5 +224,9 @@ public class JIBBookmark {
     public void setFolder(String folder) {
         this.setLastModified(Instant.now().getEpochSecond());
         this.folder = folder;
+    }
+
+    public void appendFolder(String folder) {
+        this.folder = this.folder + "/" + folder;
     }
 }
