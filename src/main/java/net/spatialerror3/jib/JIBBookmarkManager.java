@@ -45,6 +45,17 @@ public class JIBBookmarkManager {
         return null;
     }
 
+    public JIBBookmark findBmUuid(JIBUser u, String uuid) {
+        Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
+        while (it3.hasNext()) {
+            JIBBookmark tmp = it3.next();
+            if (tmp.getUuid().toString().equals(uuid)) {
+                return tmp;
+            }
+        }
+        return null;
+    }
+
     public void addBookmark(JIBBookmark b) {
         if (findUrl(b.getUser(), b.getUrl()) == null) {
             bookmarks.add(b);
