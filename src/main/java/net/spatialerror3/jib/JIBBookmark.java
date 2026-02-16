@@ -68,14 +68,38 @@ public class JIBBookmark {
             ps10.setString(2, uuid.toString());
             ps10.setString(3, title);
             ps10.setString(4, url);
-            ps10.setString(5, memo);
+            if (memo != null) {
+                ps10.setString(5, memo);
+            } else {
+                ps10.setNull(5, java.sql.Types.NULL);
+            }
             ps10.setLong(6, add_date);
             ps10.setLong(7, last_modified);
-            ps10.setString(8, icon_uri.toString());
-            ps10.setString(9, onto);
-            ps10.setString(10, category);
-            ps10.setString(11, browser);
-            ps10.setString(12, folder);
+            if (icon_uri != null) {
+                ps10.setString(8, icon_uri.toString());
+            } else {
+                ps10.setNull(8, java.sql.Types.VARCHAR);
+            }
+            if (onto != null) {
+                ps10.setString(9, onto);
+            } else {
+                ps10.setNull(9, java.sql.Types.NULL);
+            }
+            if (category != null) {
+                ps10.setString(10, category);
+            } else {
+                ps10.setNull(10, java.sql.Types.NULL);
+            }
+            if (browser != null) {
+                ps10.setString(11, browser);
+            } else {
+                ps10.setNull(11, java.sql.Types.VARCHAR);
+            }
+            if (folder != null) {
+                ps10.setString(12, folder);
+            } else {
+                ps10.setNull(12, java.sql.Types.NULL);
+            }
             ps10.execute();
             zconn.commit();
         } catch (SQLException ex) {
