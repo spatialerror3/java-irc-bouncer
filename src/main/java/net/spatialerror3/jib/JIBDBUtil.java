@@ -269,6 +269,16 @@ public class JIBDBUtil {
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
+            sql = (new JIBBookmark()).sqlCreateTable();
+            try {
+                zconn = getDatabase();
+                PreparedStatement ps4 = zconn.prepareStatement(sql);
+                ps4.execute();
+                zconn.commit();
+                finishDbConn(zconn);
+            } catch (SQLException ex) {
+                log.error((String) null, ex);
+            }
         } else {
             if (altDbTypeMariadb()) {
                 String sql = "CREATE TABLE IF NOT EXISTS servers (id int auto_increment primary key,server varchar(256),port int,`ssl` boolean,`ipv6` boolean,clientbind varchar(256),serverpass varchar(256),nick varchar(256),username varchar(256),realname varchar(256),nsacct varchar(256),nspass varchar(256),channels varchar(512),u varchar(256),s varchar(256),opt mediumblob);";

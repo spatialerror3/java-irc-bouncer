@@ -27,22 +27,27 @@ import java.util.UUID;
  */
 public class JIBBookmark {
 
-    private JIBUser u = null;
+    private JIBUser u = null; // sqltype varchar(256) toString()
     //
-    private UUID uuid = null;
-    private String title = null;
-    private String url = null;
-    private String memo = null;
-    private long add_date = 0L;
-    private long last_modified = 0L;
-    private URL icon_uri = null;
-    private String onto = null;
-    private String category = null;
-    private String browser = null;
-    private String folder = null;
+    private UUID uuid = null; // sqltype UUID
+    private String title = null; // sqltype varchar(1024)
+    private String url = null; // sqltype varchar(256)
+    private String memo = null; // sqltype text
+    private long add_date = 0L; // sqltype bigint
+    private long last_modified = 0L;  // sqltype bigint
+    private URL icon_uri = null; // sqltype varchar(256)
+    private String onto = null; // sqltype text
+    private String category = null; // sqltype text
+    private String browser = null; // sqltype varchar(1024)
+    private String folder = null; // sqltype text
 
     public JIBBookmark() {
         uuid = UUID.randomUUID();
+    }
+    
+    public String sqlCreateTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS bookmarks (id int auto_increment primary key, userUuid varchar(256), _uuid uuid, title varchar(1024), url varchar(256), memo text, add_date bigint, last_modified bigint, icon_uri varchar(256), onto text, category text, browser varchar(1024), folder text);";
+        return sql;
     }
 
     /**
