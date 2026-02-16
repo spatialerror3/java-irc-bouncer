@@ -71,7 +71,7 @@ public class JIBBookmark {
             ps10.setString(5, memo);
             ps10.setLong(6, add_date);
             ps10.setLong(7, last_modified);
-            ps10.setURL(8, icon_uri);
+            ps10.setString(8, icon_uri.toString());
             ps10.setString(9, onto);
             ps10.setString(10, category);
             ps10.setString(11, browser);
