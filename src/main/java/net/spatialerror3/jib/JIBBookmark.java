@@ -18,14 +18,21 @@
 package net.spatialerror3.jib;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.UUID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author spatialerror3
  */
 public class JIBBookmark {
+
+    private static final Logger log = LogManager.getLogger(JIBBookmark.class);
 
     private JIBUser u = null; // sqltype varchar(256) toString()
     //
@@ -44,10 +51,48 @@ public class JIBBookmark {
     public JIBBookmark() {
         uuid = UUID.randomUUID();
     }
-    
-    public String sqlCreateTable() {
+
+    public String sqlCreateTable(String altDbType) {
         String sql = "CREATE TABLE IF NOT EXISTS bookmarks (id int auto_increment primary key, userUuid varchar(256), _uuid uuid, title varchar(1024), url varchar(256), memo text, add_date bigint, last_modified bigint, icon_uri varchar(256), onto text, category text, browser varchar(1024), folder text);";
         return sql;
+    }
+
+    public void sqlInsert() {
+        Connection zconn = null;
+        String sql = "INSERT INTO bookmarks (userUuid,_uuid,title,url,memo,add_date,last_modified,icon_uri,onto,category,browser,folder) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
+        PreparedStatement ps10 = null;
+        try {
+            zconn = JavaIrcBouncer.jibDbUtil.getDatabase();
+            ps10 = zconn.prepareStatement(sql);
+            ps10.setString(1, u.getUUID().toString());
+            ps10.setString(2, uuid.toString());
+            ps10.setString(3, title);
+            ps10.setString(4, url);
+            ps10.setString(5, memo);
+            ps10.setLong(6, add_date);
+            ps10.setLong(7, last_modified);
+            ps10.setURL(8, icon_uri);
+            ps10.setString(9, onto);
+            ps10.setString(10, category);
+            ps10.setString(11, browser);
+            ps10.setString(12, folder);
+            ps10.execute();
+            zconn.commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (JavaIrcBouncer.jibDbUtil.altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+            if (JavaIrcBouncer.jibDbUtil.altDbTypePgSql()) {
+                JavaIrcBouncer.jibDbUtil.finishDbConn(zconn);
+            }
+        }
     }
 
     /**

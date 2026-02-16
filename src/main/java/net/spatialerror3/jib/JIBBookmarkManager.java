@@ -89,6 +89,7 @@ public class JIBBookmarkManager {
         if (findUrl(b.getUser(), b.getUrl()) == null) {
             b.setAddDate(Instant.now().getEpochSecond());
             bookmarks.add(b);
+            b.sqlInsert();
         }
     }
     

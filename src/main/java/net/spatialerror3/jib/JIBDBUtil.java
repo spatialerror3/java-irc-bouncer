@@ -196,7 +196,7 @@ public class JIBDBUtil {
         return conn;
     }
 
-    private void finishDbConn(Connection _zconn) {
+    public void finishDbConn(Connection _zconn) {
         if (_zconn != null) {
             if (altDbTypeMariadb()) {
                 try {
@@ -269,7 +269,7 @@ public class JIBDBUtil {
             } catch (SQLException ex) {
                 log.error((String) null, ex);
             }
-            sql = (new JIBBookmark()).sqlCreateTable();
+            sql = (new JIBBookmark()).sqlCreateTable(altDbType);
             try {
                 zconn = getDatabase();
                 PreparedStatement ps4 = zconn.prepareStatement(sql);
@@ -322,6 +322,16 @@ public class JIBDBUtil {
                     log.error((String) null, ex);
                 }
                 sql = "CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, userId bigint, _uuid uuid, username varchar(256), authtoken varchar(256), admin boolean, opt mediumblob, u varchar(256));";
+                try {
+                    zconn = getDatabase();
+                    PreparedStatement ps4 = zconn.prepareStatement(sql);
+                    ps4.execute();
+                    zconn.commit();
+                    finishDbConn(zconn);
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+                sql = (new JIBBookmark()).sqlCreateTable(altDbType);
                 try {
                     zconn = getDatabase();
                     PreparedStatement ps4 = zconn.prepareStatement(sql);
@@ -384,6 +394,17 @@ public class JIBDBUtil {
                 } catch (SQLException ex) {
                     log.error((String) null, ex);
                 }
+                sql = (new JIBBookmark()).sqlCreateTable(altDbType);
+                try {
+                    zconn = getDatabase();
+                    PreparedStatement ps4 = zconn.prepareStatement(sql);
+                    ps4.execute();
+                    zconn.commit();
+                    finishDbConn(zconn);
+                } catch (SQLException ex) {
+                    log.error((String) null, ex);
+                }
+
             }
         }
         try {
