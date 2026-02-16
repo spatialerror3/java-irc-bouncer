@@ -17,6 +17,7 @@
  */
 package net.spatialerror3.jib;
 
+import java.sql.Connection;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,16 +32,16 @@ import org.apache.logging.log4j.Logger;
  * @author spatialerror3
  */
 public class JIBBookmarkManager {
-    
+
     private static final Logger log = LogManager.getLogger(JIBBookmarkManager.class);
     private ArrayList<JIBBookmark> bookmarks = null;
     private UUID bmApiKey = UUID.randomUUID();
-    
+
     public JIBBookmarkManager() {
         bookmarks = new ArrayList<>();
         log.error(this + " BMAPIKEY=" + this.bmApiKey);
     }
-    
+
     public JIBBookmark findUrl(JIBUser u, String url) {
         Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
         while (it3.hasNext()) {
@@ -51,7 +52,7 @@ public class JIBBookmarkManager {
         }
         return null;
     }
-    
+
     public JIBBookmark findBmUuid(JIBUser u, String uuid) {
         Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
         while (it3.hasNext()) {
@@ -62,7 +63,7 @@ public class JIBBookmarkManager {
         }
         return null;
     }
-    
+
     public JIBBookmark findBmCat(JIBUser u, String category) {
         Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
         while (it3.hasNext()) {
@@ -73,7 +74,7 @@ public class JIBBookmarkManager {
         }
         return null;
     }
-    
+
     public JIBBookmark findBmFolder(JIBUser u, String folder) {
         Iterator<JIBBookmark> it3 = getBookmarksForJIBUser(u).iterator();
         while (it3.hasNext()) {
@@ -84,7 +85,7 @@ public class JIBBookmarkManager {
         }
         return null;
     }
-    
+
     public void addBookmark(JIBBookmark b) {
         if (findUrl(b.getUser(), b.getUrl()) == null) {
             b.setAddDate(Instant.now().getEpochSecond());
@@ -92,15 +93,15 @@ public class JIBBookmarkManager {
             b.sqlInsert();
         }
     }
-    
+
     public void removeBookmark(JIBBookmark b) {
         bookmarks.remove(b);
     }
-    
+
     public List<JIBBookmark> getBookmarks() {
         return Collections.synchronizedList(bookmarks);
     }
-    
+
     public List<JIBBookmark> getBookmarksForJIBUser(JIBUser u) {
         ArrayList<JIBBookmark> ubms = new ArrayList<>();
         Iterator<JIBBookmark> it2 = getBookmarks().iterator();
@@ -125,5 +126,11 @@ public class JIBBookmarkManager {
      */
     public void setBmApiKey(UUID bmApiKey) {
         this.bmApiKey = bmApiKey;
+    }
+
+    public long loadBookmarks() {
+        Connection zconn = null;
+        long loadedBookmarks = 0L;
+        return loadedBookmarks;
     }
 }

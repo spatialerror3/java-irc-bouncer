@@ -157,6 +157,7 @@ public class JavaIrcBouncer {
             log.info(jibHttpsServ.toString());
         }
         jibBookmarkManager = new JIBBookmarkManager();
+        jibBookmarkManager.loadBookmarks();
         while (true) {
             try {
                 Thread.sleep(60000);
