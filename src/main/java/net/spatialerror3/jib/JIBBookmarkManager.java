@@ -17,7 +17,12 @@
  */
 package net.spatialerror3.jib;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -131,6 +136,41 @@ public class JIBBookmarkManager {
     public long loadBookmarks() {
         Connection zconn = null;
         long loadedBookmarks = 0L;
+        String sql = "SELECT userUuid,_uuid,title,url,memo,add_date,last_modified,icon_uri,onto,category,browser,folder FROM bookmarks;";
+        PreparedStatement ps25 = null;
+        ResultSet rs25 = null;
+        try {
+            zconn = JavaIrcBouncer.jibDbUtil.getDatabase();
+            ps25 = zconn.prepareStatement(sql);
+            rs25 = ps25.executeQuery();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        try {
+            while (rs25 != null && rs25.next()) {
+                JIBBookmark tmpbm = new JIBBookmark();
+                tmpbm.setUser(JavaIrcBouncer.jibCore.getUser(UUID.fromString(rs25.getString(1))));
+                tmpbm.setUuid(UUID.fromString(rs25.getString(2)));
+                tmpbm.setTitle(rs25.getString(3));
+                tmpbm.setUrl(rs25.getString(4));
+                tmpbm.setMemo(rs25.getString(5));
+                tmpbm.setAddDate(rs25.getLong(6));
+                tmpbm.setLastModified(rs25.getLong(7));
+                tmpbm.setIconUri(URI.create(rs25.getString(8)).toURL());
+                tmpbm.setOnto(rs25.getString(9));
+                tmpbm.setCategory(rs25.getString(10));
+                tmpbm.setBrowser(rs25.getString(11));
+                tmpbm.setFolder(rs25.getString(12));
+
+                bookmarks.add(tmpbm);
+                loadedBookmarks++;
+            }
+        } catch (MalformedURLException mue1) {
+            log.error((String) null, mue1);
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        JavaIrcBouncer.jibDbUtil.finishDbConn(zconn);
         return loadedBookmarks;
     }
 }
