@@ -38,7 +38,7 @@ public class JIBBookmark {
     //
     private UUID uuid = null; // sqltype UUID
     private String title = null; // sqltype varchar(1024)
-    private String url = null; // sqltype varchar(256)
+    private String url = null; // sqltype varchar(2048)
     private String memo = null; // sqltype text
     private long add_date = 0L; // sqltype bigint
     private long last_modified = 0L;  // sqltype bigint
@@ -53,7 +53,7 @@ public class JIBBookmark {
     }
 
     public String sqlCreateTable(String altDbType) {
-        String sql = "CREATE TABLE IF NOT EXISTS bookmarks (id int auto_increment primary key, userUuid varchar(256), _uuid uuid, title varchar(1024), url varchar(256), memo text, add_date bigint, last_modified bigint, icon_uri varchar(256), onto text, category text, browser varchar(1024), folder text);";
+        String sql = "CREATE TABLE IF NOT EXISTS bookmarks (id int auto_increment primary key, userUuid varchar(256), _uuid uuid, title varchar(1024), url varchar(2048), memo text, add_date bigint, last_modified bigint, icon_uri varchar(256), onto text, category text, browser varchar(1024), folder text);";
         return sql;
     }
 
