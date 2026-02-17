@@ -99,7 +99,7 @@ public class JIBBookmarkManager {
         }
     }
 
-    public void removeBookmark(JIBBookmark b) {
+    public void removeBookmark(JIBBookmark b, boolean internal) {
         bookmarks.remove(b);
     }
 
@@ -172,5 +172,30 @@ public class JIBBookmarkManager {
         }
         JavaIrcBouncer.jibDbUtil.finishDbConn(zconn);
         return loadedBookmarks;
+    }
+
+    public void removeBookmark(JIBBookmark bm) {
+        Connection zconn = null;
+        String sql = "DELETE FROM bookmarks WHERE _uuid = ?;";
+        PreparedStatement ps26 = null;
+        try {
+            zconn = JavaIrcBouncer.jibDbUtil.getDatabase();
+            ps26 = zconn.prepareStatement(sql);
+            ps26.setString(1, bm.getUuid().toString());
+            ps26.execute();
+            zconn.commit();
+        } catch (SQLException ex) {
+            log.error((String) null, ex);
+        }
+        if (zconn != null) {
+            if (JavaIrcBouncer.jibDbUtil.altDbTypeMariadb()) {
+                try {
+                    zconn.close();
+                } catch (SQLException ex) {
+                    log.error(ex);
+                }
+            }
+        }
+        removeBookmark(bm, true);
     }
 }
