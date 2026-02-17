@@ -54,12 +54,13 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         }
     }
 
-    public void addBookmark(JIBUser u, String title, String url) {
+    public void addBookmark(JIBUser u, String title, String url, String folder) {
         JIBBookmark newBookmark = new JIBBookmark();
 
         newBookmark.setUser(u);
         newBookmark.setTitle(title);
         newBookmark.setUrl(url);
+        newBookmark.setFolder(folder);
 
         JavaIrcBouncer.jibBookmarkManager.addBookmark(newBookmark);
     }
@@ -81,6 +82,7 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         String bm_title = req.getParameter("bmtitle");
         String bm_url = req.getParameter("bmurl");
         String apikey = req.getParameter("bmapikey");
+        String bm_folder = req.getParameter("bmfolder");
 
         login(req, resp);
         header(req, resp);
@@ -88,12 +90,12 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         try {
             if (apikey != null && apikey.equals(JavaIrcBouncer.jibBookmarkManager.getBmApiKey().toString())) {
                 if (whattodo != null && whattodo.equals("addbm")) {
-                    addBookmark(JavaIrcBouncer.jibCore.getUser("admin"), bm_title, bm_url);
+                    addBookmark(JavaIrcBouncer.jibCore.getUser("admin"), bm_title, bm_url, bm_folder);
                 }
             }
             if (u != null) {
                 if (whattodo != null && whattodo.equals("addbm")) {
-                    addBookmark(u, bm_title, bm_url);
+                    addBookmark(u, bm_title, bm_url, bm_folder);
                 }
                 if (whattodo != null && whattodo.equals("delbm")) {
                     delBookmark(u, req.getParameter("bmuuid"));
