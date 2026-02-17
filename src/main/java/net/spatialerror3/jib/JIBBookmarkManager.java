@@ -156,7 +156,11 @@ public class JIBBookmarkManager {
                 tmpbm.setMemo(rs25.getString(5));
                 tmpbm.setAddDate(rs25.getLong(6));
                 tmpbm.setLastModified(rs25.getLong(7));
-                tmpbm.setIconUri(URI.create(rs25.getString(8)).toURL());
+                if (rs25.getString(8) != null) {
+                    tmpbm.setIconUri(URI.create(rs25.getString(8)).toURL());
+                } else {
+                    tmpbm.setIconUri(null);
+                }
                 tmpbm.setOnto(rs25.getString(9));
                 tmpbm.setCategory(rs25.getString(10));
                 tmpbm.setBrowser(rs25.getString(11));
