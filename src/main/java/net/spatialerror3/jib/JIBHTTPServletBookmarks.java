@@ -21,6 +21,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -54,13 +57,29 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         }
     }
 
-    public void addBookmark(JIBUser u, String title, String url, String folder, long addDate, long lastMod, String icon_uri) {
+    public void addBookmark(JIBUser u, String title, String url, String folder, long addDate, long lastMod, String icon_uri, String browser) {
         JIBBookmark newBookmark = new JIBBookmark();
 
         newBookmark.setUser(u);
         newBookmark.setTitle(title);
         newBookmark.setUrl(url);
         newBookmark.setFolder(folder);
+        if (addDate > 0L) {
+            newBookmark.setAddDate(addDate);
+        }
+        if (lastMod > 0L) {
+            newBookmark.setLastModified(lastMod);
+        }
+        if (icon_uri != null) {
+            try {
+                newBookmark.setIconUri(URI.create(icon_uri).toURL());
+            } catch (MalformedURLException ex) {
+                log.error((String) null, ex);
+            }
+        }
+        if (browser != null) {
+            newBookmark.setBrowser(browser);
+        }
 
         JavaIrcBouncer.jibBookmarkManager.addBookmark(newBookmark);
     }
@@ -86,6 +105,7 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         String bm_adddate = req.getParameter("bmadddate");
         String bm_lastmod = req.getParameter("bmlastmod");
         String bm_iconuri = req.getParameter("bmiconuri");
+        String bm_browser = req.getParameter("bmbrowser");
 
         login(req, resp);
         header(req, resp);
@@ -93,12 +113,12 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         try {
             if (apikey != null && apikey.equals(JavaIrcBouncer.jibBookmarkManager.getBmApiKey().toString())) {
                 if (whattodo != null && whattodo.equals("addbm")) {
-                    addBookmark(JavaIrcBouncer.jibCore.getUser("admin"), bm_title, bm_url, bm_folder, 0L, 0L, null);
+                    addBookmark(JavaIrcBouncer.jibCore.getUser("admin"), bm_title, bm_url, bm_folder, 0L, 0L, null, bm_browser);
                 }
             }
             if (u != null) {
                 if (whattodo != null && whattodo.equals("addbm")) {
-                    addBookmark(u, bm_title, bm_url, bm_folder, 0L, 0L, null);
+                    addBookmark(u, bm_title, bm_url, bm_folder, 0L, 0L, null, bm_browser);
                 }
                 if (whattodo != null && whattodo.equals("delbm")) {
                     delBookmark(u, req.getParameter("bmuuid"));
