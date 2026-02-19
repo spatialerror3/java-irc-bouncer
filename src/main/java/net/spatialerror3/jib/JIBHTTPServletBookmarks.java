@@ -64,12 +64,6 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         newBookmark.setTitle(title);
         newBookmark.setUrl(url);
         newBookmark.setFolder(folder);
-        if (addDate > 0L) {
-            newBookmark.setAddDate(addDate);
-        }
-        if (lastMod > 0L) {
-            newBookmark.setLastModified(lastMod);
-        }
         if (icon_uri != null) {
             try {
                 newBookmark.setIconUri(URI.create(icon_uri).toURL());
@@ -79,6 +73,12 @@ public class JIBHTTPServletBookmarks extends JIBHTTPServletBase {
         }
         if (browser != null) {
             newBookmark.setBrowser(browser);
+        }
+        if (addDate > 0L) {
+            newBookmark.setAddDate(addDate);
+        }
+        if (lastMod > 0L) {
+            newBookmark.setLastModified(lastMod);
         }
 
         JavaIrcBouncer.jibBookmarkManager.addBookmark(newBookmark);
